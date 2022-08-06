@@ -6,7 +6,6 @@ package com.journal.florist.backend.feature.product.service;
 
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.app.utils.BaseResponse;
-import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.product.dto.SuccessResponse;
@@ -23,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.journal.florist.app.constant.JournalConstants.*;
-import static com.journal.florist.app.security.config.SecurityConst.MUST_BE_AUTHENTICATED;
 
 @RequiredArgsConstructor
 @Service
@@ -71,8 +69,6 @@ public class CategoryServiceImpl implements CategoryService {
             entity.setCreatedAt(new Date(System.currentTimeMillis()));
             entity.setDescription(category.getDescription());
 
-        } else {
-            throw new AppBaseException(MUST_BE_AUTHENTICATED);
         }
 
         categoryRepository.save(entity);

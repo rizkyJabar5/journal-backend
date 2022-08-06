@@ -148,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductMapper> findAllProduct(Pageable pageable) {
-        return repository.findAll(pageable)
+        return repository.findAllProduct(pageable)
                 .map(productMapper::productMapper);
     }
 

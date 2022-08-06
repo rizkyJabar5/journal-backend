@@ -4,21 +4,21 @@
 
 package com.journal.florist.backend.feature.customer.model;
 
-import com.journal.florist.backend.feature.utils.BaseEntity;
+import com.journal.florist.backend.feature.utils.Address;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
+import java.io.Serializable;
 
-@Entity
 @Getter
 @Setter
-public class Company extends BaseEntity {
+@Embeddable
+public class Company implements Serializable {
 
     private String companyName;
 
     @Embedded
     private Address address;
-
 }

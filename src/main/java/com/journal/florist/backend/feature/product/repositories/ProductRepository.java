@@ -25,7 +25,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "order by p.createdAt desc")
     Page<Product> findByField(Pageable pageable);
 
-    Page<Product> findAll(Pageable pageable);
+    @Query("select p from Product p")
+    Page<Product> findAllProduct(Pageable pageable);
     Optional<Product> findByPublicKey(String publicKey);
 
     @Query("select (count(p) > 0 ) " +

@@ -11,9 +11,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.Collection;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -23,30 +25,23 @@ import java.util.Collection;
 public class Customers extends BaseEntity {
 
     private String name;
+    private String phoneNumber;
 
-    private Integer phoneNumber;
+    @Embedded
+    private Company company;
 
     @OneToMany(mappedBy = "customers")
     private Collection<HistoryOrder> historyOrder;
-
     @Override
     public int hashCode() {
-        if (getId() != null) {
-            return getId().hashCode();
-        }
-        return super.hashCode();
+        return Objects.hash(super.hashCode(), getName());
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof BaseEntity other)) {
-            return false; // null or other class
-        }
-
-        if (getId() != null) {
-            return getId().equals(other.getId());
-        }
-        return super.equals(other);
+        if (this == obj) return true;
+        if (!(obj instanceof Customers customers) || super.equals(obj)) return false; // null or other class
+        return Objects.equals(getName(), customers.name);
     }
 
 }

@@ -19,12 +19,14 @@ public final class JournalConstants {
     public static final String NO_CONTENT = "No content found for %s ";
     public static final String MUST_BE_UNIQUE = "Name %s must be unique";
     public static final String ORDER_NOT_FOUND_MSG = "Error: Order %s is not found";
+    public static final String CUSTOMER_NOT_FOUND_MSG = "Error: Customer %s is not found";
     public static final String PRODUCT_NOT_FOUND_MSG = "Error: Product %s is not found";
     public static final String CATEGORY_NOT_FOUND_MSG = "Error: Category %s is not found";
     public static final String HISTORY_NOT_FOUND_MSG = "Error: History %s is not found";
 
     // AbstractCrudView
     public static final String CANNOT_BE_BLANK = "Field %s cannot be blank";
+    public static final String NOT_VALID_FIELD = "%s is not valid";
     public static final String DELETE_MESSAGE = "Are you sure you want to delete the selected %s? This action cannot be undone.";
 
 }

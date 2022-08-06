@@ -18,5 +18,8 @@ public final class UserConstant {
     public static final String USER_NOT_FOUND_MSG = "Error: User %s is not found";
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern VALID_PHONE_NUMBER_REGEX =
+            Pattern.compile("(\\+62 ((\\d{3}([ -]\\d{3,})([- ]\\d{4,})?)|(\\d+)))|(\\(\\d+\\) \\d+)|\\d{3}( \\d+)+|(\\d+[ -]\\d+)|\\d+",
+                    Pattern.CASE_INSENSITIVE);
 
 }
