@@ -130,7 +130,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerMapper mapper = customerMapper.mapToEntity(entity);
         return new BaseResponse(
-                HttpStatus.CREATED,
+                HttpStatus.ACCEPTED,
                 String.format("Customer with id %s is successfully updated", entity.getPublicKey()),
                 mapper);
     }
