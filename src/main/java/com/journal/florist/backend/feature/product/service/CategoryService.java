@@ -6,7 +6,7 @@ package com.journal.florist.backend.feature.product.service;
 
 import com.journal.florist.app.utils.BaseResponse;
 import com.journal.florist.app.utils.HasLogger;
-import com.journal.florist.backend.feature.product.dto.SuccessResponse;
+import com.journal.florist.app.utils.SuccessResponse;
 import com.journal.florist.backend.feature.product.model.Category;
 
 public interface CategoryService extends HasLogger {

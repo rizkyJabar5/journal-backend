@@ -6,7 +6,7 @@ import com.journal.florist.backend.feature.customer.dto.CustomerMapper;
 import com.journal.florist.backend.feature.customer.dto.CustomerRequest;
 import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
-import com.journal.florist.backend.feature.product.dto.SuccessResponse;
+import com.journal.florist.app.utils.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

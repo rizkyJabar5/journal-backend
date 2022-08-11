@@ -31,7 +31,7 @@ public enum PaymentStatus {
         this.name = name;
     }
 
-    public static String getAllOrderState() {
+    public static String getAllPaymentStatus() {
         return Arrays.toString(PaymentStatus.class.getEnumConstants());
     }
 

@@ -12,7 +12,7 @@ import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.product.dto.AddProductRequest;
 import com.journal.florist.backend.feature.product.dto.ProductMapper;
-import com.journal.florist.backend.feature.product.dto.SuccessResponse;
+import com.journal.florist.app.utils.SuccessResponse;
 import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.model.Product;

@@ -16,7 +16,7 @@ import java.math.BigInteger;
 @Getter
 @Setter
 @Entity
-public class Expenditure extends BaseEntity {
+public class Expense extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;

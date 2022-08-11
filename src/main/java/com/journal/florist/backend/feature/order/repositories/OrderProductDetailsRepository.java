@@ -1,12 +1,12 @@
 package com.journal.florist.backend.feature.order.repositories;
 
-import com.journal.florist.backend.feature.order.model.Orders;
+import com.journal.florist.backend.feature.order.model.OrderProductDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Orders, Long> {
+public interface OrderProductDetailsRepository extends JpaRepository<OrderProductDetails, Long> {
 
-    Orders findOrderByPublicKey(String publicKey);
+
 
 }

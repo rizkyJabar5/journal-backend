@@ -58,8 +58,8 @@ public class LoginJwtResponse implements Serializable {
             List<String> authorities = localUserDetails.getAuthorities().stream()
                     .map(role -> new SimpleGrantedAuthority(role.getAuthority()).toString()).toList();
 
-            LocalDateTime dateTime = DateConverter.toLocalDate(localUserDetails.getJoinDate());
-            String date = DateConverter.formatDate().format(dateTime);
+            LocalDateTime dateTime = DateConverter.toLocalDateTime(localUserDetails.getJoinDate());
+            String date = DateConverter.formatDateTime().format(dateTime);
 
             return LoginJwtResponse.builder()
                     .accessToken(jwToken)

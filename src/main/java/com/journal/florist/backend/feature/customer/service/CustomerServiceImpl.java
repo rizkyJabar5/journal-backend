@@ -10,7 +10,7 @@ import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
 import com.journal.florist.backend.feature.customer.model.Company;
 import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.customer.repositories.CustomerRepository;
-import com.journal.florist.backend.feature.product.dto.SuccessResponse;
+import com.journal.florist.app.utils.SuccessResponse;
 import com.journal.florist.backend.feature.utils.EntityUtil;
 import com.journal.florist.backend.feature.utils.Validator;
 import lombok.RequiredArgsConstructor;

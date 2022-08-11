@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Lob;
 import java.io.Serializable;
 
 @Getter
@@ -19,9 +20,11 @@ import java.io.Serializable;
 @Embeddable
 public class Address implements Serializable {
 
+    @Lob
     private String street;
     private String city;
-    private String state;
+    private String province;
+    private String country;
     private String zip;
 
 }

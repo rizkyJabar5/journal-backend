@@ -14,6 +14,7 @@ public final class ApiUrlConstant {
     public static final String PRODUCTS_URL = "/api/v1/products";
     public static final String CATEGORY_URL = "/api/v1/categories";
     public static final String CUSTOMER_URL = "/api/v1/customers";
+    public static final String ORDER_URL = "/api/v1/orders";
     public static final String LOGIN_URL = "/api/v1/auth/login";
     public static final String LOGIN_FAILURE_URL = "/login?error";
     public static final String LOGOUT_URL = "/";

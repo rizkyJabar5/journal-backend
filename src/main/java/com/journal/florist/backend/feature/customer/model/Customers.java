@@ -4,18 +4,16 @@
 
 package com.journal.florist.backend.feature.customer.model;
 
-import com.journal.florist.backend.feature.order.model.HistoryOrder;
+import com.journal.florist.backend.feature.order.model.HistoryOrders;
 import com.journal.florist.backend.feature.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.Collection;
+import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -24,14 +22,18 @@ import java.util.Objects;
 @Entity
 public class Customers extends BaseEntity {
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
 
     @Embedded
     private Company company;
 
-    @OneToMany(mappedBy = "customers")
-    private Collection<HistoryOrder> historyOrder;
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "customers")
+    private Set<HistoryOrders> historyOrder;
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getName());

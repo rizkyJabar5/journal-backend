@@ -49,7 +49,7 @@ public class Product extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if(!(o instanceof Product product) || !super.equals(o)) return false;
-        return Objects.equals(getProductName(), product.productName);
+        return Objects.equals(getPublicKey(), product.getPublicKey());
     }
 
     @Override

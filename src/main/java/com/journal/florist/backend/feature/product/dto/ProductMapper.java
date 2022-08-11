@@ -37,13 +37,13 @@ public class ProductMapper {
 
     public ProductMapper productMapper(Product entity) {
 
-        LocalDateTime dateCreateAt = DateConverter.toLocalDate(entity.getCreatedAt());
+        LocalDateTime dateCreateAt = DateConverter.toLocalDateTime(entity.getCreatedAt());
         String formatUpdateAt = null;
         if (entity.getLastModifiedDate() != null) {
-            LocalDateTime dateUpdateAt = DateConverter.toLocalDate(entity.getLastModifiedDate());
-            formatUpdateAt = DateConverter.formatDate().format(dateUpdateAt);
+            LocalDateTime dateUpdateAt = DateConverter.toLocalDateTime(entity.getLastModifiedDate());
+            formatUpdateAt = DateConverter.formatDateTime().format(dateUpdateAt);
         }
-        String formatCreateAt = DateConverter.formatDate().format(dateCreateAt);
+        String formatCreateAt = DateConverter.formatDateTime().format(dateCreateAt);
         String updateBy = entity.getLastModifiedBy();
         if(updateBy == null) {
             this.updatedBy = null;

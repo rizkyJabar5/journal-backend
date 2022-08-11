@@ -5,7 +5,6 @@
 package com.journal.florist.app.security.config;
 
 import com.journal.florist.app.utils.HasLogger;
-import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.feature.user.enums.ERole;
 import com.journal.florist.backend.feature.user.model.AppRoles;
 import com.journal.florist.backend.feature.user.service.RoleService;
@@ -34,7 +33,7 @@ public class BeanSecurityConfig implements HasLogger {
             try {
                 AppRoles appRoles = roleService.getRolesByName(role);
                 getLogger().info("{} is found", appRoles);
-            } catch (AppBaseException e) {
+            } catch (RuntimeException e) {
                 AppRoles roles = new AppRoles();
                 if (Objects.equals(ERole.ROLE_CASHIER, role)) {
                     roles.setRoleName(role);

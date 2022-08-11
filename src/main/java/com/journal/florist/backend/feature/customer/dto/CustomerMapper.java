@@ -2,8 +2,8 @@ package com.journal.florist.backend.feature.customer.dto;
 
 import com.journal.florist.app.utils.DateConverter;
 import com.journal.florist.backend.feature.customer.model.Customers;
+import com.journal.florist.backend.feature.order.model.HistoryOrders;
 import com.journal.florist.backend.feature.utils.Address;
-import com.journal.florist.backend.feature.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +37,7 @@ public class CustomerMapper implements Serializable {
         if(mapper.getHistoryOrder() != null){
             history = mapper.getHistoryOrder()
                     .stream()
-                    .map(BaseEntity::getPublicKey).toList();
+                    .map(HistoryOrders::getHistoryOrderCode).toList();
         }
 
         String modifiedBy = mapper.getLastModifiedBy();
@@ -45,12 +45,12 @@ public class CustomerMapper implements Serializable {
             updatedBy = null;
         }
 
-        LocalDateTime dateTime = DateConverter.toLocalDate(mapper.getCreatedAt());
-        String addedDate = DateConverter.formatDate().format(dateTime);
+        LocalDateTime dateTime = DateConverter.toLocalDateTime(mapper.getCreatedAt());
+        String addedDate = DateConverter.formatDateTime().format(dateTime);
         String updatedDate = null;
         if(mapper.getLastModifiedDate() != null) {
-            LocalDateTime toLocalDate = DateConverter.toLocalDate(mapper.getLastModifiedDate());
-            updatedDate = DateConverter.formatDate().format(toLocalDate);
+            LocalDateTime toLocalDate = DateConverter.toLocalDateTime(mapper.getLastModifiedDate());
+            updatedDate = DateConverter.formatDateTime().format(toLocalDate);
         }
 
         return CustomerMapper.builder()
