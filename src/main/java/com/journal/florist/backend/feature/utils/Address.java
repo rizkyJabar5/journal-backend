@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 @Getter
@@ -21,10 +22,19 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     @Lob
+    @NotEmpty(message = "Street may not be empty")
     private String street;
+
+    @NotEmpty(message = "City may not be empty")
     private String city;
+
+    @NotEmpty(message = "Your state may not be empty")
     private String province;
+
+    @NotEmpty(message = "Country is may not be empty")
     private String country;
+
+    @NotEmpty(message = "Zip address may not be empty")
     private String zip;
 
 }

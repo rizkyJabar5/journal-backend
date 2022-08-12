@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import static com.journal.florist.app.constant.ApiUrlConstant.ORDER_URL;
 
 @RestController
@@ -20,7 +22,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/add-order")
-    public ResponseEntity<BaseResponse> addOrder(@RequestBody AddOrderRequest request) {
+    public ResponseEntity<BaseResponse> addOrder(@Valid @RequestBody AddOrderRequest request) {
         var response = orderService.addOrder(request);
         return ResponseEntity.ok().body(response);
     }

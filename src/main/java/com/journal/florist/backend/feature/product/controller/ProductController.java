@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 import java.util.Optional;
 
 import static com.journal.florist.app.constant.ApiUrlConstant.PRODUCTS_URL;
@@ -51,14 +52,15 @@ public class ProductController {
 
     @PostMapping("/add-product")
     public ResponseEntity<BaseResponse> createProduct(
-            @ModelAttribute AddProductRequest request) {
+            @Valid @ModelAttribute AddProductRequest request) {
         BaseResponse response= service.addNewProduct(request);
 
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<BaseResponse> updateProduct(@ModelAttribute UpdateProductRequest request) {
+    public ResponseEntity<BaseResponse> updateProduct(
+            @Valid @ModelAttribute UpdateProductRequest request) {
         BaseResponse response = service.updateProduct(request);
         return ResponseEntity.ok().body(response);
     }

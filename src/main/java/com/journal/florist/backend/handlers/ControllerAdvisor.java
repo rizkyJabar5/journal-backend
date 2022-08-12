@@ -5,13 +5,17 @@ import com.journal.florist.backend.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -104,7 +108,7 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> constraintViolationException(ConstraintViolationException constraintException,
-                                                    HttpServletRequest request) {
+                                                               HttpServletRequest request) {
         Map<String, Object> response = new LinkedHashMap<>();
         String date = DateConverter.formatDateTime().format(LocalDateTime.now());
         response.put("timestamp", date);
@@ -114,5 +118,29 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
         response.put("path", request.getServletPath());
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex,
+                                                             HttpServletRequest request) {
+
+        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> errors = new HashMap<>();
+        Map<String, String> error = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((objectError) -> {
+                    String field = ((FieldError) objectError).getField();
+                    String defaultMessage = objectError.getDefaultMessage();
+                    error.put(field, defaultMessage);
+                });
+
+        errors.put("timestamp", date);
+        errors.put("errors", error);
+        errors.put("status", OperationStatus.FAILURE);
+        errors.put("code", HttpStatus.BAD_REQUEST.value());
+        errors.put("path", request.getServletPath());
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

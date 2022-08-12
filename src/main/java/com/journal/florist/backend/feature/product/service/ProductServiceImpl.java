@@ -98,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
         Authentication authentication = SecurityUtils.getAuthentication();
         String updateBy = authentication.getName();
         boolean authenticated = SecurityUtils.isAuthenticated();
-        Product product = findByProductKey(request.getProductKey());
+        Product product = findByProductKey(request.getProductId());
 
         if (authenticated) {
             if (Objects.nonNull(request.getProductName())) {
@@ -108,8 +108,8 @@ public class ProductServiceImpl implements ProductService {
                 }
                 product.setProductName(request.getProductName());
             }
-            if (Objects.nonNull(request.getCategoryKey())) {
-                Category category = categoryService.findByCategoryKey(request.getCategoryKey());
+            if (Objects.nonNull(request.getCategoryId())) {
+                Category category = categoryService.findByCategoryKey(request.getCategoryId());
                 product.setCategory(category);
             }
             if (Objects.nonNull(request.getDescription())) {
