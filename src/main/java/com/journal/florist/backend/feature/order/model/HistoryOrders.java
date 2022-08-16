@@ -36,14 +36,12 @@ public class HistoryOrders {
 
     @ManyToOne(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
             targetEntity = Customers.class)
     @JoinColumn(foreignKey = @ForeignKey(name = "customer_fk_id"))
     private Customers customers;
 
     @ManyToOne(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
             targetEntity = Product.class)
     @JoinColumn(foreignKey = @ForeignKey(name = "buy_product_fk_id"))
     private Product product;

@@ -22,7 +22,7 @@ public class Suppliers extends BaseEntity {
 
     @Column(unique = true)
     private String productName;
-    private Integer quantity;
     private BigInteger price;
+
 
 }

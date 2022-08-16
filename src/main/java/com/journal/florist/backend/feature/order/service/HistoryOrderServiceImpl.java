@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -17,7 +18,9 @@ public class HistoryOrderServiceImpl implements HistoryOrderService {
     private final HistoryOrderRepositories historyRepository;
 
     @Override
+    @Transactional
     public void saveHistoryOrder(Orders orders, Customers customer, Product product) {
+
         HistoryOrders entity = new HistoryOrders();
         entity.setOrders(orders);
         entity.setCustomers(customer);

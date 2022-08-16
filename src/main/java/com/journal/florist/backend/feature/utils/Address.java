@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Lob;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
@@ -21,7 +21,6 @@ import java.io.Serializable;
 @Embeddable
 public class Address implements Serializable {
 
-    @Lob
     @NotEmpty(message = "Street may not be empty")
     private String street;
 
@@ -37,4 +36,8 @@ public class Address implements Serializable {
     @NotEmpty(message = "Zip address may not be empty")
     private String zip;
 
+    @Transient
+    public String getFullAddress() {
+        return street + ", " + city + ", " + province + ", " + country + ", " + zip;
+    }
 }

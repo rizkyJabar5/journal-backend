@@ -1,27 +1,29 @@
 package com.journal.florist.backend.feature.order.model;
 
 import com.journal.florist.backend.feature.utils.Address;
-import com.journal.florist.backend.feature.utils.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @Entity
-public class OrderShipments extends BaseEntity {
+public class OrderShipments implements Serializable {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "order_id",
-            foreignKey = @ForeignKey(name = "order_fk_id"),
-            nullable = false)
+    @Id
+    @Column(name = "order_id")
+    private Long orderId;
+
+    @OneToOne(optional = false)
+    @MapsId
+    @JoinColumn(name = "order_id")
     private Orders order;
 
     private String recipientName;
@@ -31,4 +33,23 @@ public class OrderShipments extends BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date deliveryDate;
+
+    public OrderShipments(Orders order, String recipientName, Address deliveryAddress, Date deliveryDate) {
+        this.order = order;
+        this.recipientName = recipientName;
+        this.deliveryAddress = deliveryAddress;
+        this.deliveryDate = deliveryDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrderShipments shipments) || !super.equals(o)) return false;
+        return Objects.equals(getOrder(), shipments.order);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getOrder());
+    }
 }

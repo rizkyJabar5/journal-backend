@@ -6,6 +6,7 @@ package com.journal.florist.backend.feature.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -27,8 +28,8 @@ public abstract class BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "apps_sequence")
     @SequenceGenerator(name = "appsSequence",
-            sequenceName = "apps_sequence",
-            allocationSize = 3)
+            allocationSize = 1,
+            sequenceName = "apps_sequence")
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -53,16 +54,17 @@ public abstract class BaseEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getPublicKey());
+        return Objects.hashCode(getId());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         if(!(o instanceof BaseEntity that)) return false;
         if(!that.canEqual(this) ) return false;
 
-        return Objects.equals(getPublicKey(), that.getPublicKey());
+        return id != null && Objects.equals(getId(), that.getId());
     }
     /**
      * This method is meant for allowing to redefine equality on several levels of the class hierarchy

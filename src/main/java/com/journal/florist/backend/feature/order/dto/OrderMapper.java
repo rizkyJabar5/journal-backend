@@ -2,7 +2,6 @@ package com.journal.florist.backend.feature.order.dto;
 
 import com.journal.florist.app.utils.DateConverter;
 import com.journal.florist.backend.feature.order.model.Orders;
-import com.journal.florist.backend.feature.utils.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,14 +19,12 @@ import java.time.LocalDateTime;
 @Builder
 @Component
 public class OrderMapper implements Serializable {
+
     private String orderId;
     private String customerName;
     private String phoneNumber;
-    private String productId;
-    private String productName;
-    private String notes;
-    private Integer quantity;
-    private BigInteger totalAmount;
+    private List<DetailProduct> detailOfOrderProducts;
+    private BigDecimal totalOrderAmount;
     private String paymentStatus;
     private String orderStatus;
     private String recipientName;
@@ -40,22 +38,32 @@ public class OrderMapper implements Serializable {
 
     public OrderMapper mapToEntity(Orders orders) {
 
+        List<DetailProduct> detailProducts = orders.getOrderDetails().parallelStream()
+                .map(detail -> new DetailProduct(
+                            detail.getProduct().getPublicKey(),
+                            detail.getProduct().getProductName(),
+                            detail.getQuantity(),
+                            detail.getNotes(),
+                            new BigDecimal(detail.getTotalPrice())))
+                .toList();
+
         LocalDateTime dateTime = DateConverter.toLocalDateTime(orders.getCreatedAt());
         String addedDate = DateConverter.formatDateTime().format(dateTime);
         String modifiedDate = null;
 
         String modifiedBy = orders.getLastModifiedBy();
 
-        if(orders.getLastModifiedDate() != null) {
+        if (orders.getLastModifiedDate() != null) {
             LocalDateTime toLocalDate = DateConverter.toLocalDateTime(orders.getLastModifiedDate());
             modifiedDate = DateConverter.formatDateTime().format(toLocalDate);
         }
 
-        if(modifiedBy == null) {
+        if (modifiedBy == null) {
             updatedBy = null;
         }
 
-        var date = DateConverter.toLocalDate(orders.getOrderShipments().getDeliveryDate());
+        var date = DateConverter.toLocalDate(orders.getOrderShipment().getDeliveryDate());
+//        var date = DateConverter.toLocalDate(orders.getOrderShipments().getDeliveryDate());
         var dateFormat = DateConverter.formatDate().format(date);
         var timeFormat = DateConverter.formatTime().format(date);
 
@@ -63,15 +71,12 @@ public class OrderMapper implements Serializable {
                 .orderId(orders.getPublicKey())
                 .customerName(orders.getCustomer().getName())
                 .phoneNumber(orders.getCustomer().getPhoneNumber())
-                .productId(orders.getOrderProductDetails().getProduct().getPublicKey())
-                .productName(orders.getOrderProductDetails().getProduct().getProductName())
-                .notes(orders.getOrderProductDetails().getNotes())
-                .quantity(orders.getOrderProductDetails().getQuantity())
-                .totalAmount(orders.getOrderProductDetails().getTotalAmount())
+                .detailOfOrderProducts(detailProducts)
+                .totalOrderAmount(orders.getTotalOrderAmount())
                 .paymentStatus(orders.getPaymentStatus().name())
                 .orderStatus(orders.getOrderStatus().name())
-                .recipientName(orders.getOrderShipments().getRecipientName())
-                .deliveryAddress(getFullDeliveryAddress(orders.getOrderShipments().getDeliveryAddress()))
+                .recipientName(orders.getOrderShipment().getRecipientName())
+                .deliveryAddress(orders.getOrderShipment().getDeliveryAddress().getFullAddress())
                 .deliveryDate(dateFormat)
                 .deliveryTime(timeFormat)
                 .addedBy(orders.getCreatedBy())
@@ -81,12 +86,13 @@ public class OrderMapper implements Serializable {
                 .build();
     }
 
-    private String getFullDeliveryAddress(Address address) {
-
-        return address.getStreet() + ", "
-                + address.getCity() + ", "
-                + address.getProvince() + ", "
-                + address.getCountry() + ", "
-                + address.getZip();
+    @Data
+    @AllArgsConstructor
+    public static class DetailProduct {
+        private String productId;
+        private String productName;
+        private Integer quantity;
+        private String notes;
+        private BigDecimal totalPricePerProduct;
     }
 }
