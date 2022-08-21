@@ -22,7 +22,6 @@ public class AddOrderRequest implements Serializable {
     private OrderStatus orderStatus;
     private PaymentStatus paymentStatus;
 
-    @NotBlank(message = "Recipient's name is is required")
     private String recipientName;
 
     @Valid

@@ -40,11 +40,11 @@ public class OrderMapper implements Serializable {
 
         List<DetailProduct> detailProducts = orders.getOrderDetails().parallelStream()
                 .map(detail -> new DetailProduct(
-                            detail.getProduct().getPublicKey(),
-                            detail.getProduct().getProductName(),
-                            detail.getQuantity(),
-                            detail.getNotes(),
-                            new BigDecimal(detail.getTotalPrice())))
+                        detail.getProduct().getPublicKey(),
+                        detail.getProduct().getProductName(),
+                        detail.getQuantity(),
+                        detail.getNotes(),
+                        new BigDecimal(detail.getTotalPrice())))
                 .toList();
 
         LocalDateTime dateTime = DateConverter.toLocalDateTime(orders.getCreatedAt());
@@ -62,11 +62,18 @@ public class OrderMapper implements Serializable {
             updatedBy = null;
         }
 
-        var date = DateConverter.toLocalDate(orders.getOrderShipment().getDeliveryDate());
-//        var date = DateConverter.toLocalDate(orders.getOrderShipments().getDeliveryDate());
-        var dateFormat = DateConverter.formatDate().format(date);
-        var timeFormat = DateConverter.formatTime().format(date);
+        String dateFormat = null;
+        String timeFormat = null;
+        if (orders.getOrderShipment().getDeliveryDate() != null) {
+            var date = DateConverter.toLocalDate(orders.getOrderShipment().getDeliveryDate());
+            dateFormat = DateConverter.formatDate().format(date);
+            timeFormat = DateConverter.formatTime().format(date);
+        }
 
+        String fullAddress = null;
+        if (orders.getOrderShipment().getDeliveryAddress() != null) {
+            fullAddress = orders.getOrderShipment().getDeliveryAddress().getFullAddress();
+        }
         return OrderMapper.builder()
                 .orderId(orders.getPublicKey())
                 .customerName(orders.getCustomer().getName())
@@ -76,7 +83,7 @@ public class OrderMapper implements Serializable {
                 .paymentStatus(orders.getPaymentStatus().name())
                 .orderStatus(orders.getOrderStatus().name())
                 .recipientName(orders.getOrderShipment().getRecipientName())
-                .deliveryAddress(orders.getOrderShipment().getDeliveryAddress().getFullAddress())
+                .deliveryAddress(fullAddress)
                 .deliveryDate(dateFormat)
                 .deliveryTime(timeFormat)
                 .addedBy(orders.getCreatedBy())

@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.journal.florist.app.constant.JournalConstants.ORDER_NOT_FOUND_MSG;
 
@@ -85,21 +82,26 @@ public class OrderServiceImpl implements OrderService {
         orders.setOrderDetails(orderDetails);
 
         // Setter order shipment
-        long time;
-        var dateTimeDelivery = request.getDateDelivery() + request.getTimeDelivery();
-        try {
-            var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-            var parse = dateFormat.parse(dateTimeDelivery);
-            time = parse.getTime();
-        } catch (ParseException e) {
-            throw new AppBaseException(String.format("Could not parse date time format %s", dateTimeDelivery));
+        Date deliveryDate = null;
+        if (Objects.nonNull(request.getDateDelivery()) && Objects.nonNull(request.getTimeDelivery())) {
+            var dateTimeDelivery = request.getDateDelivery() + request.getTimeDelivery();
+            try {
+                var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                var parse = dateFormat.parse(dateTimeDelivery);
+                long time = parse.getTime();
+                if (time != 0) {
+                    deliveryDate = new Date(time);
+                }
+            } catch (ParseException e) {
+                throw new AppBaseException(String.format("Could not parse date time format %s", dateTimeDelivery));
+            }
         }
 
         OrderShipments shipment = shipmentService.create(new OrderShipments(
                 orders,
                 request.getRecipientName(),
                 request.getAddress(),
-                new Date(time)
+                deliveryDate
         ));
         orders.setOrderShipment(shipment);
 

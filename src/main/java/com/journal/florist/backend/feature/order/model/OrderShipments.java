@@ -1,6 +1,7 @@
 package com.journal.florist.backend.feature.order.model;
 
 import com.journal.florist.backend.feature.utils.Address;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,17 +14,15 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @Entity
 public class OrderShipments implements Serializable {
 
     @Id
-    @Column(name = "order_id")
     private Long orderId;
 
     @OneToOne(optional = false)
     @MapsId
-    @JoinColumn(name = "order_id")
     private Orders order;
 
     private String recipientName;
