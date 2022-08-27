@@ -1,7 +1,7 @@
 package com.journal.florist.backend.feature.order.service;
 
 import com.journal.florist.app.security.SecurityUtils;
-import com.journal.florist.app.utils.BaseResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
@@ -42,6 +42,13 @@ public class OrderServiceImpl implements OrderService {
                 .map(orderMapper::mapToEntity)
                 .orElseThrow(() -> new NotFoundException(String.format(ORDER_NOT_FOUND_MSG, orderId)));
     }
+
+    @Override
+    public Orders findOrderById(String orderId) {
+        return Optional.ofNullable(orderRepository.findOrderByPublicKey(orderId))
+                .orElseThrow(() -> new NotFoundException(String.format(ORDER_NOT_FOUND_MSG, orderId)));
+    }
+
 
     @Override
     @Transactional

@@ -1,7 +1,7 @@
 package com.journal.florist.backend.feature.product.controller;
 
-import com.journal.florist.app.utils.BaseResponse;
-import com.journal.florist.app.utils.SuccessResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.service.CategoryService;
 import lombok.RequiredArgsConstructor;

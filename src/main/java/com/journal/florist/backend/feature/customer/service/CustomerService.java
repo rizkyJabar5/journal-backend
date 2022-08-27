@@ -1,12 +1,12 @@
 package com.journal.florist.backend.feature.customer.service;
 
-import com.journal.florist.app.utils.BaseResponse;
-import com.journal.florist.app.utils.HasLogger;
+import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.utils.HasLogger;
 import com.journal.florist.backend.feature.customer.dto.CustomerMapper;
 import com.journal.florist.backend.feature.customer.dto.CustomerRequest;
 import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
 import com.journal.florist.backend.feature.customer.model.Customers;
-import com.journal.florist.app.utils.SuccessResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

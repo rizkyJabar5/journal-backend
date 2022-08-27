@@ -4,10 +4,10 @@
 
 package com.journal.florist.backend.feature.product.controller;
 
-import com.journal.florist.app.utils.BaseResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.feature.product.dto.AddProductRequest;
 import com.journal.florist.backend.feature.product.dto.ProductMapper;
-import com.journal.florist.app.utils.SuccessResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import lombok.RequiredArgsConstructor;

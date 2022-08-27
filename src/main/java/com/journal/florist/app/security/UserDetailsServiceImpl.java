@@ -1,6 +1,6 @@
 package com.journal.florist.app.security;
 
-import com.journal.florist.app.utils.HasLogger;
+import com.journal.florist.app.common.utils.HasLogger;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import com.journal.florist.backend.feature.user.model.AppUsers;
 import com.journal.florist.backend.feature.user.service.AppUserService;

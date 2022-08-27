@@ -1,6 +1,6 @@
 package com.journal.florist.backend.feature.user.service;
 
-import com.journal.florist.app.utils.HasLogger;
+import com.journal.florist.app.common.utils.HasLogger;
 import com.journal.florist.backend.feature.user.enums.ERole;
 import com.journal.florist.backend.feature.user.model.AppRoles;
 

@@ -1,4 +1,4 @@
-package com.journal.florist.app.utils;
+package com.journal.florist.app.common.utils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;

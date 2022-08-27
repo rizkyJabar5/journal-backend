@@ -1,12 +1,12 @@
 package com.journal.florist.backend.feature.customer.controller;
 
-import com.journal.florist.app.utils.BaseResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.feature.customer.dto.CustomerMapper;
 import com.journal.florist.backend.feature.customer.dto.CustomerRequest;
 import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
-import com.journal.florist.app.utils.SuccessResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

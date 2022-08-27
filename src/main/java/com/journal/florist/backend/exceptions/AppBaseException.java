@@ -13,6 +13,10 @@ public class AppBaseException extends RuntimeException {
         super(message);
     }
 
+    public AppBaseException(Exception e) {
+        super(e);
+    }
+
     public AppBaseException(String message, Throwable cause) {
         super(message, cause);
     }

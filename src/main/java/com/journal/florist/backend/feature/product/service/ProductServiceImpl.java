@@ -6,13 +6,13 @@ package com.journal.florist.backend.feature.product.service;
 
 
 import com.journal.florist.app.security.SecurityUtils;
-import com.journal.florist.app.utils.BaseResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.product.dto.AddProductRequest;
 import com.journal.florist.backend.feature.product.dto.ProductMapper;
-import com.journal.florist.app.utils.SuccessResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.model.Product;

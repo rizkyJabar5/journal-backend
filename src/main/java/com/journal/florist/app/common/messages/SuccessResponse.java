@@ -1,4 +1,4 @@
-package com.journal.florist.app.utils;
+package com.journal.florist.app.common.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

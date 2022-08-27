@@ -5,7 +5,7 @@
 package com.journal.florist.app.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.journal.florist.app.utils.HasLogger;
+import com.journal.florist.app.common.utils.HasLogger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

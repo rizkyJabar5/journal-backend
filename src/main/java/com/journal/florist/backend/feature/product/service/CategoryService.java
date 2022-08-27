@@ -4,9 +4,9 @@
 
 package com.journal.florist.backend.feature.product.service;
 
-import com.journal.florist.app.utils.BaseResponse;
-import com.journal.florist.app.utils.HasLogger;
-import com.journal.florist.app.utils.SuccessResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.utils.HasLogger;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.model.Category;
 
 public interface CategoryService extends HasLogger {

@@ -2,7 +2,7 @@
  * Copyright (c) 2022.
  */
 
-package com.journal.florist.app.utils;
+package com.journal.florist.app.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

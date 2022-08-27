@@ -4,7 +4,7 @@
 
 package com.journal.florist.backend.feature.user.service;
 
-import com.journal.florist.app.utils.BaseResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.UserFriendlyDataException;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;

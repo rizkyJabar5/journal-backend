@@ -1,7 +1,7 @@
 package com.journal.florist.backend.feature.customer.service;
 
 import com.journal.florist.app.security.SecurityUtils;
-import com.journal.florist.app.utils.BaseResponse;
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.customer.dto.CustomerMapper;
@@ -10,7 +10,7 @@ import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
 import com.journal.florist.backend.feature.customer.model.Company;
 import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.customer.repositories.CustomerRepository;
-import com.journal.florist.app.utils.SuccessResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.utils.EntityUtil;
 import com.journal.florist.backend.feature.utils.Validator;
 import lombok.RequiredArgsConstructor;

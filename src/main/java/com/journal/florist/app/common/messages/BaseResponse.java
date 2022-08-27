@@ -2,7 +2,7 @@
  * Copyright (c) 2022.
  */
 
-package com.journal.florist.app.utils;
+package com.journal.florist.app.common.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,4 +15,8 @@ public class BaseResponse {
     private HttpStatus httpStatus;
     private String message;
     private Object data;
+
+    public BaseResponse(Object data) {
+        this.data = data;
+    }
 }

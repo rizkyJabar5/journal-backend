@@ -5,7 +5,7 @@
 package com.journal.florist.app.security.jwt;
 
 
-import com.journal.florist.app.utils.HasLogger;
+import com.journal.florist.app.common.utils.HasLogger;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

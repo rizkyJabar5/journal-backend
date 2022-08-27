@@ -1,4 +1,4 @@
-package com.journal.florist.backend.handlers;
+package com.journal.florist.app.common.handlers;
 
 public enum OperationStatus {
     /**
