@@ -1,6 +1,5 @@
 package com.journal.florist.backend.feature.order.service;
 
-import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.app.common.utils.jasper.JasperReportRequest;
 import com.journal.florist.app.common.utils.jasper.ReportService;
 import com.journal.florist.app.security.SecurityUtils;
@@ -28,7 +27,7 @@ public class DeliveryNoteServiceImpl implements DeliveryNoteService {
     private final ReportService jasperService;
 
     @Override
-    public BaseResponse create(String orderId, String gnrId) {
+    public JasperReportRequest create(String orderId, String gnrId) {
         DeliveryNote entity = new DeliveryNote();
         Orders order = orderService.findOrderById(orderId);
         String createdBy = SecurityUtils.getAuthentication().getName();
@@ -42,9 +41,8 @@ public class DeliveryNoteServiceImpl implements DeliveryNoteService {
         deliveryNoteRepository.save(entity);
         JasperReportRequest reportRequest = printedDeliveryNote(entity.getGnrId(), order.getPublicKey());
 
-        JasperReportRequest request = jasperService.generatePDFReport(reportRequest);
+        return jasperService.generatePDFReport(reportRequest);
 
-        return new BaseResponse(request);
     }
 
     private JasperReportRequest printedDeliveryNote(String deliveryNoteId, String orderId) {

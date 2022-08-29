@@ -1,6 +1,6 @@
 package com.journal.florist.app.common.utils.jasper;
 
-import com.journal.florist.app.common.utils.DateConverter;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.sf.jasperreports.engine.*;
@@ -13,26 +13,20 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimplePdfReportConfiguration;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @RequiredArgsConstructor
 @Service
+@Getter
 public class JasperReportService implements ReportService {
     private final StorageService storageService;
+    private JasperPrint jasperPrint;
 
     @Override
     public JasperReportRequest generatePDFReport(JasperReportRequest request) {
         byte[] bytes;
-        JasperPrint jasperPrint;
         JasperReport jasperReport = loadJasperReport(request);
 
         JRDataSource dataSource = new JRBeanCollectionDataSource(request.getReportData());
@@ -52,11 +46,11 @@ public class JasperReportService implements ReportService {
     }
 
     @Override
-    public void exportToPdf(String outputFilename, JasperPrint jasperPrint, HttpServletResponse response) {
+    public void exportToPdf(String outputFilename) {
         try {
             JRPdfExporter pdfExporter = new JRPdfExporter();
             pdfExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+            pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputFilename));
 
             SimplePdfReportConfiguration reportConfig = new SimplePdfReportConfiguration();
             reportConfig.setSizePageToContent(true);
@@ -69,10 +63,8 @@ public class JasperReportService implements ReportService {
             pdfExporter.setConfiguration(reportConfig);
             pdfExporter.setConfiguration(exportConfig);
 
-            setHeaderAndContentType(response, outputFilename);
-
             pdfExporter.exportReport();
-        } catch (IOException | JRException e) {
+        } catch (JRException e) {
             throw new RuntimeException(e);
         }
 
@@ -88,11 +80,10 @@ public class JasperReportService implements ReportService {
      */
     @SneakyThrows
     private JasperReport loadJasperReport(JasperReportRequest request) {
-        JasperReport jasperReport = null;
-
+        JasperReport jasperReport;
         Resource jasper = storageService.getJasperFile(request.getReportFileName());
 
-        if(!jasper.exists()) {
+        if (!jasper.exists()) {
             InputStream jrxml = storageService.getJrxmlFile(request.getReportFileName());
             getLogger().info("{} loaded, compiling report", jrxml);
             jasperReport = JasperCompileManager.compileReport(jrxml);
@@ -108,24 +99,4 @@ public class JasperReportService implements ReportService {
         return jasperReport;
     }
 
-    private void setHeaderAndContentType(HttpServletResponse response,
-                                         String outputFileName) {
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, getHeaderValue(outputFileName));
-        response.setContentType("application/pdf");
-    }
-
-    private String getHeaderValue(String outputFileName) {
-        DateTimeFormatter dateTimeFormatter = DateConverter.formatDateTime();
-        String date = DateConverter.toLocalDate(new Date(System.currentTimeMillis()))
-                .format(dateTimeFormatter);
-        String fileName = URLEncoder
-                .encode(outputFileName
-                        .substring(0, 3)
-                        .concat(date), StandardCharsets.UTF_8);
-
-        return "attachment;filename="
-                .concat(fileName)
-                .concat(".pdf")
-                .concat(";");
-    }
 }
