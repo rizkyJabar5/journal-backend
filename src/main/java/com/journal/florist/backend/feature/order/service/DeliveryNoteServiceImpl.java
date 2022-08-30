@@ -78,7 +78,7 @@ public class DeliveryNoteServiceImpl implements DeliveryNoteService {
     private void validatePrinted(String orderId) {
         boolean isPrinted = deliveryNoteRepository.orderPrinted(orderId);
         if (isPrinted) {
-            throw new AppBaseException(String.format("Travel document in order %s is already printed", orderId));
+            throw new AppBaseException(String.format("Delivery note in order %s is already printed", orderId));
         }
     }
 }

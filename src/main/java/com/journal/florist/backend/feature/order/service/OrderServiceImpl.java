@@ -1,7 +1,7 @@
 package com.journal.florist.backend.feature.order.service;
 
-import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
@@ -13,6 +13,7 @@ import com.journal.florist.backend.feature.order.model.OrderShipments;
 import com.journal.florist.backend.feature.order.model.Orders;
 import com.journal.florist.backend.feature.order.repositories.OrderRepository;
 import com.journal.florist.backend.feature.product.service.ProductService;
+import com.journal.florist.backend.feature.utils.EntityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,13 +41,15 @@ public class OrderServiceImpl implements OrderService {
     public OrderMapper getOrderById(String orderId) {
         return Optional.ofNullable(orderRepository.findOrderByPublicKey(orderId))
                 .map(orderMapper::mapToEntity)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MSG, orderId)));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format(NOT_FOUND_MSG, EntityUtil.getName(Orders.class), orderId)));
     }
 
     @Override
     public Orders findOrderById(String orderId) {
         return Optional.ofNullable(orderRepository.findOrderByPublicKey(orderId))
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MSG, orderId)));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format(NOT_FOUND_MSG, EntityUtil.getName(Orders.class), orderId)));
     }
 
 
