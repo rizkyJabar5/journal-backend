@@ -7,26 +7,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ControllerAdvisor extends ResponseStatusExceptionHandler {
+    private final String date = DateConverter.formatDateTime().format(LocalDateTime.now());
 
     @ExceptionHandler(IllegalException.class)
     public ResponseEntity<Object> illegalActionDataHandler(IllegalException illegalException,
                                                            HttpServletRequest request) {
-        Map<String, Object> response = new LinkedHashMap<>();
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> response = new HashMap<>();
         response.put("timestamp", date);
         response.put("message", illegalException.getMessage());
         response.put("status", OperationStatus.FAILURE);
@@ -39,8 +38,7 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
     @ExceptionHandler(NullDataStoreException.class)
     public ResponseEntity<Object> nullHandler(NullDataStoreException nullPointerException,
                                               HttpServletRequest request) {
-        Map<String, Object> response = new LinkedHashMap<>();
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> response = new HashMap<>();
         response.put("timestamp", date);
         response.put("message", nullPointerException.getCause());
         response.put("status", OperationStatus.ERROR);
@@ -53,8 +51,7 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Object> usernameNotFoundHandler(UsernameNotFoundException usernameNotFoundException,
                                                           HttpServletRequest request) {
-        Map<String, Object> response = new LinkedHashMap<>();
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> response = new HashMap<>();
         response.put("timestamp", date);
         response.put("message", usernameNotFoundException.getMessage());
         response.put("status", OperationStatus.FAILURE);
@@ -67,8 +64,7 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> notFoundHandler(NotFoundException notFoundException,
                                                   HttpServletRequest request) {
-        Map<String, Object> response = new LinkedHashMap<>();
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> response = new HashMap<>();
         response.put("timestamp", date);
         response.put("message", notFoundException.getMessage());
         response.put("status", OperationStatus.NOT_FOUND);
@@ -81,8 +77,7 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
     @ExceptionHandler(DataViolationException.class)
     public ResponseEntity<Object> nonAccessibleHandler(DataViolationException violationException,
                                                        HttpServletRequest request) {
-        Map<String, Object> response = new LinkedHashMap<>();
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> response = new HashMap<>();
         response.put("timestamp", date);
         response.put("message", violationException.getMessage());
         response.put("status", OperationStatus.FAILURE);
@@ -95,8 +90,7 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
     @ExceptionHandler(AppBaseException.class)
     public ResponseEntity<Object> mvcRequestHandler(AppBaseException baseException,
                                                     HttpServletRequest request) {
-        Map<String, Object> response = new LinkedHashMap<>();
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> response = new HashMap<>();
         response.put("timestamp", date);
         response.put("message", baseException.getMessage());
         response.put("status", OperationStatus.FAILURE);
@@ -109,8 +103,7 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> constraintViolationException(ConstraintViolationException constraintException,
                                                                HttpServletRequest request) {
-        Map<String, Object> response = new LinkedHashMap<>();
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
+        Map<String, Object> response = new HashMap<>();
         response.put("timestamp", date);
         response.put("message", constraintException.getCause());
         response.put("status", OperationStatus.FAILURE);
@@ -124,10 +117,8 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex,
                                                              HttpServletRequest request) {
-
-        String date = DateConverter.formatDateTime().format(LocalDateTime.now());
-        Map<String, Object> errors = new HashMap<>();
         Map<String, String> error = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
 
         ex.getBindingResult().getAllErrors().forEach((objectError) -> {
                     String field = ((FieldError) objectError).getField();
@@ -135,12 +126,12 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
                     error.put(field, defaultMessage);
                 });
 
-        errors.put("timestamp", date);
-        errors.put("errors", error);
-        errors.put("status", OperationStatus.FAILURE);
-        errors.put("code", HttpStatus.BAD_REQUEST.value());
-        errors.put("path", request.getServletPath());
+        response.put("timestamp", date);
+        response.put("errors", error);
+        response.put("status", OperationStatus.FAILURE);
+        response.put("code", HttpStatus.BAD_REQUEST.value());
+        response.put("path", request.getServletPath());
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

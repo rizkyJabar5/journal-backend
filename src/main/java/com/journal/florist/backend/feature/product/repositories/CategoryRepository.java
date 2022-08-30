@@ -16,10 +16,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByPublicKey(String publicKey);
 
-    Category findByNameCategory(String name);
-
     @Query("select (count(c) > 0) " +
             "from Category c " +
-            "where upper(c.nameCategory) like upper(?1)")
+            "where upper(c.nameCategory) " +
+            "like upper(concat('%', ?1, '%'))")
     boolean existsByNameCategory(String categoryName);
 }

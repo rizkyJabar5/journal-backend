@@ -17,7 +17,8 @@ public interface CustomerRepository extends JpaRepository<Customers, Long> {
     @Query("select c from Customers c where upper(c.name) like upper(concat('%', ?1, '%'))")
     Page<Customers> findByNameIgnoreCaseContaining(String name, Pageable pageable);
 
-    @Query("select c from Customers c")
+    @Query("select c from Customers c " +
+            "order by c.createdAt")
     Page<Customers> findAllCustomers(Pageable pageable);
 
     @Query("select c from Customers c where upper(c.company.companyName) like upper(concat('%', ?1, '%'))")

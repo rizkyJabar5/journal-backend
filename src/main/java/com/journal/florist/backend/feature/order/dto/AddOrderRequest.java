@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class AddOrderRequest implements Serializable {
     public static class OrderDetailDto implements Serializable {
         @NotBlank(message = "Product id is required")
         private String productId;
+        @NotNull
         @Min(value = 1L, message = "Minimal quantity should be at 1")
         private Integer quantity;
         private String notes;

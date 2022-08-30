@@ -5,14 +5,14 @@
 package com.journal.florist.backend.feature.product.service;
 
 
-import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
+import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.product.dto.AddProductRequest;
 import com.journal.florist.backend.feature.product.dto.ProductMapper;
-import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.model.Product;
@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import static com.journal.florist.app.constant.JournalConstants.*;
@@ -38,16 +39,13 @@ import static com.journal.florist.app.security.config.SecurityConst.MUST_BE_AUTH
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
-
     private final ProductMapper productMapper;
-
     private final CategoryService categoryService;
 
     @Override
-    public Product findByProductKey(String productKey) {
-        return repository.findByPublicKey(productKey)
-                .orElseThrow(() ->
-                        new NotFoundException(String.format(PRODUCT_NOT_FOUND_MSG, productKey)));
+    public Page<ProductMapper> getAllProduct(Pageable pageable) {
+        return repository.findAllProduct(pageable)
+                .map(productMapper::productMapper);
     }
 
     @Override
@@ -55,7 +53,27 @@ public class ProductServiceImpl implements ProductService {
         return repository.findByPublicKey(productKey)
                 .map(productMapper::productMapper)
                 .orElseThrow(() ->
-                        new NotFoundException(String.format(PRODUCT_NOT_FOUND_MSG, productKey)));
+                        new AppBaseException(String.format(NOT_FOUND_MSG,EntityUtil.getName(Product.class), productKey)));
+    }
+
+    @Override
+    public Product findByProductKey(String productKey) {
+        return repository.findByPublicKey(productKey)
+                .orElseThrow(() ->
+                        new NotFoundException(String.format(NOT_FOUND_MSG,EntityUtil.getName(Product.class), productKey)));
+    }
+
+    @Override
+    public List<ProductMapper> getProductName(String productName) {
+        return repository.findByProductName(productName)
+                .parallelStream()
+                .map(productMapper::productMapper)
+                .toList();
+    }
+
+    @Override
+    public Page<ProductMapper> getByField(Pageable pageable) {
+        return null;
     }
 
     @Override
@@ -73,6 +91,7 @@ public class ProductServiceImpl implements ProductService {
             }
             product.setProductName(request.getProductName());
             Category category = categoryService.findByCategoryKey(request.getCategoryKey());
+
             product.setCategory(category);
             product.setDescription(request.getDescription());
             product.setCreatedBy(createdBy);
@@ -139,17 +158,10 @@ public class ProductServiceImpl implements ProductService {
     public SuccessResponse deleteProductById(String productKey) {
         Product persistedProduct = findByProductKey(productKey);
         repository.delete(persistedProduct);
+
         return new SuccessResponse(
                 String.format(SUCCESSFULLY_DELETE_OPERATION, productKey),
-                SuccessResponse.StatusOperation.SUCCESS
-
-        );
-    }
-
-    @Override
-    public Page<ProductMapper> findAllProduct(Pageable pageable) {
-        return repository.findAllProduct(pageable)
-                .map(productMapper::productMapper);
+                SuccessResponse.StatusOperation.SUCCESS);
     }
 
     @Override

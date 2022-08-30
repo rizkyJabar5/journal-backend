@@ -50,7 +50,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customers getCustomers(String customerId) {
         return repository.findByPublicKey(customerId)
-                .orElseThrow(() -> new NotFoundException(String.format(CUSTOMER_NOT_FOUND_MSG, customerId)));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format(NOT_FOUND_MSG, EntityUtil.getName(Customers.class), customerId)));
     }
 
     @Override

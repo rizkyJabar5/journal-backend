@@ -10,15 +10,18 @@ import com.journal.florist.backend.feature.product.dto.ProductMapper;
 import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.service.ProductService;
+import com.journal.florist.backend.feature.utils.FilterableCrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static com.journal.florist.app.constant.ApiUrlConstant.PRODUCTS_URL;
@@ -32,11 +35,20 @@ public class ProductController {
     private final ProductService service;
 
     @GetMapping("/")
-    public ResponseEntity<Page<ProductMapper>> getAllProduct(Pageable pageable) {
-
-        Page<ProductMapper> response = service.findAllProduct(pageable);
+    public ResponseEntity<Page<ProductMapper>> getAllProduct(@RequestParam Integer page,
+                                                             @RequestParam Integer limit) {
+        Pageable pageableWithSort = FilterableCrudService.getPageableWithSort(
+                page - 1, limit, Sort.by("productName").ascending());
+        Page<ProductMapper> response = service.getAllProduct(pageableWithSort);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<Object> getProductByName(@RequestParam(name = "product") String productName) {
+
+        List<ProductMapper> mapper = service.getProductName(productName);
+        return new ResponseEntity<>(mapper, HttpStatus.FOUND);
     }
 
     @GetMapping
@@ -50,10 +62,10 @@ public class ProductController {
         return ResponseEntity.ok().body(product.get());
     }
 
-    @PostMapping("/add-product")
+    @PostMapping(value = "/add-product")
     public ResponseEntity<BaseResponse> createProduct(
             @Valid @ModelAttribute AddProductRequest request) {
-        BaseResponse response= service.addNewProduct(request);
+        BaseResponse response = service.addNewProduct(request);
 
         return ResponseEntity.ok().body(response);
     }

@@ -4,12 +4,13 @@
 
 package com.journal.florist.backend.feature.product.service;
 
-import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.app.common.messages.BaseResponse;
-import com.journal.florist.backend.exceptions.IllegalException;
-import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.app.common.messages.SuccessResponse.StatusOperation;
+import com.journal.florist.app.security.SecurityUtils;
+import com.journal.florist.backend.exceptions.IllegalException;
+import com.journal.florist.backend.exceptions.NotFoundException;
+import com.journal.florist.backend.feature.product.dto.CategoryRequest;
 import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.repositories.CategoryRepository;
 import com.journal.florist.backend.feature.utils.EntityUtil;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -32,12 +34,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findByCategoryKey(String categoryKey) {
         return categoryRepository.findByPublicKey(categoryKey)
-                .orElseThrow(() -> new NotFoundException(String.format(CATEGORY_NOT_FOUND_MSG, categoryKey)));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format(NOT_FOUND_MSG, EntityUtil.getName(Category.class), categoryKey))
+                );
     }
 
     @Override
     public BaseResponse findAllCategory() {
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Category::getNameCategory))
+                .toList();
         if(categories.isEmpty()) {
             return new BaseResponse(
                     HttpStatus.NO_CONTENT,
@@ -53,22 +60,24 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public BaseResponse addNewCategory(Category category) {
+    public BaseResponse addNewCategory(CategoryRequest category) {
         Category entity = new Category();
+
         Authentication authentication = SecurityUtils.getAuthentication();
         String createdBy = authentication.getName();
         boolean authenticated = SecurityUtils.isAuthenticated();
 
         if (authenticated) {
-            boolean persisted = categoryRepository.existsByNameCategory(category.getNameCategory());
+            boolean persisted = categoryRepository.existsByNameCategory(category.getCategoryName());
             if (persisted) {
                 throw new IllegalException(String.format(MUST_BE_UNIQUE, EntityUtil.getName(Category.class)));
             }
-            entity.setNameCategory(category.getNameCategory());
+
+            entity.setPublicKey(category.getCategoryId());
+            entity.setNameCategory(category.getCategoryName());
             entity.setCreatedBy(createdBy);
             entity.setCreatedAt(new Date(System.currentTimeMillis()));
             entity.setDescription(category.getDescription());
-
         }
 
         categoryRepository.save(entity);
@@ -80,22 +89,29 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public BaseResponse updateCategory(Category category) {
+    public BaseResponse updateCategory(CategoryRequest category) {
 
         Authentication authentication = SecurityUtils.getAuthentication();
         String updatedBy = authentication.getName();
         boolean authenticated = SecurityUtils.isAuthenticated();
-        Category persisted = findByCategoryKey(category.getPublicKey());
+
+        if(category.getCategoryId().isEmpty()) {
+            throw new IllegalException("Category id is required");
+        }
+
+        Category persisted = findByCategoryKey(category.getCategoryId());
         if (authenticated) {
-            boolean isEqual = categoryRepository.existsByNameCategory(category.getNameCategory());
+            boolean isEqual = categoryRepository.existsByNameCategory(category.getCategoryName());
             if(isEqual) {
-                throw new IllegalException(MUST_BE_UNIQUE + EntityUtil.getName(Category.class));
+                throw new IllegalException(
+                        String.format(MUST_BE_UNIQUE, EntityUtil.getName(Category.class))
+                );
             }
-            if (category.getNameCategory() != null) {
-                persisted.setNameCategory(category.getNameCategory());
+            if (category.getCategoryName() != null) {
+                persisted.setNameCategory(category.getCategoryName());
             }
 
-            if(category.getDescription() != null) {
+            if(category.getDescription() != null && !category.getDescription().isBlank()) {
                 persisted.setDescription(category.getDescription());
             }
 
@@ -104,10 +120,10 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         categoryRepository.save(persisted);
-        getLogger().info("Adding new product {}", persisted.getPublicKey());
+        getLogger().info("Update category id {}", persisted.getPublicKey());
         return new BaseResponse(
                 HttpStatus.ACCEPTED,
-                "Successfully updated category " + category.getPublicKey(),
+                "Successfully updated category " + category.getCategoryId(),
                 persisted
         );
     }

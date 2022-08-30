@@ -14,13 +14,15 @@ import com.journal.florist.backend.feature.product.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ProductService extends HasLogger {
 
-    Page<ProductMapper> findAllProduct(Pageable pageable);
-
-    Product findByProductKey(String productKey);
+    Page<ProductMapper> getAllProduct(Pageable pageable);
     ProductMapper getProductByKey(String productKey);
-
+    Product findByProductKey(String productKey);
+    List<ProductMapper> getProductName(String productName);
+    Page<ProductMapper> getByField(Pageable pageable);
     BaseResponse addNewProduct(AddProductRequest request);
 
     BaseResponse updateProduct(UpdateProductRequest request);

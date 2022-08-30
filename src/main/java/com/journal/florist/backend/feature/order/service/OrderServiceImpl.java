@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.journal.florist.app.constant.JournalConstants.ORDER_NOT_FOUND_MSG;
+import static com.journal.florist.app.constant.JournalConstants.NOT_FOUND_MSG;
 
 @Service
 @RequiredArgsConstructor
@@ -40,13 +40,13 @@ public class OrderServiceImpl implements OrderService {
     public OrderMapper getOrderById(String orderId) {
         return Optional.ofNullable(orderRepository.findOrderByPublicKey(orderId))
                 .map(orderMapper::mapToEntity)
-                .orElseThrow(() -> new NotFoundException(String.format(ORDER_NOT_FOUND_MSG, orderId)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MSG, orderId)));
     }
 
     @Override
     public Orders findOrderById(String orderId) {
         return Optional.ofNullable(orderRepository.findOrderByPublicKey(orderId))
-                .orElseThrow(() -> new NotFoundException(String.format(ORDER_NOT_FOUND_MSG, orderId)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MSG, orderId)));
     }
 
 

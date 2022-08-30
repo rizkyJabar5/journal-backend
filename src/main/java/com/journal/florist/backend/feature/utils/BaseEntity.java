@@ -6,6 +6,7 @@ package com.journal.florist.backend.feature.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,11 +14,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
 @MappedSuperclass
 @Getter
@@ -32,8 +31,7 @@ public abstract class BaseEntity implements Serializable {
             sequenceName = "apps_sequence")
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    @NotBlank(message = "The id of the entity is required")
+    @Column(nullable = false, unique = true, updatable = false)
     private String publicKey;
 
     @CreatedDate
@@ -81,7 +79,7 @@ public abstract class BaseEntity implements Serializable {
     @PrePersist
     private void onCreate() {
         if(Objects.isNull(getPublicKey())){
-            setPublicKey(UUID.randomUUID().toString().replaceAll("-", ""));
+            setPublicKey(RandomStringUtils.randomAlphanumeric(12));
         }
     }
 }
