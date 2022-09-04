@@ -1,7 +1,9 @@
 package com.journal.florist.app.common.utils;
 
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 public final class DateConverter {
@@ -43,7 +45,9 @@ public final class DateConverter {
         return LocalDateTime.ofInstant(date.toInstant(), zoneId);
     }
 
-//    public static LocalDateTime toLocalTime(Date time) {
-//        return LocalDateTime.ofInstant(, zoneId);
-//    }
+    public static Date today() {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 0);
+        return cal.getTime();
+    }
 }

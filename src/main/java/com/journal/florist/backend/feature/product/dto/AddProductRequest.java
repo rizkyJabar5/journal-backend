@@ -7,7 +7,7 @@ package com.journal.florist.backend.feature.product.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 @Data
 public class AddProductRequest {
@@ -18,6 +18,7 @@ public class AddProductRequest {
     @NotBlank(message = "Product must have category")
     private String categoryKey;
     private String description;
-    private BigInteger price;
+    private BigDecimal costPrice;
+    private BigDecimal price;
     private String picture;
 }

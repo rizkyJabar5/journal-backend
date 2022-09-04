@@ -4,7 +4,7 @@
 
 package com.journal.florist.backend.feature.customer.model;
 
-import com.journal.florist.backend.feature.order.model.HistoryOrders;
+import com.journal.florist.backend.feature.ledger.model.Sales;
 import com.journal.florist.backend.feature.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class Customers extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "customers")
-    private Set<HistoryOrders> historyOrder;
+    private Set<Sales> historyOrder;
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getName());

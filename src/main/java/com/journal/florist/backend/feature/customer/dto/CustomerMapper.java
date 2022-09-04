@@ -2,7 +2,7 @@ package com.journal.florist.backend.feature.customer.dto;
 
 import com.journal.florist.app.common.utils.DateConverter;
 import com.journal.florist.backend.feature.customer.model.Customers;
-import com.journal.florist.backend.feature.order.model.HistoryOrders;
+import com.journal.florist.backend.feature.ledger.model.Sales;
 import com.journal.florist.backend.feature.utils.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class CustomerMapper implements Serializable {
         if(mapper.getHistoryOrder() != null){
             history = mapper.getHistoryOrder()
                     .stream()
-                    .map(HistoryOrders::getHistoryOrderCode).toList();
+                    .map(Sales::getSalesId).toList();
         }
 
         String modifiedBy = mapper.getLastModifiedBy();

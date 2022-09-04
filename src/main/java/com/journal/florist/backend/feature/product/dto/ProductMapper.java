@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -29,7 +29,8 @@ public class ProductMapper {
     private String categoryName;
     private String categoryDescription;
     private String productDescription;
-    private BigInteger price;
+    private BigDecimal costPrice;
+    private BigDecimal price;
     private String createdBy;
     private String createdAt;
     private String updatedBy;
@@ -56,6 +57,7 @@ public class ProductMapper {
                 .categoryName(entity.getCategory().getNameCategory())
                 .categoryDescription(entity.getCategory().getDescription())
                 .productDescription(entity.getDescription())
+                .costPrice(entity.getCostPrice())
                 .price(entity.getPrice())
                 .createdBy(entity.getCreatedBy())
                 .createdAt(formatCreateAt)

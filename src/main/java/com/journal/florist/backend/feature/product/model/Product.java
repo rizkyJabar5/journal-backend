@@ -12,7 +12,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Setter
@@ -37,8 +37,11 @@ public class Product extends BaseEntity {
             targetEntity = Category.class)
     private Category category;
 
+    @Column(name = "cost_price")
+    private BigDecimal costPrice;
+
     @Column(name = "price")
-    private BigInteger price;
+    private BigDecimal price;
 
     @Override
     public int hashCode() {

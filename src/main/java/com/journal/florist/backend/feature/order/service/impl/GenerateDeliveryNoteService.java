@@ -1,4 +1,4 @@
-package com.journal.florist.backend.feature.order.service;
+package com.journal.florist.backend.feature.order.service.impl;
 
 import com.journal.florist.app.common.utils.jasper.JasperReportRequest;
 import com.journal.florist.app.common.utils.jasper.ReportService;
@@ -8,6 +8,8 @@ import com.journal.florist.backend.feature.order.model.DeliveryNote;
 import com.journal.florist.backend.feature.order.model.OrderDetails;
 import com.journal.florist.backend.feature.order.model.Orders;
 import com.journal.florist.backend.feature.order.repositories.DeliveryNoteRepository;
+import com.journal.florist.backend.feature.order.service.DeliveryNoteService;
+import com.journal.florist.backend.feature.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class DeliveryNoteServiceImpl implements DeliveryNoteService {
+public class GenerateDeliveryNoteService implements DeliveryNoteService {
 
     private final DeliveryNoteRepository deliveryNoteRepository;
     private final OrderService orderService;

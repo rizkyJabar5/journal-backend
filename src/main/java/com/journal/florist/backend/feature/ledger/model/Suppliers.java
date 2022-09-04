@@ -2,7 +2,7 @@
  * Copyright (c) 2022.
  */
 
-package com.journal.florist.backend.feature.transaction.model;
+package com.journal.florist.backend.feature.ledger.model;
 
 import com.journal.florist.backend.feature.utils.BaseEntity;
 import lombok.Getter;

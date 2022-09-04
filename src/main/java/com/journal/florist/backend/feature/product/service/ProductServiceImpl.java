@@ -26,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -53,14 +54,14 @@ public class ProductServiceImpl implements ProductService {
         return repository.findByPublicKey(productKey)
                 .map(productMapper::productMapper)
                 .orElseThrow(() ->
-                        new AppBaseException(String.format(NOT_FOUND_MSG,EntityUtil.getName(Product.class), productKey)));
+                        new AppBaseException(String.format(NOT_FOUND_MSG, EntityUtil.getName(Product.class), productKey)));
     }
 
     @Override
     public Product findByProductKey(String productKey) {
         return repository.findByPublicKey(productKey)
                 .orElseThrow(() ->
-                        new NotFoundException(String.format(NOT_FOUND_MSG,EntityUtil.getName(Product.class), productKey)));
+                        new NotFoundException(String.format(NOT_FOUND_MSG, EntityUtil.getName(Product.class), productKey)));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
 
         if (authenticated) {
             boolean persisted = repository.existsByProductName(request.getProductName());
-            if(persisted){
+            if (persisted) {
                 throw new IllegalException(String.format(MUST_BE_UNIQUE, EntityUtil.getName(Product.class)));
             }
             product.setProductName(request.getProductName());
@@ -96,6 +97,11 @@ public class ProductServiceImpl implements ProductService {
             product.setDescription(request.getDescription());
             product.setCreatedBy(createdBy);
             product.setCreatedAt(new Date(System.currentTimeMillis()));
+
+            if(lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
+                throw new AppBaseException("Price must greater than cost price");
+            }
+            product.setCostPrice(request.getCostPrice());
             product.setPrice(request.getPrice());
             product.setPicture(request.getPicture());
 
@@ -122,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
         if (authenticated) {
             if (Objects.nonNull(request.getProductName())) {
                 boolean persisted = repository.existsByProductName(product.getProductName());
-                if(persisted){
+                if (persisted) {
                     throw new IllegalException(String.format(MUST_BE_UNIQUE, EntityUtil.getName(Product.class)));
                 }
                 product.setProductName(request.getProductName());
@@ -133,6 +139,12 @@ public class ProductServiceImpl implements ProductService {
             }
             if (Objects.nonNull(request.getDescription())) {
                 product.setDescription(request.getDescription());
+            }
+            if (Objects.nonNull(request.getCostPrice())) {
+                product.setCostPrice(request.getCostPrice());
+            }
+            if(lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
+                throw new AppBaseException("Price must greater than cost price");
             }
             if (Objects.nonNull(request.getPrice())) {
                 product.setPrice(request.getPrice());
@@ -167,5 +179,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long countAllProduct() {
         return repository.count();
+    }
+
+    private boolean lessThanCostPrice(BigDecimal price, BigDecimal costPrice) {
+
+        return price.compareTo(costPrice) <= 0;
     }
 }

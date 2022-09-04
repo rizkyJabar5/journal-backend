@@ -19,7 +19,7 @@ import java.util.Objects;
 public class OrderShipments implements Serializable {
 
     @Id
-    private Long orderId;
+    private Long orderShipmentId;
 
     @OneToOne(optional = false)
     @MapsId

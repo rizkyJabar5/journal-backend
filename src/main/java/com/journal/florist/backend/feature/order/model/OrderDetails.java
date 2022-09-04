@@ -10,7 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
@@ -31,28 +31,36 @@ public class OrderDetails implements Serializable {
     @Min(value = 1L, message = "Minimal quantity should be at 1")
     private Integer quantity;
 
-    private BigInteger price;
-    
+    private BigDecimal costPrice;
+    private BigDecimal price;
+
     @Transient
     public Product getProduct() {
         return this.pk.getProduct();
     }
     
-    public BigInteger getTotalPrice(){
+    public BigDecimal getTotalPrice(){
         this.price = getProduct().getPrice();
-        return this.price.multiply(BigInteger.valueOf(getQuantity()));
+        return this.price.multiply(BigDecimal.valueOf(getQuantity()));
+    }
+
+    public BigDecimal getTotalCostPrice() {
+        this.costPrice = getProduct().getCostPrice();
+        return this.costPrice.multiply(BigDecimal.valueOf(getQuantity()));
     }
 
     public OrderDetails(Orders order,
                         Product product,
                         String notes,
                         Integer quantity,
-                        BigInteger price) {
+                        BigDecimal costPrice,
+                        BigDecimal price) {
         pk = new OrderProductPK();
         pk.setOrder(order);
         pk.setProduct(product);
         this.notes = notes;
         this.quantity = quantity;
+        this.costPrice = costPrice;
         this.price = price;
     }
 

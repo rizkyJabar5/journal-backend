@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -36,7 +37,8 @@ public class OrderMapper implements Serializable {
     private String updatedBy;
     private String updatedAt;
 
-    public OrderMapper mapToEntity(Orders orders) {
+    @Transactional
+    public OrderMapper buildOrderResponse(Orders orders) {
 
         List<DetailProduct> detailProducts = orders.getOrderDetails().parallelStream()
                 .map(detail -> new DetailProduct(
@@ -44,7 +46,7 @@ public class OrderMapper implements Serializable {
                         detail.getProduct().getProductName(),
                         detail.getQuantity(),
                         detail.getNotes(),
-                        new BigDecimal(detail.getTotalPrice())))
+                        detail.getTotalPrice()))
                 .toList();
 
         LocalDateTime dateTime = DateConverter.toLocalDateTime(orders.getCreatedAt());

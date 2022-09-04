@@ -5,16 +5,15 @@
 package com.journal.florist.backend.feature.product.controller;
 
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.dto.AddProductRequest;
 import com.journal.florist.backend.feature.product.dto.ProductMapper;
-import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.FilterableCrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +34,9 @@ public class ProductController {
     private final ProductService service;
 
     @GetMapping("/")
-    public ResponseEntity<Page<ProductMapper>> getAllProduct(@RequestParam Integer page,
-                                                             @RequestParam Integer limit) {
-        Pageable pageableWithSort = FilterableCrudService.getPageableWithSort(
-                page - 1, limit, Sort.by("productName").ascending());
+    public ResponseEntity<Page<ProductMapper>> getAllProduct(@RequestParam(required = false) Integer page,
+                                                             @RequestParam(required = false) Integer limit) {
+        Pageable pageableWithSort = FilterableCrudService.getPageable(page - 1, limit);
         Page<ProductMapper> response = service.getAllProduct(pageableWithSort);
 
         return ResponseEntity.ok().body(response);

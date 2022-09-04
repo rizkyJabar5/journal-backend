@@ -16,7 +16,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -40,6 +39,7 @@ public class Orders extends BaseEntity {
     private Set<OrderDetails> orderDetails = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
     @Enumerated(EnumType.STRING)
@@ -50,16 +50,18 @@ public class Orders extends BaseEntity {
     private OrderShipments orderShipment;
 
     public BigDecimal getTotalOrderAmount() {
-        BigInteger TWO = new BigInteger("2");
-
         Set<OrderDetails> orderProduct = getOrderDetails();
-        BigInteger total = orderProduct.parallelStream()
+
+        return orderProduct.parallelStream()
                 .map(OrderDetails::getTotalPrice)
-                .filter(n -> n.mod(TWO).equals(BigInteger.ZERO))
-                .reduce(BigInteger.ZERO, BigInteger::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
-        return new BigDecimal(total);
+    public BigDecimal getTotalOrderCostPrice() {
 
+        return getOrderDetails().parallelStream()
+                .map(OrderDetails::getTotalCostPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public Orders(Customers customer,
