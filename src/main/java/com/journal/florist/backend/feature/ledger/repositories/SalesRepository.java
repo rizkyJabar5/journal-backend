@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface SalesRepositories extends JpaRepository<Sales, Long> {
+public interface SalesRepository extends JpaRepository<Sales, Long> {
 
     @Query("select s from Sales s " +
             "where cast(s.saleDate as date) = cast(?1 as date)")

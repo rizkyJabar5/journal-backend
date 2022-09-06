@@ -4,7 +4,7 @@ import com.journal.florist.app.common.utils.DateConverter;
 import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.ledger.dto.SalesMapper;
 import com.journal.florist.backend.feature.ledger.model.Sales;
-import com.journal.florist.backend.feature.ledger.repositories.SalesRepositories;
+import com.journal.florist.backend.feature.ledger.repositories.SalesRepository;
 import com.journal.florist.backend.feature.ledger.service.SalesService;
 import com.journal.florist.backend.feature.order.model.Orders;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class SalesServiceImpl implements SalesService {
 
-    private final SalesRepositories salesRepository;
+    private final SalesRepository salesRepository;
     private final SalesMapper salesMapper;
 
     @Override

@@ -5,7 +5,7 @@ import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
-import com.journal.florist.backend.feature.ledger.repositories.SalesRepositories;
+import com.journal.florist.backend.feature.ledger.repositories.SalesRepository;
 import com.journal.florist.backend.feature.ledger.service.SalesService;
 import com.journal.florist.backend.feature.order.dto.AddOrderRequest;
 import com.journal.florist.backend.feature.order.dto.OrderMapper;
@@ -38,7 +38,7 @@ import static com.journal.florist.app.constant.JournalConstants.NOT_FOUND_MSG;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-    private final SalesRepositories salesRepository;
+    private final SalesRepository salesRepository;
 
     private final OrderRepository orderRepository;
     private final ShipmentService shipmentService;
