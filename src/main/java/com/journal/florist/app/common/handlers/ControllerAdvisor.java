@@ -94,10 +94,10 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
         response.put("timestamp", date);
         response.put("message", baseException.getMessage());
         response.put("status", OperationStatus.FAILURE);
-        response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.put("code", HttpStatus.BAD_REQUEST.value());
         response.put("path", request.getServletPath());
 
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
