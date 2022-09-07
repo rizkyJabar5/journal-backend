@@ -33,6 +33,11 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    public BigDecimal sumTotalDebt() {
+        return repository.sumAllTotalDebt();
+    }
+
+    @Override
     public void update(Suppliers suppliers) {
         Suppliers byId = repository.findById(suppliers.getId())
                 .orElseThrow(() -> new NotFoundException(

@@ -16,8 +16,13 @@ public interface SupplierRepository extends JpaRepository<Suppliers, String> {
 
     @Query("""
             select s.totalDebt from Suppliers s
-            where s.id = ?1 
+            where s.id = ?1
             """)
     BigDecimal findTotalDebtSupplier(String supplierId);
 
+    @Query("""
+            select sum(s.totalDebt) 
+            from Suppliers s
+            """)
+    BigDecimal sumAllTotalDebt();
 }

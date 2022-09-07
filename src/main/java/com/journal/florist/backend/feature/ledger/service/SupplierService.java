@@ -10,7 +10,7 @@ public interface SupplierService extends HasLogger {
     Suppliers getSupplierById(String id);
     List<Suppliers> getAllSuppliers();
     BigDecimal findDebtBySupplier(String supplierId);
-
+    BigDecimal sumTotalDebt();
     void update(Suppliers suppliers);
 
     Suppliers addSuppliers(Suppliers supplier);
