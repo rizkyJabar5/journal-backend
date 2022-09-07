@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.journal.florist.app.constant.ApiUrlConstant.Supplier_URL;
+import static com.journal.florist.app.constant.ApiUrlConstant.SUPPLIER_URL;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(Supplier_URL)
+@RequestMapping(SUPPLIER_URL)
 public class SupplierController {
 
     private final SupplierService supplierService;

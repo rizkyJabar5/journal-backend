@@ -4,34 +4,28 @@
 
 package com.journal.florist.backend.feature.ledger.model;
 
-import com.journal.florist.backend.feature.order.enums.PaymentStatus;
+import com.journal.florist.backend.feature.ledger.enums.Pay;
 import com.journal.florist.backend.feature.utils.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import java.math.BigInteger;
+import javax.persistence.Entity;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Expense extends BaseEntity {
 
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
+    private String additionalInformation;
+    private BigDecimal Amount;
 
-    @Min(1)
-    private Integer quantity = 1;
-    private BigInteger price;
-    private BigInteger totalAmount;
+    private Pay payFor;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Suppliers.class)
-    private Suppliers supplier;
-
-    public BigInteger getTotalAmount() {
-        return this.totalAmount = this.price.multiply(BigInteger.valueOf(this.quantity));
-    }
 }
 
 

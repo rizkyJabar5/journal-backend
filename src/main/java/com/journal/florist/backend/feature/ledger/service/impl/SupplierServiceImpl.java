@@ -7,6 +7,7 @@ import com.journal.florist.backend.feature.ledger.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -24,6 +25,11 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public List<Suppliers> getAllSuppliers() {
         return repository.findAllSuppliers();
+    }
+
+    @Override
+    public BigDecimal findDebtBySupplier(String supplierId) {
+        return repository.findTotalDebtSupplier(supplierId);
     }
 
     @Override
