@@ -30,7 +30,7 @@ public class Purchase extends BaseEntity {
     private BigDecimal price;
     private Integer quantity;
 
-    @Column(insertable = false)
+    @Column(updatable = false)
     private BigDecimal total;
 
     public BigDecimal setTotalPurchase() {

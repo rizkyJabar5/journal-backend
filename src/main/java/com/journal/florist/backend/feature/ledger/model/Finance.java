@@ -24,12 +24,6 @@ public class Finance {
     @Temporal(TemporalType.TIMESTAMP)
     Date fromDaysFinance;
 
-    @Temporal(TemporalType.DATE)
-    Date monthlyFinance;
-
-    @Temporal(TemporalType.DATE)
-    Date yearlyFinance;
-
     BigDecimal expense = BigDecimal.ZERO;
     BigDecimal revenue = BigDecimal.ZERO;
     BigDecimal accountReceivable = BigDecimal.ZERO;
