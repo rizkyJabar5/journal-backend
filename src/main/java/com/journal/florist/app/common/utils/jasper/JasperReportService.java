@@ -7,6 +7,7 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
@@ -87,7 +88,7 @@ public class JasperReportService implements ReportService {
             getLogger().info("{} loaded, compiling report", jrxml);
             jasperReport = JasperCompileManager.compileReport(jrxml);
             // Save compiled report
-//            JRSaver.saveObject(jasperReport, jrxml.toString().replace(".jrxml", "jasper"));
+            JRSaver.saveObject(jasperReport, jrxml.toString().replace(".jrxml", "jasper"));
 
             return jasperReport;
         }
