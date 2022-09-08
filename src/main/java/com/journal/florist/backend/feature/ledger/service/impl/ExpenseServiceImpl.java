@@ -2,6 +2,7 @@ package com.journal.florist.backend.feature.ledger.service.impl;
 
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
+import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.feature.ledger.dto.request.ExpenseRequest;
 import com.journal.florist.backend.feature.ledger.enums.Pay;
 import com.journal.florist.backend.feature.ledger.model.Expense;
@@ -37,14 +38,14 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setCreatedBy(createdBy);
         expense.setCreatedAt(new Date(System.currentTimeMillis()));
 
-        Suppliers supplier = supplierService.getSupplierById(request.supplierId());
-        if (request.pay() == Pay.SUPPLIERS) {
+        if (request.supplierId() != null && request.pay() == Pay.SUPPLIERS) {
+            Suppliers supplier = supplierService.getSupplierById(request.supplierId());
             BigDecimal debtBySupplier = supplierService.findDebtBySupplier(supplier.getId());
             BigDecimal result = debtBySupplier.subtract(expense.getAmount());
             if (debtBySupplier.compareTo(BigDecimal.ZERO) == 0) {
                 throw new AppBaseException(
                         String.format(
-                                "Do not have debt to suppliers %s",
+                                "The debt has been paid off at the supplier %s",
                                 supplier.getId())
                 );
             } else if (result.compareTo(BigDecimal.ZERO) < 0) {
@@ -55,9 +56,11 @@ public class ExpenseServiceImpl implements ExpenseService {
             supplier.setTotalDebt(result);
             BigDecimal totalDebt = supplierService.sumTotalDebt();
             financeService.addFinanceExpense(expense.getAmount(), totalDebt);
+            supplierService.update(supplier);
+        } else if (request.supplierId() == null && request.pay() == Pay.SUPPLIERS) {
+            throw new IllegalException("Supplier id must not be null or empty");
         }
         expenseRepository.save(expense);
-        supplierService.update(supplier);
 
         return expense;
     }

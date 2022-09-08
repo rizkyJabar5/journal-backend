@@ -2,7 +2,7 @@ package com.journal.florist.backend.feature.order.controller;
 
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.feature.order.dto.AddOrderRequest;
-import com.journal.florist.backend.feature.order.dto.OrderMapper;
+import com.journal.florist.backend.feature.order.dto.OrdersMapper;
 import com.journal.florist.backend.feature.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import static com.journal.florist.app.constant.ApiUrlConstant.ORDER_URL;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderMapper orderMapper;
+    private final OrdersMapper orderMapper;
 
     @PostMapping("/add-order")
     public ResponseEntity<BaseResponse> addOrder(@Valid @RequestBody AddOrderRequest request) {
@@ -31,7 +31,7 @@ public class OrderController {
     @GetMapping("/order-done")
     public ResponseEntity<BaseResponse> getOrderPaidOff(@RequestParam(name = "page") int page,
                                                         @RequestParam(name = "limit") int limit) {
-        Page<OrderMapper> orderPaidOff = orderService.getOrderPaidOff(page, limit)
+        Page<OrdersMapper> orderPaidOff = orderService.getOrderPaidOff(page, limit)
                 .map(orderMapper::buildOrderResponse);
 
         if (orderPaidOff.isEmpty()) {

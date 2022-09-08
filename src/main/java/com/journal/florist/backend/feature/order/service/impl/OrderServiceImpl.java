@@ -8,7 +8,7 @@ import com.journal.florist.backend.feature.customer.service.CustomerService;
 import com.journal.florist.backend.feature.ledger.repositories.SalesRepository;
 import com.journal.florist.backend.feature.ledger.service.SalesService;
 import com.journal.florist.backend.feature.order.dto.AddOrderRequest;
-import com.journal.florist.backend.feature.order.dto.OrderMapper;
+import com.journal.florist.backend.feature.order.dto.OrdersMapper;
 import com.journal.florist.backend.feature.order.dto.UpdateOrderRequest;
 import com.journal.florist.backend.feature.order.enums.OrderStatus;
 import com.journal.florist.backend.feature.order.enums.PaymentStatus;
@@ -46,10 +46,10 @@ public class OrderServiceImpl implements OrderService {
     private final SalesService salesService;
     private final ProductService productService;
     private final CustomerService customerService;
-    private final OrderMapper orderMapper;
+    private final OrdersMapper orderMapper;
 
     @Override
-    public OrderMapper getOrderById(String orderId) {
+    public OrdersMapper getOrderById(String orderId) {
         return Optional.ofNullable(orderRepository.findOrderByPublicKey(orderId))
                 .map(orderMapper::buildOrderResponse)
                 .orElseThrow(() -> new NotFoundException(
@@ -57,10 +57,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderMapper> getByField(String orderDate,
-                                        OrderStatus orderStatus,
-                                        PaymentStatus paymentStatus,
-                                        Pageable pageable) {
+    public Page<OrdersMapper> getByField(String orderDate,
+                                         OrderStatus orderStatus,
+                                         PaymentStatus paymentStatus,
+                                         Pageable pageable) {
 
         return null;
     }
@@ -163,7 +163,7 @@ public class OrderServiceImpl implements OrderService {
         salesService.saveSales(orders, customer);
 
         getLogger().info("Successfully to save new order");
-        OrderMapper mapper = orderMapper.buildOrderResponse(orders);
+        OrdersMapper mapper = orderMapper.buildOrderResponse(orders);
         return new BaseResponse(
                 HttpStatus.CREATED,
                 "Customer is successfully order product",

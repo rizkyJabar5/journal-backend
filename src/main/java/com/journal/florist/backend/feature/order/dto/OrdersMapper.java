@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Component
-public class OrderMapper implements Serializable {
+public class OrdersMapper implements Serializable {
 
     private String orderId;
     private String customerName;
@@ -38,7 +38,7 @@ public class OrderMapper implements Serializable {
     private String updatedAt;
 
     @Transactional
-    public OrderMapper buildOrderResponse(Orders orders) {
+    public OrdersMapper buildOrderResponse(Orders orders) {
 
         List<DetailProduct> detailProducts = orders.getOrderDetails().parallelStream()
                 .map(detail -> new DetailProduct(
@@ -76,7 +76,7 @@ public class OrderMapper implements Serializable {
         if (orders.getOrderShipment().getDeliveryAddress() != null) {
             fullAddress = orders.getOrderShipment().getDeliveryAddress().getFullAddress();
         }
-        return OrderMapper.builder()
+        return OrdersMapper.builder()
                 .orderId(orders.getPublicKey())
                 .customerName(orders.getCustomer().getName())
                 .phoneNumber(orders.getCustomer().getPhoneNumber())
