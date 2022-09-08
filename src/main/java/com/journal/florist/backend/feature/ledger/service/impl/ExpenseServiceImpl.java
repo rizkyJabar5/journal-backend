@@ -53,10 +53,10 @@ public class ExpenseServiceImpl implements ExpenseService {
                         String.format("Debt is only %s your payment is over +%s", debtBySupplier, overPayment));
             }
             supplier.setTotalDebt(result);
+            BigDecimal totalDebt = supplierService.sumTotalDebt();
+            financeService.addFinanceExpense(expense.getAmount(), totalDebt);
         }
         expenseRepository.save(expense);
-        BigDecimal totalDebt = supplierService.sumTotalDebt();
-        financeService.addFinanceExpense(expense.getAmount(), totalDebt);
         supplierService.update(supplier);
 
         return expense;

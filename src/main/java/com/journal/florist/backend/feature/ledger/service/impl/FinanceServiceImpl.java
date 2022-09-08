@@ -41,11 +41,22 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
-    public void update(Finance finance) {
-        Finance entity = repository.findById(finance.getFinanceId())
-                .orElseThrow(() -> new NotFoundException(
-                        String.format("Finance %s not found", finance.getFinanceId())
-                ));
+    public void addFinancePurchase(BigDecimal purchaseAmount) {
+        Date today = DateConverter.today();
+        String financeID = isExistsFinanceToday(today);
+
+        if (financeID == null || financeID.isEmpty()) {
+            Finance entity = new Finance();
+            entity.setTotalDebt(purchaseAmount);
+            entity.setFromDaysFinance(new Date(System.currentTimeMillis()));
+            repository.saveAndFlush(entity);
+
+            return;
+        }
+
+        Finance entity = findFinanceById(financeID);
+        entity.setTotalDebt(purchaseAmount);
+
         repository.save(entity);
     }
 

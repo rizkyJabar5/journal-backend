@@ -7,6 +7,7 @@ import com.journal.florist.backend.feature.ledger.dto.request.PurchaseRequest;
 import com.journal.florist.backend.feature.ledger.model.Purchase;
 import com.journal.florist.backend.feature.ledger.model.Suppliers;
 import com.journal.florist.backend.feature.ledger.repositories.PurchaseRepository;
+import com.journal.florist.backend.feature.ledger.service.FinanceService;
 import com.journal.florist.backend.feature.ledger.service.PurchaseService;
 import com.journal.florist.backend.feature.ledger.service.SupplierService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
     private final SupplierService supplierService;
+    private final FinanceService financeService;
 
     @Override
     public Page<Purchase> getAllSuppliers(Pageable pageable) {
@@ -56,6 +58,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         suppliers.setTotalDebt(purchase.addDebt());
         supplierService.update(suppliers);
+        financeService.addFinancePurchase(supplierService.sumTotalDebt());
 
         return new BaseResponse(HttpStatus.OK,
                 "Successfully add new purchase",
