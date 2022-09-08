@@ -33,7 +33,14 @@ public class Customers extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "customers")
-    private Set<Sales> historyOrder;
+    private Set<Sales> sales;
+
+    @OneToOne(mappedBy = "customer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @PrimaryKeyJoinColumn
+    private CustomerDebt customerDebt;
+
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getName());

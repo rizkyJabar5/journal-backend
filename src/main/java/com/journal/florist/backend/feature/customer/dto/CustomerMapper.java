@@ -34,8 +34,8 @@ public class CustomerMapper implements Serializable {
 
     public CustomerMapper mapToEntity(Customers mapper) {
         List<String> history = null;
-        if(mapper.getHistoryOrder() != null){
-            history = mapper.getHistoryOrder()
+        if(mapper.getSales() != null){
+            history = mapper.getSales()
                     .stream()
                     .map(Sales::getSalesId).toList();
         }

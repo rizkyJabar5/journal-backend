@@ -61,6 +61,28 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
+    public void addAccountReceivableAndRevenue(BigDecimal accountReceivable, BigDecimal revenue) {
+        Date today = DateConverter.today();
+        String financeID = isExistsFinanceToday(today);
+
+        if (financeID == null || financeID.isEmpty()) {
+            Finance entity = new Finance();
+            entity.setAccountReceivable(accountReceivable);
+            entity.setRevenue(revenue);
+            entity.setFromDaysFinance(new Date(System.currentTimeMillis()));
+            repository.saveAndFlush(entity);
+
+            return;
+        }
+
+        Finance entity = findFinanceById(financeID);
+        entity.setAccountReceivable(accountReceivable);
+        entity.setRevenue(revenue);
+
+        repository.save(entity);
+    }
+
+    @Override
     public String isExistsFinanceToday(Date date) {
         return repository.findFinanceIdByToday(date);
     }

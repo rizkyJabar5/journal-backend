@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -27,6 +26,7 @@ public class OrdersMapper implements Serializable {
     private List<DetailProduct> detailOfOrderProducts;
     private BigDecimal totalOrderAmount;
     private String paymentStatus;
+    private BigDecimal underPayment;
     private String orderStatus;
     private String recipientName;
     private String deliveryAddress;
@@ -37,7 +37,6 @@ public class OrdersMapper implements Serializable {
     private String updatedBy;
     private String updatedAt;
 
-    @Transactional
     public OrdersMapper buildOrderResponse(Orders orders) {
 
         List<DetailProduct> detailProducts = orders.getOrderDetails().parallelStream()
@@ -83,6 +82,7 @@ public class OrdersMapper implements Serializable {
                 .detailOfOrderProducts(detailProducts)
                 .totalOrderAmount(orders.getTotalOrderAmount())
                 .paymentStatus(orders.getPaymentStatus().name())
+                .underPayment(orders.getPayment().getUnderPayment())
                 .orderStatus(orders.getOrderStatus().name())
                 .recipientName(orders.getOrderShipment().getRecipientName())
                 .deliveryAddress(fullAddress)

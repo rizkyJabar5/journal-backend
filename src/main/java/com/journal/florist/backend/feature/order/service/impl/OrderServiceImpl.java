@@ -4,8 +4,9 @@ import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.NotFoundException;
+import com.journal.florist.backend.feature.customer.service.CustomerDebtService;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
-import com.journal.florist.backend.feature.ledger.repositories.SalesRepository;
+import com.journal.florist.backend.feature.ledger.service.FinanceService;
 import com.journal.florist.backend.feature.ledger.service.SalesService;
 import com.journal.florist.backend.feature.order.dto.AddOrderRequest;
 import com.journal.florist.backend.feature.order.dto.OrdersMapper;
@@ -15,9 +16,11 @@ import com.journal.florist.backend.feature.order.enums.PaymentStatus;
 import com.journal.florist.backend.feature.order.model.OrderDetails;
 import com.journal.florist.backend.feature.order.model.OrderShipments;
 import com.journal.florist.backend.feature.order.model.Orders;
+import com.journal.florist.backend.feature.order.model.Payments;
 import com.journal.florist.backend.feature.order.repositories.OrderRepository;
 import com.journal.florist.backend.feature.order.service.OrderDetailService;
 import com.journal.florist.backend.feature.order.service.OrderService;
+import com.journal.florist.backend.feature.order.service.PaymentService;
 import com.journal.florist.backend.feature.order.service.ShipmentService;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.EntityUtil;
@@ -29,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,8 +41,8 @@ import static com.journal.florist.app.constant.JournalConstants.NOT_FOUND_MSG;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderServiceImpl implements OrderService {
-    private final SalesRepository salesRepository;
 
     private final OrderRepository orderRepository;
     private final ShipmentService shipmentService;
@@ -47,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
     private final ProductService productService;
     private final CustomerService customerService;
     private final OrdersMapper orderMapper;
+    private final PaymentService paymentService;
+    private final CustomerDebtService customerDebtService;
+    private final FinanceService financeService;
 
     @Override
     public OrdersMapper getOrderById(String orderId) {
@@ -99,7 +106,6 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    @Transactional
     public BaseResponse addOrder(AddOrderRequest request) {
 
         var orders = new Orders();
@@ -108,14 +114,12 @@ public class OrderServiceImpl implements OrderService {
         String createdBy = authentication.getName();
 
         //Setter order
-        orders = create(
+        orders = orderRepository.saveAndFlush(
                 new Orders(
                         customer,
-                        request.getPaymentStatus(),
                         request.getOrderStatus(),
                         createdBy,
-                        new Date(System.currentTimeMillis())
-                )
+                        new Date(System.currentTimeMillis()))
         );
 
         //Setter order details product.
@@ -123,33 +127,18 @@ public class OrderServiceImpl implements OrderService {
         for (AddOrderRequest.OrderDetailDto detail : request.getDetailProduct()) {
             var product = productService.findByProductKey(detail.getProductId());
             orderDetails.add(orderDetailService.create(
-                            new OrderDetails(orders,
-                                    product,
-                                    detail.getNotes(),
-                                    detail.getQuantity(),
-                                    product.getCostPrice(),
-                                    product.getPrice())
-                    )
+                    new OrderDetails(orders,
+                            product,
+                            detail.getNotes(),
+                            detail.getQuantity(),
+                            product.getCostPrice(),
+                            product.getPrice()))
             );
         }
         orders.setOrderDetails(orderDetails);
 
         // Setter order shipment
-        Date deliveryDate = null;
-        if (Objects.nonNull(request.getDateDelivery()) && Objects.nonNull(request.getTimeDelivery())) {
-            var dateTimeDelivery = request.getDateDelivery() + request.getTimeDelivery();
-            try {
-                var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                var parse = dateFormat.parse(dateTimeDelivery);
-                long time = parse.getTime();
-                if (time != 0) {
-                    deliveryDate = new Date(time);
-                }
-            } catch (ParseException e) {
-                throw new AppBaseException(String.format("Could not parse date time format %s", dateTimeDelivery));
-            }
-        }
-
+        Date deliveryDate = parseDateToEpoch(request.getDateDelivery(), request.getTimeDelivery());
         OrderShipments shipment = shipmentService.create(new OrderShipments(
                 orders,
                 request.getRecipientName(),
@@ -158,9 +147,30 @@ public class OrderServiceImpl implements OrderService {
         ));
         orders.setOrderShipment(shipment);
 
-        update(orders);
+        // Customer payment check
+        if (request.getPaymentAmount() != null) {
+            BigDecimal totalToBePaid = orders.getTotalOrderAmount();
+            BigDecimal result = totalToBePaid.subtract(request.getPaymentAmount());
+
+            if (result.compareTo(BigDecimal.ZERO) > 0) {
+                customerDebtService.debtCustomer(orders.getCustomer(), result);
+                orders.setPaymentStatus(PaymentStatus.DOWN_PAYMENT);
+            } else if (result.compareTo(BigDecimal.ZERO) == 0) {
+                orders.setPaymentStatus(PaymentStatus.PAID_OFF);
+            } else {
+                BigDecimal paymentOver = request.getPaymentAmount().subtract(totalToBePaid);
+                throw new AppBaseException(String.format("Customer payment is over +%s", paymentOver));
+            }
+
+            Payments payments = paymentService.addPayment(request.getPaymentAmount(), result, orders);
+            orders.setPayment(payments);
+        }
+        create(orders);
 
         salesService.saveSales(orders, customer);
+        financeService.addAccountReceivableAndRevenue(
+                customerDebtService.sumAllTotalCustomerDebt(),
+                paymentService.sumRevenueToday());
 
         getLogger().info("Successfully to save new order");
         OrdersMapper mapper = orderMapper.buildOrderResponse(orders);
@@ -175,11 +185,26 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
-    private Orders create(Orders orders) {
-        return orderRepository.save(orders);
+    private Date parseDateToEpoch(String dateDelivery, String timeDelivery) {
+        Date deliveryDate = null;
+        if (Objects.nonNull(dateDelivery) && Objects.nonNull(timeDelivery)) {
+            var dateTimeDelivery = dateDelivery + timeDelivery;
+            try {
+                var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                var parse = dateFormat.parse(dateTimeDelivery);
+                long time = parse.getTime();
+                if (time != 0) {
+                    deliveryDate = new Date(time);
+                }
+            } catch (ParseException e) {
+                throw new AppBaseException(String.format("Could not parse date time format %s", dateTimeDelivery));
+            }
+        }
+
+        return deliveryDate;
     }
 
-    private void update(Orders orders) {
-        orderRepository.save(orders);
+    private Orders create(Orders orders) {
+        return orderRepository.save(orders);
     }
 }

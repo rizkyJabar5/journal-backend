@@ -40,7 +40,7 @@ public class Orders extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus paymentStatus;
+    private PaymentStatus paymentStatus = PaymentStatus.NOT_YET_PAID;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -48,6 +48,9 @@ public class Orders extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order", optional = false)
     @PrimaryKeyJoinColumn
     private OrderShipments orderShipment;
+
+    @OneToOne(mappedBy = "order", optional = false)
+    private Payments payment;
 
     public BigDecimal getTotalOrderAmount() {
         Set<OrderDetails> orderProduct = getOrderDetails();
@@ -65,12 +68,12 @@ public class Orders extends BaseEntity {
     }
 
     public Orders(Customers customer,
-                  PaymentStatus paymentStatus,
+//                  PaymentStatus paymentStatus,
                   OrderStatus orderStatus,
                   String createdBy,
                   Date createdAt) {
         this.customer = customer;
-        this.paymentStatus = paymentStatus;
+//        this.paymentStatus = paymentStatus;
         this.orderStatus = orderStatus;
         this.setCreatedBy(createdBy);
         this.setCreatedAt(createdAt);

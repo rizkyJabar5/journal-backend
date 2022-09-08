@@ -1,7 +1,6 @@
 package com.journal.florist.backend.feature.order.dto;
 
 import com.journal.florist.backend.feature.order.enums.OrderStatus;
-import com.journal.florist.backend.feature.order.enums.PaymentStatus;
 import com.journal.florist.backend.feature.utils.Address;
 import lombok.Data;
 
@@ -10,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
@@ -21,7 +21,7 @@ public class AddOrderRequest implements Serializable {
     private Set<OrderDetailDto> detailProduct;
 
     private OrderStatus orderStatus;
-    private PaymentStatus paymentStatus;
+    private BigDecimal paymentAmount;
 
     private String recipientName;
 
