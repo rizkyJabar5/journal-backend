@@ -79,7 +79,7 @@ public abstract class BaseEntity implements Serializable {
     @PrePersist
     private void onCreate() {
         if(Objects.isNull(getPublicKey())){
-            setPublicKey(RandomStringUtils.randomAlphanumeric(12));
+            setPublicKey(RandomStringUtils.randomAlphanumeric(16));
         }
     }
 }

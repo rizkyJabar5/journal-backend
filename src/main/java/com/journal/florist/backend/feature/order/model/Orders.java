@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.order.enums.OrderStatus;
 import com.journal.florist.backend.feature.order.enums.PaymentStatus;
+import com.journal.florist.backend.feature.payment.model.Payments;
 import com.journal.florist.backend.feature.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,7 +50,7 @@ public class Orders extends BaseEntity {
     @PrimaryKeyJoinColumn
     private OrderShipments orderShipment;
 
-    @OneToOne(mappedBy = "order", optional = false)
+    @OneToOne(mappedBy = "order")
     private Payments payment;
 
     public BigDecimal getTotalOrderAmount() {
@@ -68,12 +69,10 @@ public class Orders extends BaseEntity {
     }
 
     public Orders(Customers customer,
-//                  PaymentStatus paymentStatus,
                   OrderStatus orderStatus,
                   String createdBy,
                   Date createdAt) {
         this.customer = customer;
-//        this.paymentStatus = paymentStatus;
         this.orderStatus = orderStatus;
         this.setCreatedBy(createdBy);
         this.setCreatedAt(createdAt);

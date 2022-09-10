@@ -1,5 +1,6 @@
-package com.journal.florist.backend.feature.order.model;
+package com.journal.florist.backend.feature.payment.model;
 
+import com.journal.florist.backend.feature.order.model.Orders;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,8 +32,15 @@ public class Payments {
     private Date paymentDate;
 
     @Column(name = "amount")
-    private BigDecimal amount;
-    private BigDecimal underPayment;
+    private BigDecimal amount = BigDecimal.ZERO;
+    private BigDecimal underPayment = BigDecimal.ZERO;
+
+    @ManyToOne(targetEntity = PaymentLogs.class,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_logs_id",
+            foreignKey = @ForeignKey(name = "payment_logs_fk_id"))
+    private PaymentLogs paymentLogs;
 
     @PrePersist
     private void generateRandomId() {

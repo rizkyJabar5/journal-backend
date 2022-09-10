@@ -1,0 +1,13 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: Journal backend
+  profiles:
+    active: dev
+  mustache:
+    check-template-location: false
+
+jwt:
+  secretKey: rahasiarahasiarahasiarahasiarahasiarahasiarahasiarahasiarahasirahasiarahasiarahasiasangat

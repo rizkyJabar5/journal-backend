@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 
 public interface CustomerDebtService extends HasLogger {
 
-    void debtCustomer(Customers customer, BigDecimal customerPay);
+    void addDebtCustomer(Customers customer, BigDecimal totalDebt);
 
+    void subtractDebtCustomer(Customers customer, BigDecimal totalDebt);
     BigDecimal sumAllTotalCustomerDebt();
 }

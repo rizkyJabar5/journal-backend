@@ -3,6 +3,7 @@ package com.journal.florist.backend.feature.order.controller;
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.feature.order.dto.AddOrderRequest;
 import com.journal.florist.backend.feature.order.dto.OrdersMapper;
+import com.journal.florist.backend.feature.order.dto.UpdateOrderRequest;
 import com.journal.florist.backend.feature.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,12 +22,6 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrdersMapper orderMapper;
-
-    @PostMapping("/add-order")
-    public ResponseEntity<BaseResponse> addOrder(@Valid @RequestBody AddOrderRequest request) {
-        var response = orderService.addOrder(request);
-        return ResponseEntity.ok().body(response);
-    }
 
     @GetMapping("/order-done")
     public ResponseEntity<BaseResponse> getOrderPaidOff(@RequestParam(name = "page") int page,
@@ -47,5 +42,17 @@ public class OrderController {
                 "fetching orders with paid status",
                 orderPaidOff);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/update-order")
+    public ResponseEntity<BaseResponse> addOrder(@Valid @RequestBody UpdateOrderRequest request) {
+        var response = orderService.updateOrder(request);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/add-order")
+    public ResponseEntity<BaseResponse> addOrder(@Valid @RequestBody AddOrderRequest request) {
+        var response = orderService.addOrder(request);
+        return ResponseEntity.ok().body(response);
     }
 }

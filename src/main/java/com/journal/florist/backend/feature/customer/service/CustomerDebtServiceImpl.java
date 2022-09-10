@@ -17,18 +17,29 @@ public class CustomerDebtServiceImpl implements CustomerDebtService {
     private final CustomerDebtRepository repository;
 
     @Override
-    public void debtCustomer(Customers customer, BigDecimal customerPay) {
-        CustomerDebt debt = repository.findCustomerById(customer.getId());
+    public void addDebtCustomer(Customers customer, BigDecimal totalDebt) {
+        CustomerDebt debt = repository.findCustomerById(customer.getPublicKey());
         if(debt == null) {
             CustomerDebt customerDebt = new CustomerDebt();
             customerDebt.setCustomer(customer);
-            customerDebt.setTotalDebt(customerPay);
+            customerDebt.setTotalDebt(totalDebt);
             repository.save(customerDebt);
             return;
         }
-        BigDecimal total = debt.getTotalDebt().add(customerPay);
+        BigDecimal total = debt.getTotalDebt().add(totalDebt);
         debt.setTotalDebt(total);
+        repository.save(debt);
     }
+
+    @Override
+    public void subtractDebtCustomer(Customers customer, BigDecimal totalDebt) {
+        CustomerDebt debt = repository.findCustomerById(customer.getPublicKey());
+
+        BigDecimal total = debt.getTotalDebt().subtract(totalDebt);
+        debt.setTotalDebt(total);
+        repository.save(debt);
+    }
+
 
     @Override
     public BigDecimal sumAllTotalCustomerDebt() {

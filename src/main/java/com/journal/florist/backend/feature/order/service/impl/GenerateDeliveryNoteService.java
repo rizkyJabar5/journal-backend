@@ -4,6 +4,7 @@ import com.journal.florist.app.common.utils.jasper.JasperReportRequest;
 import com.journal.florist.app.common.utils.jasper.ReportService;
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
+import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.feature.order.model.DeliveryNote;
 import com.journal.florist.backend.feature.order.model.OrderDetails;
 import com.journal.florist.backend.feature.order.model.Orders;
@@ -33,6 +34,10 @@ public class GenerateDeliveryNoteService implements DeliveryNoteService {
         DeliveryNote entity = new DeliveryNote();
         Orders order = orderService.findOrderById(orderId);
         String createdBy = SecurityUtils.getAuthentication().getName();
+
+        if(deliveryNoteRepository.existsByGnrId(gnrId)) {
+            throw new IllegalException("GNR id must be unique. It's already taken");
+        }
 
         validatePrinted(orderId);
         entity.setGnrId(gnrId);

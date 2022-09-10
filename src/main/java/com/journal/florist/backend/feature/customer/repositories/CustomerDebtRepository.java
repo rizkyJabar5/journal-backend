@@ -16,7 +16,7 @@ public interface CustomerDebtRepository extends JpaRepository<CustomerDebt, Stri
     @Query("""
             select cd
             from CustomerDebt cd
-            where cd.customer.id = :customerId
+            where cd.customer.publicKey = :customerId
             """)
-    CustomerDebt findCustomerById(Long customerId);
+    CustomerDebt findCustomerById(String customerId);
 }

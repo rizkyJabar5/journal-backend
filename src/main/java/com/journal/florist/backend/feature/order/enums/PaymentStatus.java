@@ -19,6 +19,10 @@ public enum PaymentStatus {
      * Pembayaran lunas
      */
     PAID_OFF("Paid off"),
+    /**
+     * Pembayaran secara kredit
+     */
+    CREDIT("Credit"),
 
     /**
      * Pembayaran di muka

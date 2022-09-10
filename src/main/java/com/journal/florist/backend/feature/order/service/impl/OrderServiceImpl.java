@@ -16,11 +16,12 @@ import com.journal.florist.backend.feature.order.enums.PaymentStatus;
 import com.journal.florist.backend.feature.order.model.OrderDetails;
 import com.journal.florist.backend.feature.order.model.OrderShipments;
 import com.journal.florist.backend.feature.order.model.Orders;
-import com.journal.florist.backend.feature.order.model.Payments;
+import com.journal.florist.backend.feature.payment.model.Payments;
 import com.journal.florist.backend.feature.order.repositories.OrderRepository;
 import com.journal.florist.backend.feature.order.service.OrderDetailService;
 import com.journal.florist.backend.feature.order.service.OrderService;
-import com.journal.florist.backend.feature.order.service.PaymentService;
+import com.journal.florist.backend.feature.payment.service.PaymentLogService;
+import com.journal.florist.backend.feature.payment.service.PaymentService;
 import com.journal.florist.backend.feature.order.service.ShipmentService;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.EntityUtil;
@@ -52,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerService customerService;
     private final OrdersMapper orderMapper;
     private final PaymentService paymentService;
+    private final PaymentLogService paymentLogService;
     private final CustomerDebtService customerDebtService;
     private final FinanceService financeService;
 
@@ -148,29 +150,13 @@ public class OrderServiceImpl implements OrderService {
         orders.setOrderShipment(shipment);
 
         // Customer payment check
-        if (request.getPaymentAmount() != null) {
-            BigDecimal totalToBePaid = orders.getTotalOrderAmount();
-            BigDecimal result = totalToBePaid.subtract(request.getPaymentAmount());
-
-            if (result.compareTo(BigDecimal.ZERO) > 0) {
-                customerDebtService.debtCustomer(orders.getCustomer(), result);
-                orders.setPaymentStatus(PaymentStatus.DOWN_PAYMENT);
-            } else if (result.compareTo(BigDecimal.ZERO) == 0) {
-                orders.setPaymentStatus(PaymentStatus.PAID_OFF);
-            } else {
-                BigDecimal paymentOver = request.getPaymentAmount().subtract(totalToBePaid);
-                throw new AppBaseException(String.format("Customer payment is over +%s", paymentOver));
-            }
-
-            Payments payments = paymentService.addPayment(request.getPaymentAmount(), result, orders);
-            orders.setPayment(payments);
-        }
+        customerCheckPayment(request.getPaymentAmount(), orders.getTotalOrderAmount(), orders);
         create(orders);
 
         salesService.saveSales(orders, customer);
         financeService.addAccountReceivableAndRevenue(
                 customerDebtService.sumAllTotalCustomerDebt(),
-                paymentService.sumRevenueToday());
+                paymentLogService.sumTotalAmountPayment());
 
         getLogger().info("Successfully to save new order");
         OrdersMapper mapper = orderMapper.buildOrderResponse(orders);
@@ -182,7 +168,67 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public BaseResponse updateOrder(UpdateOrderRequest request) {
-        return null;
+        request.checkOrderId();
+        Orders persisted = findOrderById(request.orderId());
+        var updatedBy = SecurityUtils.getAuthentication().getName();
+
+        persisted.setOrderStatus(request.orderStatus());
+
+        if (request.recipientName() != null
+                || request.address() != null
+                || request.dateDelivery() != null
+                || request.timeDelivery() != null) {
+            Date deliveryDate = parseDateToEpoch(request.dateDelivery(), request.timeDelivery());
+
+            OrderShipments shipment = shipmentService.findShipmentByOrderId(persisted.getPublicKey());
+            shipment.setRecipientName(request.recipientName());
+            shipment.setDeliveryAddress(request.address());
+            shipment.setDeliveryDate(deliveryDate);
+            shipmentService.create(shipment);
+        }
+        persisted.setLastModifiedBy(updatedBy);
+        persisted.setLastModifiedDate(new Date(System.currentTimeMillis()));
+
+        Orders newUpdateOrder = create(persisted);
+
+        OrdersMapper mapper = orderMapper.buildOrderResponse(newUpdateOrder);
+
+        return new BaseResponse(
+                HttpStatus.CREATED,
+                String.format("Order with id %s successfully to update", request.orderId()),
+                mapper);
+    }
+
+    // Customer payment check
+    private void customerCheckPayment(BigDecimal paymentAmount,
+                                      BigDecimal totalToBePaid,
+                                      Orders orders) {
+        if (paymentAmount != null) {
+            BigDecimal result = totalToBePaid.subtract(paymentAmount);
+
+            if (result.compareTo(BigDecimal.ZERO) > 0) {
+                customerDebtService.addDebtCustomer(orders.getCustomer(), result);
+                orders.setPaymentStatus(PaymentStatus.DOWN_PAYMENT);
+            } else if (result.compareTo(BigDecimal.ZERO) == 0) {
+                orders.setPaymentStatus(PaymentStatus.PAID_OFF);
+            } else {
+                BigDecimal paymentOver = paymentAmount.subtract(totalToBePaid);
+                throw new AppBaseException(String.format("Customer payment is over +%s", paymentOver));
+            }
+
+            Payments payments = paymentService.addPayment(paymentAmount, result, orders);
+            orders.setPayment(payments);
+            return;
+        }
+        /*
+         * If the paymentAmount is null, will be created customer payment bill.
+         * And add the debt of customer.
+         *
+         * And then order status will have Payment status value NOT_YET_PAID
+         */
+        Payments payments = paymentService.addPayment(BigDecimal.ZERO, totalToBePaid, orders);
+        customerDebtService.addDebtCustomer(orders.getCustomer(), orders.getTotalOrderAmount());
+        orders.setPayment(payments);
     }
 
     private Date parseDateToEpoch(String dateDelivery, String timeDelivery) {

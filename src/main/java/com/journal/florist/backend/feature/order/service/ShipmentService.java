@@ -5,5 +5,6 @@ import com.journal.florist.backend.feature.order.model.OrderShipments;
 
 public interface ShipmentService extends HasLogger {
     OrderShipments create(OrderShipments request);
+    OrderShipments findShipmentByOrderId(String orderId);
 
 }

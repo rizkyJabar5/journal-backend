@@ -14,4 +14,6 @@ public interface DeliveryNoteRepository extends JpaRepository<DeliveryNote, Long
             "and d.isPrinted = true")
     boolean orderPrinted(String orderId);
 
+    @Query("select (count(d) > 0) from DeliveryNote d where d.gnrId = ?1")
+    boolean existsByGnrId(String gnrId);
 }

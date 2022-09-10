@@ -30,7 +30,7 @@ public class PrintedDeliveryNoteOrder {
 
     @PostMapping
     public ResponseEntity<?> printDeliveryNote(@RequestParam(name = "order-id") String orderId,
-                                               @RequestParam(name = "gnr-id") String gnrId,
+                                               @RequestParam(name = "gnr-id", required = false) String gnrId,
                                                HttpServletResponse httpResponse) throws IOException, JRException {
         HttpHeaders headers = new HttpHeaders();
         JasperReportRequest jasperRequest = deliveryNoteService.create(orderId, gnrId);

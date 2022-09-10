@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class OrdersMapper implements Serializable {
     private List<DetailProduct> detailOfOrderProducts;
     private BigDecimal totalOrderAmount;
     private String paymentStatus;
+    private BigDecimal paymentAmount;
     private BigDecimal underPayment;
     private String orderStatus;
     private String recipientName;
@@ -37,6 +39,7 @@ public class OrdersMapper implements Serializable {
     private String updatedBy;
     private String updatedAt;
 
+    @Transactional
     public OrdersMapper buildOrderResponse(Orders orders) {
 
         List<DetailProduct> detailProducts = orders.getOrderDetails().parallelStream()
@@ -47,6 +50,13 @@ public class OrdersMapper implements Serializable {
                         detail.getNotes(),
                         detail.getTotalPrice()))
                 .toList();
+
+        BigDecimal pay = BigDecimal.ZERO;
+        BigDecimal underPay = orders.getTotalOrderAmount();
+        if (orders.getPayment() != null) {
+            pay = orders.getPayment().getAmount();
+            underPay = orders.getPayment().getUnderPayment();
+        }
 
         LocalDateTime dateTime = DateConverter.toLocalDateTime(orders.getCreatedAt());
         String addedDate = DateConverter.formatDateTime().format(dateTime);
@@ -75,6 +85,7 @@ public class OrdersMapper implements Serializable {
         if (orders.getOrderShipment().getDeliveryAddress() != null) {
             fullAddress = orders.getOrderShipment().getDeliveryAddress().getFullAddress();
         }
+
         return OrdersMapper.builder()
                 .orderId(orders.getPublicKey())
                 .customerName(orders.getCustomer().getName())
@@ -82,7 +93,8 @@ public class OrdersMapper implements Serializable {
                 .detailOfOrderProducts(detailProducts)
                 .totalOrderAmount(orders.getTotalOrderAmount())
                 .paymentStatus(orders.getPaymentStatus().name())
-                .underPayment(orders.getPayment().getUnderPayment())
+                .paymentAmount(pay)
+                .underPayment(underPay)
                 .orderStatus(orders.getOrderStatus().name())
                 .recipientName(orders.getOrderShipment().getRecipientName())
                 .deliveryAddress(fullAddress)

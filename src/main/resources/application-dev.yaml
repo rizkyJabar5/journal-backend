@@ -1,0 +1,18 @@
+#Spring datasource
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tkbunga
+    username: postgres
+    password:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        connection:
+          driver_class: org.postgresql.Driver
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
