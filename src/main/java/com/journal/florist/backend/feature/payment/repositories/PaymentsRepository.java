@@ -8,12 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PaymentsRepository extends JpaRepository<Payments, String> {
 
-    @Query("""
-            SELECT py.paymentID
-            FROM Payments py
-            WHERE py.order.publicKey = ?1
-            """)
-    String existsPaymentByOrderId(String orderId);
+
+    @Query("select (count(p) > 0) from Payments p where p.order.id = ?1")
+    boolean existsPaymentByOrderId(String orderId);
 
     @Query("""
             SELECT py

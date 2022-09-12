@@ -4,13 +4,11 @@ import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
 import java.util.Objects;
 
 @Slf4j
@@ -75,6 +73,7 @@ public final class SecurityUtils {
     public static void authenticateUser(AuthenticationManager authenticationManager,
                                         String emails,
                                         String password) {
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 emails,
                 password);
@@ -83,19 +82,18 @@ public final class SecurityUtils {
     }
 
     /**
+     * For Jwt authentication object.
      * Creates an authentication object with the userDetails then set authentication to
      * SecurityContextHolder.
-     *
      * @param userDetails the userDetails
      */
     public static void authenticateUser(HttpServletRequest request, UserDetails userDetails) {
 
         if (Objects.nonNull(request) && Objects.nonNull(userDetails)) {
-            Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
-                    authorities);
+                    userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource()
                     .buildDetails(request));
 
