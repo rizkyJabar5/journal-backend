@@ -25,7 +25,6 @@ import com.journal.florist.backend.feature.payment.service.PaymentService;
 import com.journal.florist.backend.feature.order.service.ShipmentService;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.EntityUtil;
-import com.journal.florist.backend.feature.utils.FilterableCrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,8 +74,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<Orders> getOrderPaidOff(int page, int limit) {
-        return orderRepository.findOrderPaidOff(FilterableCrudService.getPageable(page, limit));
+    public Page<OrdersMapper> getAllOrder(Pageable pageable) {
+        return orderRepository.findAllOrder(pageable)
+                .map(orderMapper::buildOrderResponse);
     }
 
     @Override

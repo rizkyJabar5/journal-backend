@@ -34,10 +34,19 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
             "order by o.createdAt desc")
     List<Orders> findOrderByDate(Date orderDate);
 
-    @Query("select o " +
-            "from Orders o " +
-            "where o.paymentStatus = com.journal.florist.backend.feature.order.enums.PaymentStatus.PAID_OFF " +
-            "order by o.createdAt desc")
+    @Query("""
+            select o
+            from Orders o
+            order by o.createdAt desc
+            """)
+    Page<Orders> findAllOrder(Pageable pageable);
+
+    @Query("""
+            select o
+            from Orders o
+            where o.paymentStatus = com.journal.florist.backend.feature.order.enums.PaymentStatus.PAID_OFF
+            order by o.createdAt desc
+            """)
     Page<Orders> findOrderPaidOff(Pageable pageable);
 
     List<Orders> findOrderByOrderStatus(OrderStatus orderStatus);

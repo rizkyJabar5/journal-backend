@@ -5,8 +5,10 @@
 package com.journal.florist.backend.feature.product.service;
 
 
+import com.cloudinary.utils.ObjectUtils;
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.app.common.messages.SuccessResponse;
+import com.journal.florist.app.common.utils.CloudinaryConfig;
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.IllegalException;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -42,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final ProductMapper productMapper;
     private final CategoryService categoryService;
+    private final CloudinaryConfig cloudinaryConfig;
 
     @Override
     public Page<ProductMapper> getAllProduct(Pageable pageable) {
@@ -78,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public BaseResponse addNewProduct(AddProductRequest request) {
+    public BaseResponse addNewProduct(AddProductRequest request, MultipartFile image) {
         Authentication authentication = SecurityUtils.getAuthentication();
         String createdBy = authentication.getName();
 
@@ -98,12 +102,17 @@ public class ProductServiceImpl implements ProductService {
             product.setCreatedBy(createdBy);
             product.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            if(lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
+            if (lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
                 throw new AppBaseException("Price must greater than cost price");
             }
             product.setCostPrice(request.getCostPrice());
             product.setPrice(request.getPrice());
-            product.setPicture(request.getPicture());
+            var uploadImage = cloudinaryConfig.upload(image,
+                            ObjectUtils.asMap(
+                                    "resourceType", "image",
+                                    "folder", "journal-backend/"))
+                    .get("url").toString();
+            product.setPicture(uploadImage);
 
             repository.save(product);
         } else {
@@ -118,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public BaseResponse updateProduct(UpdateProductRequest request) {
+    public BaseResponse updateProduct(UpdateProductRequest request, MultipartFile image) {
 
         Authentication authentication = SecurityUtils.getAuthentication();
         String updateBy = authentication.getName();
@@ -143,14 +152,19 @@ public class ProductServiceImpl implements ProductService {
             if (Objects.nonNull(request.getCostPrice())) {
                 product.setCostPrice(request.getCostPrice());
             }
-            if(lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
+            if (lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
                 throw new AppBaseException("Price must greater than cost price");
             }
             if (Objects.nonNull(request.getPrice())) {
                 product.setPrice(request.getPrice());
             }
-            if (Objects.nonNull(request.getPicture())) {
-                product.setPicture(request.getPicture());
+            if (Objects.nonNull(image)) {
+                String uploadImage = cloudinaryConfig.upload(image,
+                                ObjectUtils.asMap(
+                                        "resourceType", "image",
+                                        "folder", "journal-backend/"))
+                        .get("url").toString();
+                product.setPicture(uploadImage);
             }
 
             product.setLastModifiedBy(updateBy);

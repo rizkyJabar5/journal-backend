@@ -13,6 +13,7 @@ import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,9 +24,9 @@ public interface ProductService extends HasLogger {
     Product findByProductKey(String productKey);
     List<ProductMapper> getProductName(String productName);
     Page<ProductMapper> getByField(Pageable pageable);
-    BaseResponse addNewProduct(AddProductRequest request);
+    BaseResponse addNewProduct(AddProductRequest request, MultipartFile image);
 
-    BaseResponse updateProduct(UpdateProductRequest request);
+    BaseResponse updateProduct(UpdateProductRequest request, MultipartFile image);
 
     SuccessResponse deleteProductById(String productKey);
 

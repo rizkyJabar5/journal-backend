@@ -8,6 +8,22 @@ spring:
     active: dev
   mustache:
     check-template-location: false
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 10MB
 
 jwt:
   secretKey: rahasiarahasiarahasiarahasiarahasiarahasiarahasiarahasiarahasirahasiarahasiarahasiasangat
+
+#    Swagger Properties
+swagger:
+  title: Journal Backend
+  version: v1.0.0
+  description: Journal api is an endpoint that can perform various operations to manage a transaction. This end point is still under development so if you find any bugs, please report at the contact below. Your support means a lot to us.
+
+#Cloudinary Properties
+cloud:
+  name: journal-florist
+  key: 718635641258268
+  secret: KYip6UFwF92tp_QUU4BO3Nr8TOU

@@ -8,16 +8,21 @@ import com.journal.florist.backend.feature.customer.dto.CustomerRequest;
 import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
 import com.journal.florist.backend.feature.utils.FilterableCrudService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.journal.florist.app.constant.ApiUrlConstant.CUSTOMER_URL;
 
+@Tag(name = "Customer Endpoint",
+        description = "Transaction customer endpoint")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(CUSTOMER_URL)
@@ -25,12 +30,17 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @GetMapping("/customer")
+    @Operation(summary = "Filter customer by customer name")
+    @GetMapping(value = "/customer")
     public ResponseEntity<Page<CustomerMapper>> getCustomerName(@RequestParam String name,
-                                                                @RequestParam(required = false) int page,
-                                                                @RequestParam(required = false) int limit) {
+                                                                @RequestParam(defaultValue = "1",
+                                                                        required = false) int page,
+                                                                @RequestParam(defaultValue = "10",
+                                                                        required = false) int limit) {
         Pageable filter = FilterableCrudService.getPageableWithSort(
-                page - 1, limit, Sort.by("name").ascending());
+                page - 1,
+                limit,
+                Sort.by("name").ascending());
         if (name.isBlank()) {
             throw new IllegalException("Parameter name is required");
         }
@@ -39,19 +49,30 @@ public class CustomerController {
         return new ResponseEntity<>(mapperPage, HttpStatus.FOUND);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<CustomerMapper>> getAllCustomers(Pageable pageable) {
-        Page<CustomerMapper> response = customerService.findAllCustomer(pageable);
+    @Operation(summary = "Fetching all customer in record found")
+    @GetMapping(value = "")
+    public ResponseEntity<Page<CustomerMapper>> getAllCustomers(
+            @RequestParam(defaultValue = "1", required = false) Integer page,
+            @RequestParam(defaultValue = "10", required = false) Integer limit) {
+        Pageable filter = FilterableCrudService.getPageableWithSort(
+                page - 1, limit, Sort.by("name").ascending());
+        Page<CustomerMapper> response = customerService.findAllCustomer(filter);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/add-customer")
+    @Operation(summary = "Creating new customer")
+    @PostMapping(value = "/add-customer",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResponse> addCustomer(@RequestBody CustomerRequest request) {
         BaseResponse response = customerService.addCustomer(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update-customer")
+    @Operation(summary = "Updating existing customer")
+    @PutMapping(value = "/update-customer",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResponse> updateCustomer(@RequestBody UpdateCustomerRequest request) {
         if (request.getCustomerId() == null) {
             throw new IllegalException("Customer id is required");
@@ -60,7 +81,10 @@ public class CustomerController {
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/delete")
+    @Operation(summary = "Deleting existing customer")
+    @DeleteMapping(value = "/delete",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponse> deleteCustomer(@RequestParam String customerId) {
         SuccessResponse response = customerService.deleteCustomer(customerId);
         return new ResponseEntity<>(response, HttpStatus.OK);

@@ -2,6 +2,8 @@ package com.journal.florist.backend.authentication.login;
 
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.app.security.jwt.JwtUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import javax.validation.Valid;
 
 import static com.journal.florist.app.constant.ApiUrlConstant.AUTHENTICATION_URL;
 
+@Tag(name = "User Login",
+        description = "Api endpoint for user login to application")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(AUTHENTICATION_URL)
@@ -24,7 +28,10 @@ public class LoginController {
 
     private final JwtUtils jwtUtils;
 
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Login user with username and password required")
+    @PostMapping(value = "/login",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginJwtResponse> authenticationUserLogin(
             @Valid @RequestBody LoginRequest loginRequest) {
 

@@ -20,7 +20,7 @@ public interface OrderService extends HasLogger {
                                   OrderStatus orderStatus,
                                   PaymentStatus paymentStatus,
                                   Pageable pageable);
-    Page<Orders> getOrderPaidOff(int page, int limit);
+    Page<OrdersMapper> getAllOrder(Pageable pageable);
     List<Orders> getOrderByCustomerName(String customerName);
     List<Orders> findOrderByStatus(OrderStatus orderStatus);
     List<Orders> findOrderByDate(String orderDate);
