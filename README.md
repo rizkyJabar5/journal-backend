@@ -1,46 +1,39 @@
 # Journal Florist
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+This project is a application for backend Journal Florist and already deployed on Heroku
 
 ## Running the application
 
 The project is a standard Maven project. To run it from the command line,
 type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+http://localhost:8080/swagger-ui/index.html in your browser to see endpoint documentation.
 
 You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different 
-IDEs](https://vaadin.com/docs/latest/flow/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
+(Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
 
-## Deploying to Production
+## Deploying to Heroku
 
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
+- See documentation API branch `staging` https://journal-florist-staging.herokuapp.com/swagger-ui/index.html
+- See documentation API branch `production` https://journal-florist-production.herokuapp.com/swagger-ui/index.html
 
-Once the JAR file is built, you can run it using
-`java -jar target/journalflorist-1.0-SNAPSHOT.jar`
 
-## Project structure
+## Built With
 
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/components/vaadin-app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `frontend/` contains the client-side JavaScript views of your application.
-- `themes` folder in `frontend/` contains the custom CSS styles.
+* [Spring Boot 2.7.0](https://projects.spring.io/spring-boot/) - Inversion of Control Framework,
+* [Maven](https://maven.apache.org) Dependency library and built tool,
+* [Lombok](https://projectlombok.org/) - Automatically plugs into our editor and build tools,
+* [Spring Security](https://docs.spring.io/spring-boot/docs/2.6.7/reference/htmlsingle/#boot-features-security)
+* [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/2.6.7/reference/htmlsingle/#configuration-metadata-annotation-processor)
+* [Validation](https://docs.spring.io/spring-boot/docs/2.6.7/reference/htmlsingle/#boot-features-validation)
+* [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/2.6.7/reference/htmlsingle/#using-boot-devtools)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.7/reference/htmlsingle/#boot-features-jpa-and-spring-data)
+* [Rest Repositories](https://docs.spring.io/spring-boot/docs/2.6.7/reference/htmlsingle/#howto-use-exposing-spring-data-repositories-rest-endpoint)
 
-## Deploying using Docker
-To build the Dockerized version of the project, run
+## Features
 
-```
-docker build . -t journalflorist:latest
-```
-
-Once the Docker image is correctly built, you can test it locally using
-
-```
-docker run -p 8080:8080 journalflorist:latest
-```
+- [OpenApi3 Swagger]()
+- [Form Validation](https://formvalidation.io/)
+- [API Login Controller]()
+- [Advanced CORS Configuration]()
+- [Production Ready Folder Structure]()
+- [Authentication and Authorization with JWT]()
