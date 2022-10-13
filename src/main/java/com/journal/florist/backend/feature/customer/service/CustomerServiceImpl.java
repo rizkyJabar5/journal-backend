@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customers getCustomers(String customerId) {
+    public Customers getCustomerId(String customerId) {
         return repository.findByPublicKey(customerId)
                 .orElseThrow(() -> new NotFoundException(
                         String.format(NOT_FOUND_MSG, EntityUtil.getName(Customers.class), customerId)));
@@ -99,7 +99,7 @@ public class CustomerServiceImpl implements CustomerService {
         Authentication authentication = SecurityUtils.getAuthentication();
         String updatedBy = authentication.getName();
 
-        Customers entity = getCustomers(customer.getCustomerId());
+        Customers entity = getCustomerId(customer.getCustomerId());
 
         if (customer.getCustomerName() != null) {
             entity.setName(customer.getCustomerName());
@@ -138,7 +138,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public SuccessResponse deleteCustomer(String id) {
-        Customers persisted = getCustomers(id);
+        Customers persisted = getCustomerId(id);
         repository.delete(persisted);
 
         getLogger().info("Successfully deleted category {}", persisted.getPublicKey());

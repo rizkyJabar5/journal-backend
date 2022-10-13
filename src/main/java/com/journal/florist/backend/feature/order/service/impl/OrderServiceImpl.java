@@ -111,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
     public BaseResponse addOrder(AddOrderRequest request) {
 
         var orders = new Orders();
-        var customer = customerService.getCustomers(request.getCustomerId());
+        var customer = customerService.getCustomerId(request.getCustomerId());
         var authentication = SecurityUtils.getAuthentication();
         String createdBy = authentication.getName();
 

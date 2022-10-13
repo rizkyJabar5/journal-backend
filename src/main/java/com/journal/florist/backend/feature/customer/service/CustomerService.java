@@ -14,7 +14,7 @@ public interface CustomerService extends HasLogger {
 
     Page<CustomerMapper> getCustomerByName(String name, Pageable pageable);
     Page<CustomerMapper> findAllCustomer(Pageable pageable);
-    Customers getCustomers(String customerId);
+    Customers getCustomerId(String customerId);
     BaseResponse addCustomer(CustomerRequest customer);
     BaseResponse updateCustomer(UpdateCustomerRequest customer);
     SuccessResponse deleteCustomer(String id);
