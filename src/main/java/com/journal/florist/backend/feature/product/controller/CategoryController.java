@@ -28,9 +28,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(summary = "Fetching all categories")
-    @GetMapping(value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/")
     public ResponseEntity<BaseResponse> getAllCategories() {
         BaseResponse response = categoryService.findAllCategory();
         return ResponseEntity.ok().body(response);
