@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
-public class  UserController {
+public class UserController {
     private final AppUserService appUserService;
 
     @Operation(summary = "Fetching all user with pagination")
-    @GetMapping(value = "")
+    @GetMapping
     public ResponseEntity<Page<AppUserBuilder>> getUsers(
             @RequestParam(defaultValue = "1", required = false) Integer page,
-            @RequestParam(defaultValue = "10", required = false) Integer limit){
+            @RequestParam(defaultValue = "10", required = false) Integer limit) {
         Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
         Page<AppUserBuilder> contentUsers = appUserService.getAllUsers(filter);
 
@@ -37,10 +37,11 @@ public class  UserController {
     }
 
     @Operation(summary = "Filter user by username")
-    @GetMapping(value = "{username}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppUsers> getByUsername(@PathVariable("username") String email, String username) {
+    @GetMapping(value = "/user",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+
+    public ResponseEntity<AppUsers> getByUsername(@RequestParam(name = "username") String email, String username) {
         AppUsers content = appUserService.findByEmailOrUsername(email, username);
 
         return new ResponseEntity<>(content, HttpStatus.OK);

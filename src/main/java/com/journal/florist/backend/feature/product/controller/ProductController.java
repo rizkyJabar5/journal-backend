@@ -6,9 +6,9 @@ package com.journal.florist.backend.feature.product.controller;
 
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.app.common.messages.SuccessResponse;
-import com.journal.florist.backend.feature.product.dto.AddProductRequest;
-import com.journal.florist.backend.feature.product.dto.ProductMapper;
-import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
+import com.journal.florist.backend.feature.product.dto.product.AddProductRequest;
+import com.journal.florist.backend.feature.product.dto.product.ProductMapper;
+import com.journal.florist.backend.feature.product.dto.product.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.FilterableCrudService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +40,7 @@ public class ProductController {
     private final ProductService service;
 
     @Operation(summary = "Fetching all product with pagination")
-    @GetMapping(value = "/")
+    @GetMapping
     public ResponseEntity<Page<ProductMapper>> getAllProduct(
             @RequestParam(defaultValue = "1",
                     required = false) Integer page,
@@ -53,16 +53,16 @@ public class ProductController {
     }
 
     @Operation(summary = "Filter by product name")
-    @GetMapping(value = "/name")
-    public ResponseEntity<Object> getProductByName(@RequestParam(name = "product") String productName) {
+    @GetMapping(value = "/product")
+    public ResponseEntity<Object> getProductByName(@RequestParam(name = "name") String productName) {
 
         List<ProductMapper> mapper = service.getProductName(productName);
         return new ResponseEntity<>(mapper, HttpStatus.FOUND);
     }
 
     @Operation(summary = "Filter product by product key in request param")
-    @GetMapping(value = "")
-    public ResponseEntity<ProductMapper> getProductByKey(@RequestParam(name = "key") String productKey) {
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ProductMapper> getProductByKey(@PathVariable("id") String productKey) {
 
         Optional<ProductMapper> product = Optional.ofNullable(service.getProductByKey(productKey));
         if (product.isEmpty()) {
@@ -73,12 +73,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Add new product")
-    @PostMapping(value = "/add-product",
-            consumes = {
-                    MediaType.MULTIPART_FORM_DATA_VALUE,
-                    MediaType.APPLICATION_JSON_VALUE
-            },
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse> createProduct(
             @Valid @ModelAttribute AddProductRequest request,
             @RequestParam(required = false) MultipartFile image) {
@@ -88,12 +83,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Update product")
-    @PutMapping(value = "/update",
-            consumes = {
-                    MediaType.MULTIPART_FORM_DATA_VALUE,
-                    MediaType.APPLICATION_JSON_VALUE
-            },
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse> updateProduct(
             @Valid @ModelAttribute UpdateProductRequest request,
             @RequestParam(required = false) MultipartFile image) {
@@ -102,9 +92,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Delete product")
-    @DeleteMapping(value = "/delete",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete")
     public ResponseEntity<SuccessResponse> deleteProduct(@RequestParam(name = "key") String productKey) {
         SuccessResponse response = service.deleteProductById(productKey);
         return ResponseEntity.accepted().body(response);

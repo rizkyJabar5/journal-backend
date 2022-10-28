@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +24,7 @@ public class SupplierController {
     private final SupplierService supplierService;
 
     @Operation(summary = "Fetching all supplier found in record")
-    @GetMapping(value = "")
+    @GetMapping
     public ResponseEntity<?> getAllSupplier() {
         List<Suppliers> suppliers = supplierService.getAllSuppliers();
         if (suppliers.isEmpty()) {
@@ -36,12 +35,10 @@ public class SupplierController {
     }
 
     @Operation(summary = "Creating a supplier")
-    @PostMapping(value = "",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResponse> addNewSupplier(@RequestBody Suppliers suppliers) {
+    @PostMapping(value = "/add-supplier")
+    public ResponseEntity<BaseResponse> addNewSupplier(@RequestBody Object supplierName) {
 
-        Suppliers data = supplierService.addSuppliers(suppliers);
+        Suppliers data = supplierService.addSuppliers(supplierName);
 
         BaseResponse response = new BaseResponse(
                 HttpStatus.OK,

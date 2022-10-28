@@ -13,9 +13,9 @@ import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
-import com.journal.florist.backend.feature.product.dto.AddProductRequest;
-import com.journal.florist.backend.feature.product.dto.ProductMapper;
-import com.journal.florist.backend.feature.product.dto.UpdateProductRequest;
+import com.journal.florist.backend.feature.product.dto.product.AddProductRequest;
+import com.journal.florist.backend.feature.product.dto.product.ProductMapper;
+import com.journal.florist.backend.feature.product.dto.product.UpdateProductRequest;
 import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.model.Product;
 import com.journal.florist.backend.feature.product.repositories.ProductRepository;
@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new IllegalException(String.format(MUST_BE_UNIQUE, EntityUtil.getName(Product.class)));
             }
             product.setProductName(request.getProductName());
-            Category category = categoryService.findByCategoryKey(request.getCategoryKey());
+            Category category = categoryService.findByCategoryId(request.getCategoryKey());
 
             product.setCategory(category);
             product.setDescription(request.getDescription());
@@ -143,7 +143,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setProductName(request.getProductName());
             }
             if (Objects.nonNull(request.getCategoryId())) {
-                Category category = categoryService.findByCategoryKey(request.getCategoryId());
+                Category category = categoryService.findByCategoryId(request.getCategoryId());
                 product.setCategory(category);
             }
             if (Objects.nonNull(request.getDescription())) {

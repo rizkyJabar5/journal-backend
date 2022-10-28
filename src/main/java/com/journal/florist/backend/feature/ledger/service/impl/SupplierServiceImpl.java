@@ -46,7 +46,9 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Suppliers addSuppliers(Suppliers supplier) {
-        return repository.save(supplier);
+    public Suppliers addSuppliers(Object supplierName) {
+        Suppliers entity = new Suppliers();
+        entity.setSupplierName(String.valueOf(supplierName));
+        return repository.save(entity);
     }
 }

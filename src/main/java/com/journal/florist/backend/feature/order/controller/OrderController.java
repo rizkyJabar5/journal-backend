@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @Operation(summary = "Fetching all order in record with pagination")
-    @GetMapping(value = "")
+    @GetMapping
     public ResponseEntity<BaseResponse> getAllOrder(
             @RequestParam(name = "page",
                     required = false,
@@ -58,18 +57,14 @@ public class OrderController {
     }
 
     @Operation(summary = "Creating new order")
-    @PostMapping(value = "/add-order",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-order")
     public ResponseEntity<BaseResponse> addNewOrder(@Valid @RequestBody AddOrderRequest request) {
         var response = orderService.addOrder(request);
         return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "Update existing order")
-    @PutMapping(value = "/update-order",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update-order")
     public ResponseEntity<BaseResponse> updateExistingOrder(@Valid @RequestBody UpdateOrderRequest request) {
         var response = orderService.updateOrder(request);
         return ResponseEntity.ok().body(response);

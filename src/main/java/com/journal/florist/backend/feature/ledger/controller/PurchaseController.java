@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @Operation(summary = "Fetching all purchase in record with pagination")
-    @GetMapping(value = "")
+    @GetMapping
     public ResponseEntity<BaseResponse> getAllPage(
             @RequestParam(defaultValue = "1", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer limit) {
@@ -44,9 +43,7 @@ public class PurchaseController {
     }
 
     @Operation(summary = "Purchasing product from supplier")
-    @PostMapping(value = "",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/add-purchase")
     public ResponseEntity<?> addNewPurchase(@RequestBody PurchaseRequest request) {
         BaseResponse response = purchaseService.create(request);
 

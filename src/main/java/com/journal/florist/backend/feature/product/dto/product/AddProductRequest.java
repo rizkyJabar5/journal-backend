@@ -2,22 +2,22 @@
  * Copyright (c) 2022.
  */
 
-package com.journal.florist.backend.feature.product.dto;
+package com.journal.florist.backend.feature.product.dto.product;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
-public class UpdateProductRequest implements Serializable {
-    @NotBlank(message = "Product id is required")
-    private String productId;
+public class AddProductRequest {
 
+    @NotBlank(message = "Product name is required")
     private String productName;
+
+    @NotBlank(message = "Product must have category")
+    private String categoryKey;
     private String description;
     private BigDecimal costPrice;
     private BigDecimal price;
-    private String categoryId;
 }

@@ -13,7 +13,7 @@ public interface SupplierService extends HasLogger {
     BigDecimal sumTotalDebt();
     void update(Suppliers suppliers);
 
-    Suppliers addSuppliers(Suppliers supplier);
+    Suppliers addSuppliers(Object supplierName);
 
 
 }

@@ -218,7 +218,6 @@ public class OrderServiceImpl implements OrderService {
 
             Payments payments = paymentService.addPayment(paymentAmount, result, orders);
             orders.setPayment(payments);
-            return;
         }
         /*
          * If the paymentAmount is null, will be created customer payment bill.

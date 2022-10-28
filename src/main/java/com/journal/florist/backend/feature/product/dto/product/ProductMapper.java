@@ -2,7 +2,7 @@
  * Copyright (c) 2022.
  */
 
-package com.journal.florist.backend.feature.product.dto;
+package com.journal.florist.backend.feature.product.dto.product;
 
 import com.journal.florist.app.common.utils.DateConverter;
 import com.journal.florist.backend.feature.product.model.Product;

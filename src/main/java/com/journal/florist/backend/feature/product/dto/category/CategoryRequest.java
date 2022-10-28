@@ -1,4 +1,4 @@
-package com.journal.florist.backend.feature.product.dto;
+package com.journal.florist.backend.feature.product.dto.category;
 
 import lombok.Data;
 

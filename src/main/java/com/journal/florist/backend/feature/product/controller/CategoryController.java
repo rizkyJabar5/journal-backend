@@ -2,13 +2,13 @@ package com.journal.florist.backend.feature.product.controller;
 
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.app.common.messages.SuccessResponse;
-import com.journal.florist.backend.feature.product.dto.CategoryRequest;
+import com.journal.florist.backend.feature.product.dto.category.AddCategoryRequest;
+import com.journal.florist.backend.feature.product.dto.category.CategoryRequest;
 import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,34 +28,28 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(summary = "Fetching all categories")
-    @GetMapping(value = "/")
+    @GetMapping
     public ResponseEntity<BaseResponse> getAllCategories() {
         BaseResponse response = categoryService.findAllCategory();
         return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "Filter by category key")
-    @GetMapping(value = "/{categoryKey}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Category> getCategoryByKey(@PathVariable("categoryKey") String categoryKey) {
-        Category response = categoryService.findByCategoryKey(categoryKey);
+    @GetMapping(value = "/")
+    public ResponseEntity<Category> getCategoryByKey(@RequestParam(name = "id") String categoryKey) {
+        Category response = categoryService.findByCategoryId(categoryKey);
         return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "Add new category")
-    @PostMapping(value = "/add-category",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResponse> addCategory(@Valid @RequestBody CategoryRequest category) {
-        BaseResponse response = categoryService.addNewCategory(category);
+    @PostMapping(value = "/add-category")
+    public ResponseEntity<BaseResponse> addCategory(@Valid @RequestBody AddCategoryRequest request) {
+        BaseResponse response = categoryService.addNewCategory(request);
         return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "Update category")
-    @PutMapping(value = "/update-category",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update-category")
     public ResponseEntity<BaseResponse> updateCategory(@Valid @RequestBody CategoryRequest category) {
 
         BaseResponse response = categoryService.updateCategory(category);
@@ -63,10 +57,8 @@ public class CategoryController {
     }
 
     @Operation(summary = "Delete category by key")
-    @DeleteMapping(value = "/delete",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SuccessResponse> deleteCategory(@RequestParam(name = "key") String categoryKey) {
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<SuccessResponse> deleteCategory(@RequestParam(name = "id") String categoryKey) {
         SuccessResponse response = categoryService.deleteCategory(categoryKey);
         return ResponseEntity.ok().body(response);
     }
