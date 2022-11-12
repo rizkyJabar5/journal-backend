@@ -21,6 +21,8 @@ public interface CustomerRepository extends JpaRepository<Customers, Long> {
             "order by c.createdAt")
     Page<Customers> findAllCustomers(Pageable pageable);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
     @Query("select c from Customers c where upper(c.company.companyName) like upper(concat('%', ?1, '%'))")
     Customers findByCompanyIgnoreCaseContaining(String companyName);
 }

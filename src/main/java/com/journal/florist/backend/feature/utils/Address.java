@@ -4,6 +4,7 @@
 
 package com.journal.florist.backend.feature.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
+@JsonIgnoreProperties(value = "fullAddress", allowGetters = true)
 public class Address implements Serializable {
 
     @NotEmpty(message = "Street may not be empty")

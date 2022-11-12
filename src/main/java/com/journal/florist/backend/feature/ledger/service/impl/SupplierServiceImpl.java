@@ -1,10 +1,12 @@
 package com.journal.florist.backend.feature.ledger.service.impl;
 
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.ledger.model.Suppliers;
 import com.journal.florist.backend.feature.ledger.repositories.SupplierRepository;
 import com.journal.florist.backend.feature.ledger.service.SupplierService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -46,9 +48,15 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Suppliers addSuppliers(Object supplierName) {
+    public BaseResponse addSuppliers(Suppliers suppliers) {
         Suppliers entity = new Suppliers();
-        entity.setSupplierName(String.valueOf(supplierName));
-        return repository.save(entity);
+        entity.setSupplierName(suppliers.getSupplierName());
+
+        repository.save(entity);
+        return new BaseResponse(
+                HttpStatus.CREATED,
+                "Successfully to add new Suppliers",
+                entity
+        );
     }
 }

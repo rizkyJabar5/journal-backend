@@ -4,6 +4,7 @@
 
 package com.journal.florist.backend.feature.ledger.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties(value ={"id", "totalDebt"}, allowGetters = true )
 public class Suppliers {
 
     @Id

@@ -36,14 +36,9 @@ public class SupplierController {
 
     @Operation(summary = "Creating a supplier")
     @PostMapping(value = "/add-supplier")
-    public ResponseEntity<BaseResponse> addNewSupplier(@RequestBody Object supplierName) {
+    public ResponseEntity<BaseResponse> addNewSupplier(@RequestBody Suppliers suppliers) {
 
-        Suppliers data = supplierService.addSuppliers(supplierName);
-
-        BaseResponse response = new BaseResponse(
-                HttpStatus.OK,
-                "Success to persist new Supplier",
-                data);
+        BaseResponse response = supplierService.addSuppliers(suppliers);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

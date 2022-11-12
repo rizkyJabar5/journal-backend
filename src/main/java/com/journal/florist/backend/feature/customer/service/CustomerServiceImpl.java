@@ -3,6 +3,7 @@ package com.journal.florist.backend.feature.customer.service;
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.exceptions.AppBaseException;
+import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.customer.dto.CustomerMapper;
 import com.journal.florist.backend.feature.customer.dto.CustomerRequest;
@@ -56,11 +57,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public BaseResponse addCustomer(CustomerRequest customer) {
-
         Authentication authentication = SecurityUtils.getAuthentication();
         String createdBy = authentication.getName();
 
         Customers entity = new Customers();
+
+        boolean persisted = repository.existsByPhoneNumber(customer.getCustomerPhone());
+        if(persisted){
+            throw new IllegalException(UNIQUE_PHONE_NUMBER);
+        }
+
         entity.setName(customer.getCustomerName());
         boolean validPhoneNumber = validator.isValidPhoneNumber(customer.getCustomerPhone());
         if (!validPhoneNumber) {

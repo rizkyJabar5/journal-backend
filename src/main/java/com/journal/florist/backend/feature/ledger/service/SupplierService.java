@@ -1,5 +1,6 @@
 package com.journal.florist.backend.feature.ledger.service;
 
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.app.common.utils.HasLogger;
 import com.journal.florist.backend.feature.ledger.model.Suppliers;
 
@@ -13,7 +14,6 @@ public interface SupplierService extends HasLogger {
     BigDecimal sumTotalDebt();
     void update(Suppliers suppliers);
 
-    Suppliers addSuppliers(Object supplierName);
-
+    BaseResponse addSuppliers(Suppliers suppliers);
 
 }
