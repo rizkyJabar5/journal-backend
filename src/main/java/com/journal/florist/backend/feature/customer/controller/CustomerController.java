@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,18 +60,14 @@ public class CustomerController {
     }
 
     @Operation(summary = "Creating new customer")
-    @PostMapping(value = "/add-customer",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-customer")
     public ResponseEntity<BaseResponse> addCustomer(@RequestBody CustomerRequest request) {
         BaseResponse response = customerService.addCustomer(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Updating existing customer")
-    @PutMapping(value = "/update-customer",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update-customer")
     public ResponseEntity<BaseResponse> updateCustomer(@RequestBody UpdateCustomerRequest request) {
         if (request.getCustomerId() == null) {
             throw new IllegalException("Customer id is required");
@@ -82,9 +77,7 @@ public class CustomerController {
     }
 
     @Operation(summary = "Deleting existing customer")
-    @DeleteMapping(value = "/delete",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete")
     public ResponseEntity<SuccessResponse> deleteCustomer(@RequestParam String customerId) {
         SuccessResponse response = customerService.deleteCustomer(customerId);
         return new ResponseEntity<>(response, HttpStatus.OK);
