@@ -43,7 +43,8 @@ public class BeanSecurityConfig implements WebMvcConfigurer, HasLogger {
     public void addCorsMappings(CorsRegistry registry) {
         registry
                 .addMapping("/**")
-                .allowedOrigins("*");
+                .allowedOrigins("*")
+                .allowedMethods("*");
     }
 
     private String uploadPath(String directory) {
