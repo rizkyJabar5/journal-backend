@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
         //Setter order details product.
         Set<OrderDetails> orderDetails = new HashSet<>();
         for (AddOrderRequest.OrderDetailDto detail : request.getDetailProduct()) {
-            var product = productService.findByProductKey(detail.getProductId());
+            var product = productService.findByProductId(detail.getProductId());
             orderDetails.add(orderDetailService.create(
                     new OrderDetails(orders,
                             product,

@@ -9,6 +9,7 @@ import com.journal.florist.backend.feature.product.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +37,15 @@ public class CategoryController {
 
     @Operation(summary = "Filter by category key")
     @GetMapping(value = "/")
-    public ResponseEntity<Category> getCategoryByKey(@RequestParam(name = "id") String categoryKey) {
-        Category response = categoryService.findByCategoryId(categoryKey);
+    public ResponseEntity<BaseResponse> getCategoryById(@RequestParam(name = "categoryId") String categoryId) {
+        Category category = categoryService.findByCategoryId(categoryId);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                String.format("Customer found with id %s", categoryId),
+                category
+        );
+
         return ResponseEntity.ok().body(response);
     }
 

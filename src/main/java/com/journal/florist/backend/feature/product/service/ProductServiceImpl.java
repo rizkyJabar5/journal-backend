@@ -54,15 +54,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductMapper getProductByKey(String productKey) {
-        return repository.findByPublicKey(productKey)
+    public ProductMapper getProductById(String productId) {
+        return repository.findByPublicKey(productId)
                 .map(productMapper::productMapper)
                 .orElseThrow(() ->
-                        new AppBaseException(String.format(NOT_FOUND_MSG, EntityUtil.getName(Product.class), productKey)));
+                        new AppBaseException(String.format(NOT_FOUND_MSG, EntityUtil.getName(Product.class), productId)));
     }
 
     @Override
-    public Product findByProductKey(String productKey) {
+    public Product findByProductId(String productKey) {
         return repository.findByPublicKey(productKey)
                 .orElseThrow(() ->
                         new NotFoundException(String.format(NOT_FOUND_MSG, EntityUtil.getName(Product.class), productKey)));
@@ -132,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
         Authentication authentication = SecurityUtils.getAuthentication();
         String updateBy = authentication.getName();
         boolean authenticated = SecurityUtils.isAuthenticated();
-        Product product = findByProductKey(request.getProductId());
+        Product product = findByProductId(request.getProductId());
 
         if (authenticated) {
             if (Objects.nonNull(request.getProductName())) {
@@ -182,7 +182,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public SuccessResponse deleteProductById(String productKey) {
-        Product persistedProduct = findByProductKey(productKey);
+        Product persistedProduct = findByProductId(productKey);
         repository.delete(persistedProduct);
 
         return new SuccessResponse(

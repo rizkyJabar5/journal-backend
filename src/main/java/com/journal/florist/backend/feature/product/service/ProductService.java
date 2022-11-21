@@ -20,8 +20,8 @@ import java.util.List;
 public interface ProductService extends HasLogger {
 
     Page<ProductMapper> getAllProduct(Pageable pageable);
-    ProductMapper getProductByKey(String productKey);
-    Product findByProductKey(String productKey);
+    ProductMapper getProductById(String productId);
+    Product findByProductId(String productKey);
     List<ProductMapper> getProductName(String productName);
     Page<ProductMapper> getByField(Pageable pageable);
     BaseResponse addNewProduct(AddProductRequest request, MultipartFile image);

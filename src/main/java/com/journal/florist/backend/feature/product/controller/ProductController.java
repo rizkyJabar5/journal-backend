@@ -41,35 +41,54 @@ public class ProductController {
 
     @Operation(summary = "Fetching all product with pagination")
     @GetMapping
-    public ResponseEntity<Page<ProductMapper>> getAllProduct(
+    public ResponseEntity<BaseResponse> getAllProduct(
             @RequestParam(defaultValue = "1",
                     required = false) Integer page,
             @RequestParam(defaultValue = "10",
                     required = false) Integer limit) {
         Pageable pageable = FilterableCrudService.getPageable(page - 1, limit);
-        Page<ProductMapper> response = service.getAllProduct(pageable);
+        Page<ProductMapper> productMapper = service.getAllProduct(pageable);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                "Fetching all product",
+                productMapper
+        );
 
         return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "Filter by product name")
     @GetMapping(value = "/product")
-    public ResponseEntity<Object> getProductByName(@RequestParam(name = "name") String productName) {
+    public ResponseEntity<BaseResponse> getProductByName(@RequestParam(name = "name") String productName) {
 
-        List<ProductMapper> mapper = service.getProductName(productName);
-        return new ResponseEntity<>(mapper, HttpStatus.FOUND);
+        List<ProductMapper> productMapper = service.getProductName(productName);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.FOUND,
+                "Fetching product by name",
+                productMapper
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.FOUND);
     }
 
     @Operation(summary = "Filter product by product key in request param")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductMapper> getProductByKey(@PathVariable("id") String productKey) {
+    public ResponseEntity<BaseResponse> getProductByKey(@PathVariable("id") String productId) {
 
-        Optional<ProductMapper> product = Optional.ofNullable(service.getProductByKey(productKey));
-        if (product.isEmpty()) {
+        Optional<ProductMapper> productMapper = Optional.ofNullable(service.getProductById(productId));
+        if (productMapper.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok().body(product.get());
+        BaseResponse response = new BaseResponse(
+                HttpStatus.FOUND,
+                String.format("Customer found with id %s", productId),
+                productMapper
+        );
+
+        return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "Add new product")

@@ -6,11 +6,12 @@ import com.journal.florist.backend.feature.ledger.model.Suppliers;
 import com.journal.florist.backend.feature.ledger.repositories.SupplierRepository;
 import com.journal.florist.backend.feature.ledger.service.SupplierService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<Suppliers> getAllSuppliers() {
-        return repository.findAllSuppliers();
+    public Page<Suppliers> getAllSuppliers(Pageable pageable) {
+        return repository.findAllSuppliers(pageable);
     }
 
     @Override

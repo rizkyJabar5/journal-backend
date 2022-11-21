@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.Collections;
+
 import static com.journal.florist.app.constant.ApiUrlConstant.ORDER_URL;
 
 @Tag(name = "Order endpoint",
@@ -49,8 +51,8 @@ public class OrderController {
             BaseResponse noContent = new BaseResponse(
                     HttpStatus.NOT_FOUND,
                     "No content we found",
-                    null);
-            return new ResponseEntity<>(noContent, HttpStatus.NO_CONTENT);
+                    Collections.emptyList());
+            return new ResponseEntity<>(noContent, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);

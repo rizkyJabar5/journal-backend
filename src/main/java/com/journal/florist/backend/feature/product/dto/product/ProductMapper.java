@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Component
 public class ProductMapper {
 
-    private String productKey;
+    private String productId;
     private String picture;
     private String productName;
     private String categoryKey;
@@ -50,7 +50,7 @@ public class ProductMapper {
             this.updatedBy = null;
         }
         return ProductMapper.builder()
-                .productKey(entity.getPublicKey())
+                .productId(entity.getPublicKey())
                 .picture(entity.getPicture())
                 .productName(entity.getProductName())
                 .categoryKey(entity.getCategory().getPublicKey())

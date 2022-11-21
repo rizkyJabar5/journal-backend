@@ -4,6 +4,7 @@
 
 package com.journal.florist.backend.feature.user.controller;
 
+import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import com.journal.florist.backend.feature.user.model.AppUsers;
 import com.journal.florist.backend.feature.user.service.AppUserService;
@@ -14,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "User Application Endpoint")
 @RestController
@@ -27,24 +30,36 @@ public class UserController {
 
     @Operation(summary = "Fetching all user with pagination")
     @GetMapping
-    public ResponseEntity<Page<AppUserBuilder>> getUsers(
+    public ResponseEntity<BaseResponse> getUsers(
             @RequestParam(defaultValue = "1", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer limit) {
         Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
-        Page<AppUserBuilder> contentUsers = appUserService.getAllUsers(filter);
+        Page<AppUserBuilder> userPage = appUserService.getAllUsers(filter);
 
-        return new ResponseEntity<>(contentUsers, HttpStatus.OK);
+        BaseResponse response = new BaseResponse(
+                HttpStatus.FOUND,
+                "Fetching all users",
+                userPage
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Filter user by username")
-    @GetMapping(value = "/user",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping(value = "/user")
 
-    public ResponseEntity<AppUsers> getByUsername(@RequestParam(name = "username") String email, String username) {
-        AppUsers content = appUserService.findByEmailOrUsername(email, username);
+    public ResponseEntity<BaseResponse> getByUsername(
+            @RequestParam(name = "username") String email,
+            String username) {
+        AppUsers appUsers = appUserService.findByEmailOrUsername(email, username);
 
-        return new ResponseEntity<>(content, HttpStatus.OK);
+        BaseResponse response = new BaseResponse(
+                HttpStatus.FOUND,
+                String.format("User %s is found", username),
+                appUsers
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 //    @PostMapping("/user/save")

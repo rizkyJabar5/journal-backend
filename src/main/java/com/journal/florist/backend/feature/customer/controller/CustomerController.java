@@ -31,7 +31,7 @@ public class CustomerController {
 
     @Operation(summary = "Filter customer by customer name")
     @GetMapping(value = "/customer")
-    public ResponseEntity<Page<CustomerMapper>> getCustomerName(@RequestParam String name,
+    public ResponseEntity<BaseResponse> getCustomerName(@RequestParam String name,
                                                                 @RequestParam(defaultValue = "1",
                                                                         required = false) int page,
                                                                 @RequestParam(defaultValue = "10",
@@ -45,17 +45,30 @@ public class CustomerController {
         }
         Page<CustomerMapper> mapperPage = customerService.getCustomerByName(name, filter);
 
-        return new ResponseEntity<>(mapperPage, HttpStatus.FOUND);
+        BaseResponse response = new BaseResponse(
+                HttpStatus.FOUND,
+                "Fetching Customer by name",
+                mapperPage
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.FOUND);
     }
 
     @Operation(summary = "Fetching all customer in record found")
     @GetMapping(value = "")
-    public ResponseEntity<Page<CustomerMapper>> getAllCustomers(
+    public ResponseEntity<BaseResponse> getAllCustomers(
             @RequestParam(defaultValue = "1", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer limit) {
         Pageable filter = FilterableCrudService.getPageableWithSort(
                 page - 1, limit, Sort.by("name").ascending());
-        Page<CustomerMapper> response = customerService.findAllCustomer(filter);
+        Page<CustomerMapper> mapperPage = customerService.findAllCustomer(filter);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                "Fetching all Customer",
+                mapperPage
+        );
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,9 +26,7 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @Operation(summary = "Add new expense and will be request send to server")
-    @PostMapping(value = "",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-expense")
     public ResponseEntity<BaseResponse> addNewExpense(@RequestBody ExpenseRequest request) {
 
         Expense data = expenseService.create(request);
