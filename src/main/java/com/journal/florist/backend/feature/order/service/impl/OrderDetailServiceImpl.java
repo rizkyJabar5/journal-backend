@@ -14,6 +14,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public OrderDetails create(OrderDetails request) {
-        return repository.save(request);
+        return repository.saveAndFlush(request);
     }
 }

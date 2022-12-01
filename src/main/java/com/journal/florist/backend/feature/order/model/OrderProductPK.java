@@ -1,6 +1,6 @@
 package com.journal.florist.backend.feature.order.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.journal.florist.backend.feature.product.model.Product;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @Embeddable
 public class OrderProductPK implements Serializable {
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Orders order;

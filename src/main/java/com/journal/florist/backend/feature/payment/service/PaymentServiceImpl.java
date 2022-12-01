@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentLogs.setPaymentDate(new Date(System.currentTimeMillis()));
         }
 
-        return repository.save(entity);
+        return repository.saveAndFlush(entity);
     }
 
     @Override
@@ -68,7 +68,8 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentLogs paymentLogs = new PaymentLogs();
         Payments entity = Optional.ofNullable(repository.findPaymentByOrderId(request.orderId()))
                 .orElseThrow(() -> new NotFoundException(
-                        String.format(NOT_FOUND_MSG, Payments.class.getName(), request.orderId())));
+                        String.format(NOT_FOUND_MSG, "Order with id", request.orderId()))
+                );
 
         PaymentStatus paymentStatus = entity.getOrder().getPaymentStatus();
 
@@ -116,6 +117,4 @@ public class PaymentServiceImpl implements PaymentService {
         Payments save = repository.save(entity);
         return paymentMapper.buildPaymentMapper(save);
     }
-
-
 }

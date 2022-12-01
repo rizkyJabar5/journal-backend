@@ -16,13 +16,13 @@ import com.journal.florist.backend.feature.order.enums.PaymentStatus;
 import com.journal.florist.backend.feature.order.model.OrderDetails;
 import com.journal.florist.backend.feature.order.model.OrderShipments;
 import com.journal.florist.backend.feature.order.model.Orders;
-import com.journal.florist.backend.feature.payment.model.Payments;
 import com.journal.florist.backend.feature.order.repositories.OrderRepository;
 import com.journal.florist.backend.feature.order.service.OrderDetailService;
 import com.journal.florist.backend.feature.order.service.OrderService;
+import com.journal.florist.backend.feature.order.service.ShipmentService;
+import com.journal.florist.backend.feature.payment.model.Payments;
 import com.journal.florist.backend.feature.payment.service.PaymentLogService;
 import com.journal.florist.backend.feature.payment.service.PaymentService;
-import com.journal.florist.backend.feature.order.service.ShipmentService;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.EntityUtil;
 import lombok.RequiredArgsConstructor;
@@ -128,38 +128,73 @@ public class OrderServiceImpl implements OrderService {
         Set<OrderDetails> orderDetails = new HashSet<>();
         for (AddOrderRequest.OrderDetailDto detail : request.getDetailProduct()) {
             var product = productService.findByProductId(detail.getProductId());
-            orderDetails.add(orderDetailService.create(
-                    new OrderDetails(orders,
-                            product,
-                            detail.getNotes(),
-                            detail.getQuantity(),
-                            product.getCostPrice(),
-                            product.getPrice()))
+            orderDetails.add(
+                    orderDetailService.create(
+                            new OrderDetails(
+                                    orders,
+                                    product,
+                                    detail.getNotes(),
+                                    detail.getQuantity(),
+                                    product.getCostPrice(),
+                                    product.getPrice()))
             );
         }
         orders.setOrderDetails(orderDetails);
 
-        // Setter order shipment
-        Date deliveryDate = parseDateToEpoch(request.getDateDelivery(), request.getTimeDelivery());
-        OrderShipments shipment = shipmentService.create(new OrderShipments(
-                orders,
-                request.getRecipientName(),
-                request.getAddress(),
-                deliveryDate
-        ));
-        orders.setOrderShipment(shipment);
+        if (request.getOrderStatus() == OrderStatus.SENT) {
+            if (request.getDateDelivery() == null && request.getTimeDelivery() == null) {
+                return new BaseResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "Delivery time cannot be blank",
+                        null
+                );
+            } else if (request.getRecipientName() == null) {
+                return new BaseResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "Recipient name cannot be blank",
+                        null
+                );
+            } else if (request.getAddress() == null) {
+                return new BaseResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "Sender address cannot be blank",
+                        null
+                );
+            }
+
+            // Setter order shipment
+            Date deliveryDate = parseDateToEpoch(request.getDateDelivery(), request.getTimeDelivery());
+            OrderShipments shipment = shipmentService.create(
+                    new OrderShipments(
+                            orders,
+                            request.getRecipientName(),
+                            request.getAddress(),
+                            deliveryDate
+                    ));
+            orders.setOrderShipment(shipment);
+        }
+
+        if (request.getOrderStatus() == OrderStatus.TAKEN) {
+            if (request.getDateDelivery() != null && request.getTimeDelivery() != null) {
+                throw new AppBaseException("If order status is TAKEN, Delivery Time not needed");
+            } else if (request.getRecipientName() != null) {
+                throw new AppBaseException("If order status is TAKEN, Recipient name not needed");
+            } else if (request.getAddress() != null) {
+                throw new AppBaseException("If order status is TAKEN, Sender address not needed");
+            }
+        }
 
         // Customer payment check
         customerCheckPayment(request.getPaymentAmount(), orders.getTotalOrderAmount(), orders);
-        create(orders);
 
         salesService.saveSales(orders, customer);
         financeService.addAccountReceivableAndRevenue(
                 customerDebtService.sumAllTotalCustomerDebt(),
                 paymentLogService.sumTotalAmountPayment());
 
+        Orders entity = create(orders);
         getLogger().info("Successfully to save new order");
-        OrdersMapper mapper = orderMapper.buildOrderResponse(orders);
+        OrdersMapper mapper = orderMapper.buildOrderResponse(entity);
         return new BaseResponse(
                 HttpStatus.CREATED,
                 "Customer is successfully order product",
@@ -203,37 +238,41 @@ public class OrderServiceImpl implements OrderService {
     private void customerCheckPayment(BigDecimal paymentAmount,
                                       BigDecimal totalToBePaid,
                                       Orders orders) {
-        if (paymentAmount != null) {
-            BigDecimal result = totalToBePaid.subtract(paymentAmount);
 
-            if (result.compareTo(BigDecimal.ZERO) > 0) {
-                customerDebtService.addDebtCustomer(orders.getCustomer(), result);
-                orders.setPaymentStatus(PaymentStatus.DOWN_PAYMENT);
-            } else if (result.compareTo(BigDecimal.ZERO) == 0) {
-                orders.setPaymentStatus(PaymentStatus.PAID_OFF);
-            } else {
-                BigDecimal paymentOver = paymentAmount.subtract(totalToBePaid);
-                throw new AppBaseException(String.format("Customer payment is over +%s", paymentOver));
-            }
-
-            Payments payments = paymentService.addPayment(paymentAmount, result, orders);
-            orders.setPayment(payments);
-        }
         /*
-         * If the paymentAmount is null, will be created customer payment bill.
-         * And add the debt of customer.
-         *
-         * And then order status will have Payment status value NOT_YET_PAID
+          If the paymentAmount is null, will be created customer payment bill.
+          And add the debt of customer.
+          And then order status will have Payment status value NOT_YET_PAID
          */
-        Payments payments = paymentService.addPayment(BigDecimal.ZERO, totalToBePaid, orders);
-        customerDebtService.addDebtCustomer(orders.getCustomer(), orders.getTotalOrderAmount());
+        if (paymentAmount == null || paymentAmount.equals(BigDecimal.ZERO)) {
+
+            Payments payments = paymentService.addPayment(BigDecimal.ZERO, totalToBePaid, orders);
+            customerDebtService.addDebtCustomer(orders.getCustomer(), orders.getTotalOrderAmount());
+            orders.setPayment(payments);
+
+            return;
+        }
+
+        BigDecimal result = totalToBePaid.subtract(paymentAmount);
+
+        if (result.compareTo(BigDecimal.ZERO) > 0) {
+            customerDebtService.addDebtCustomer(orders.getCustomer(), result);
+            orders.setPaymentStatus(PaymentStatus.DOWN_PAYMENT);
+        } else if (result.compareTo(BigDecimal.ZERO) == 0) {
+            orders.setPaymentStatus(PaymentStatus.PAID_OFF);
+        } else {
+            BigDecimal paymentOver = paymentAmount.subtract(totalToBePaid);
+            throw new AppBaseException(String.format("Customer payment is over +%s", paymentOver));
+        }
+
+        Payments payments = paymentService.addPayment(paymentAmount, result, orders);
         orders.setPayment(payments);
     }
 
     private Date parseDateToEpoch(String dateDelivery, String timeDelivery) {
         Date deliveryDate = null;
         if (Objects.nonNull(dateDelivery) && Objects.nonNull(timeDelivery)) {
-            var dateTimeDelivery = dateDelivery + timeDelivery;
+            var dateTimeDelivery = dateDelivery.concat(" ") + timeDelivery;
             try {
                 var dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
                 var parse = dateFormat.parse(dateTimeDelivery);

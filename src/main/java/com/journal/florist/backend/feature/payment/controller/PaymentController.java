@@ -34,7 +34,7 @@ public class PaymentController {
         PaymentsMapper data = paymentService.creditPayment(request);
 
         BaseResponse response = new BaseResponse(HttpStatus.OK,
-                String.format("Payment in order %s is successfully updated", request.orderId()),
+                String.format("Payment in order %s is successfully", request.orderId()),
                 data);
 
         return new ResponseEntity<>(response, HttpStatus.OK);

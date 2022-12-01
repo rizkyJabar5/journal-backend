@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -23,8 +25,10 @@ public class Payments {
     @Column(name = "payment_id")
     private String paymentID;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "order_id",
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(
+            name = "order_id",
             foreignKey = @ForeignKey(name = "order_fk_id"))
     private Orders order;
 

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -75,15 +76,22 @@ public class OrdersMapper implements Serializable {
 
         String dateFormat = null;
         String timeFormat = null;
-        if (orders.getOrderShipment().getDeliveryDate() != null) {
-            var date = DateConverter.toLocalDate(orders.getOrderShipment().getDeliveryDate());
-            dateFormat = DateConverter.formatDate().format(date);
-            timeFormat = DateConverter.formatTime().format(date);
-        }
-
         String fullAddress = null;
-        if (orders.getOrderShipment().getDeliveryAddress() != null) {
-            fullAddress = orders.getOrderShipment().getDeliveryAddress().getFullAddress();
+        String recipientName = "NaN";
+
+        if (orders.getOrderShipment() != null) {
+            recipientName = orders.getOrderShipment().getRecipientName();
+            Date deliveryDateConvert = orders.getOrderShipment().getDeliveryDate();
+
+            if (deliveryDateConvert != null) {
+                var date = DateConverter.toLocalDate(deliveryDateConvert);
+                dateFormat = DateConverter.formatDate().format(date);
+                timeFormat = DateConverter.formatTime().format(date);
+            }
+
+            if (orders.getOrderShipment().getDeliveryAddress() != null) {
+                fullAddress = orders.getOrderShipment().getDeliveryAddress().getFullAddress();
+            }
         }
 
         return OrdersMapper.builder()
@@ -95,8 +103,8 @@ public class OrdersMapper implements Serializable {
                 .paymentStatus(orders.getPaymentStatus().name())
                 .paymentAmount(pay)
                 .underPayment(underPay)
-                .orderStatus(orders.getOrderStatus().name())
-                .recipientName(orders.getOrderShipment().getRecipientName())
+                .orderStatus(orders.getOrderStatus().getName())
+                .recipientName(recipientName)
                 .deliveryAddress(fullAddress)
                 .deliveryDate(dateFormat)
                 .deliveryTime(timeFormat)

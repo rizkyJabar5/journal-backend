@@ -33,7 +33,7 @@ public class Sales {
     private String salesId;
 
     @ManyToOne(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
             targetEntity = Orders.class)
     @JoinColumn(foreignKey = @ForeignKey(name = "order_fk_id"))

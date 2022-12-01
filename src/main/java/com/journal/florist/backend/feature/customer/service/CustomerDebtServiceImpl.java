@@ -28,7 +28,7 @@ public class CustomerDebtServiceImpl implements CustomerDebtService {
         }
         BigDecimal total = debt.getTotalDebt().add(totalDebt);
         debt.setTotalDebt(total);
-        repository.save(debt);
+        repository.saveAndFlush(debt);
     }
 
     @Override

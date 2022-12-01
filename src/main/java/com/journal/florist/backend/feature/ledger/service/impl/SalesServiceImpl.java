@@ -28,6 +28,7 @@ public class SalesServiceImpl implements SalesService {
     public void saveSales(Orders orders, Customers customer) {
         Sales entity = new Sales();
         List<Sales> saleToday = salesRepository.findAllBySaleDate(DateConverter.today());
+
         if (saleToday.isEmpty()) {
             entity.setSalesAmount(orders.getTotalOrderAmount());
             entity.setNetProfit(orders.getTotalOrderCostPrice());

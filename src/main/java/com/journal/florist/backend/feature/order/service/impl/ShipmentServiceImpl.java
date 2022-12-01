@@ -23,7 +23,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     @Override
     public OrderShipments create(OrderShipments request) {
-        return repository.save(request);
+        return repository.saveAndFlush(request);
     }
 
     @Override

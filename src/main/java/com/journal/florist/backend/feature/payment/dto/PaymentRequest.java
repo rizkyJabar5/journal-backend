@@ -10,14 +10,14 @@ public record PaymentRequest(
 
     public void checkOrderIdNullOrNot() {
         if (orderId == null || orderId.isEmpty()) {
-            throw new IllegalException("paymentId can not be null or empty");
+            throw new IllegalException("Order id can't be null or empty");
         }
     }
 
     public void checkPaymentAmount() {
         if(paymentAmount.compareTo(BigDecimal.ZERO) < 0
                 || paymentAmount.compareTo(BigDecimal.ZERO) == 0) {
-            throw new IllegalException("paymentAmount can not be negative");
+            throw new IllegalException("Payment amount can't be negative");
         }
     }
 }
