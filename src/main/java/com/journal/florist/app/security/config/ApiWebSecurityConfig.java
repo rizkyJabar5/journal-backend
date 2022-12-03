@@ -1,6 +1,7 @@
 package com.journal.florist.app.security.config;
 
 import com.journal.florist.app.security.jwt.AuthEntryPointJwt;
+import com.journal.florist.app.security.jwt.AuthorizationFilterDenied;
 import com.journal.florist.app.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ public class ApiWebSecurityConfig {
 
     private final AuthenticationManager authenticationManager;
     private final AuthEntryPointJwt authEntryPointJwt;
+    private final AuthorizationFilterDenied accessDenied;
     private final JwtAuthenticationFilter authenticationFilter;
 
     @Bean
@@ -29,6 +31,7 @@ public class ApiWebSecurityConfig {
         http.cors();
         http.csrf().disable()
                 .exceptionHandling()
+                .accessDeniedHandler(accessDenied)
                 .authenticationEntryPoint(authEntryPointJwt)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

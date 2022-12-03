@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class PaymentController {
     @Operation(summary = "Add payment",
             description = "Payment customer by order id")
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> addPaymentOrder(@Valid @RequestBody PaymentRequest request) {
         PaymentsMapper data = paymentService.creditPayment(request);
 

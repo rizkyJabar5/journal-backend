@@ -1,5 +1,6 @@
 package com.journal.florist.app.security.config;
 
+import com.journal.florist.app.security.jwt.JournalAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,15 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class AppsSecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-
+    private final UserDetailsService userService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
+    protected void configureGlobal(AuthenticationManagerBuilder authBuilder) {
+        JournalAuthenticationProvider provider = new JournalAuthenticationProvider(userService, passwordEncoder);
+        authBuilder.authenticationProvider(provider);
     }
 
     @Bean

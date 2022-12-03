@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +42,7 @@ public class ProductController {
 
     @Operation(summary = "Fetching all product with pagination")
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_CASHIER') or hasRole('ROLE_USER')")
     public ResponseEntity<BaseResponse> getAllProduct(
             @RequestParam(defaultValue = "1",
                     required = false) Integer page,
@@ -60,6 +62,7 @@ public class ProductController {
 
     @Operation(summary = "Filter by product name")
     @GetMapping(value = "/product")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> getProductByName(@RequestParam(name = "name") String productName) {
 
         List<ProductMapper> productMapper = service.getProductName(productName);
@@ -75,6 +78,7 @@ public class ProductController {
 
     @Operation(summary = "Filter product by product key in request param")
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> getProductByKey(@PathVariable("id") String productId) {
 
         Optional<ProductMapper> productMapper = Optional.ofNullable(service.getProductById(productId));
@@ -93,6 +97,7 @@ public class ProductController {
 
     @Operation(summary = "Add new product")
     @PostMapping(value = "/add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse> createProduct(
             @Valid @ModelAttribute AddProductRequest request,
             @RequestParam(required = false) MultipartFile image) {
@@ -103,6 +108,7 @@ public class ProductController {
 
     @Operation(summary = "Update product")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse> updateProduct(
             @Valid @ModelAttribute UpdateProductRequest request,
             @RequestParam(required = false) MultipartFile image) {
@@ -112,6 +118,7 @@ public class ProductController {
 
     @Operation(summary = "Delete product")
     @DeleteMapping(value = "/delete")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<SuccessResponse> deleteProduct(@RequestParam(name = "key") String productKey) {
         SuccessResponse response = service.deleteProductById(productKey);
         return ResponseEntity.accepted().body(response);

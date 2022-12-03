@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,6 +33,7 @@ public class OrderController {
 
     @Operation(summary = "Fetching all order in record with pagination")
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> getAllOrder(
             @RequestParam(name = "page",
                     required = false,
@@ -60,6 +62,7 @@ public class OrderController {
 
     @Operation(summary = "Creating new order")
     @PostMapping(value = "/add-order")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> addNewOrder(@Valid @RequestBody AddOrderRequest request) {
         var response = orderService.addOrder(request);
         return ResponseEntity.ok().body(response);
@@ -67,6 +70,7 @@ public class OrderController {
 
     @Operation(summary = "Update existing order")
     @PutMapping(value = "/update-order")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> updateExistingOrder(@Valid @RequestBody UpdateOrderRequest request) {
         var response = orderService.updateOrder(request);
         return ResponseEntity.ok().body(response);

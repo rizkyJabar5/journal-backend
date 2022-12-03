@@ -1,7 +1,7 @@
 package com.journal.florist.backend.authentication.login;
 
 import com.journal.florist.app.security.SecurityUtils;
-import com.journal.florist.app.common.utils.DateConverter;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import lombok.Builder;
 import lombok.Data;

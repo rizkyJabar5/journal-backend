@@ -101,8 +101,6 @@ public final class SecurityUtils {
         }
     }
 
-
-
     /**
      * Validates that the user is neither disabled, locked nor expired.
      *

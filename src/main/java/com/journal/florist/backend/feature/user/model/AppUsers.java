@@ -4,6 +4,7 @@
 
 package com.journal.florist.backend.feature.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,9 +17,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -28,6 +27,7 @@ import java.util.Objects;
             @UniqueConstraint(columnNames = "email")
 })
 @NoArgsConstructor
+@JsonIgnoreProperties("hashedPassword")
 public class AppUsers implements UserDetails {
 
     @Id
@@ -95,10 +95,6 @@ public class AppUsers implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void addRole(final AppUsers user, final AppRoles role) {
-
     }
 
     @PrePersist

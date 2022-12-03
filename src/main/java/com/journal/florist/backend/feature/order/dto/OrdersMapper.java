@@ -1,6 +1,6 @@
 package com.journal.florist.backend.feature.order.dto;
 
-import com.journal.florist.app.common.utils.DateConverter;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.backend.feature.order.model.Orders;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

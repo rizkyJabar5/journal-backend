@@ -20,7 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService, HasLogger {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUsers appUser = userService.findByEmailOrUsername(username, username);
 
-        getLogger().info("User present with username or email: {}", username);
         return AppUserBuilder.buildUserDetails(appUser);
     }
 

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,7 @@ public class SalesController {
 
     @Operation(summary = "Fetching all sales with pagination and sort sale date to descending")
     @GetMapping(value = "")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getAllReport(
             @RequestParam(defaultValue = "1", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer limit) {

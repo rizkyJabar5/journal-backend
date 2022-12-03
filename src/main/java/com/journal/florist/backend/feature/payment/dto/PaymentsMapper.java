@@ -1,6 +1,6 @@
 package com.journal.florist.backend.feature.payment.dto;
 
-import com.journal.florist.app.common.utils.DateConverter;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.backend.feature.payment.model.Payments;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

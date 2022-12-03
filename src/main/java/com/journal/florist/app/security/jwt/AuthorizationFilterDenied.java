@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2022.
- */
-
 package com.journal.florist.app.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.journal.florist.app.common.utils.HasLogger;
 import com.journal.florist.app.common.utils.converter.DateConverter;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,25 +15,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class AuthEntryPointJwt implements AuthenticationEntryPoint, HasLogger {
-
+public class AuthorizationFilterDenied implements AccessDeniedHandler {
     @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
-
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         final Map<String, Object> body = new HashMap<>();
         String date = DateConverter.formatDateTime().format(LocalDateTime.now());
         body.put("timestamp", date);
-        body.put("message", authException.getMessage());
-        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("error", "Unauthorized");
+        body.put("message", accessDeniedException.getMessage());
+        body.put("status", HttpServletResponse.SC_FORBIDDEN);
+        body.put("error", "Forbidden");
         body.put("path", request.getServletPath());
 
-        getLogger().error("Unauthorized error: {}", authException.getMessage());
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
     }

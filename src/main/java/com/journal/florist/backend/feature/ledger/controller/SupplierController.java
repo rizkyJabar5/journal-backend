@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.journal.florist.app.constant.ApiUrlConstant.SUPPLIER_URL;
@@ -26,6 +27,7 @@ public class SupplierController {
 
     @Operation(summary = "Fetching all supplier found in record")
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getAllSupplier(
             @RequestParam(name = "page",
                     required = false,
@@ -50,6 +52,7 @@ public class SupplierController {
 
     @Operation(summary = "Creating a supplier")
     @PostMapping(value = "/add-supplier")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse> addNewSupplier(@RequestBody Suppliers suppliers) {
 
         BaseResponse response = supplierService.addSuppliers(suppliers);

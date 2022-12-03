@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -30,6 +31,7 @@ public class CategoryController {
 
     @Operation(summary = "Fetching all categories")
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> getAllCategories() {
         BaseResponse response = categoryService.findAllCategory();
         return ResponseEntity.ok().body(response);
@@ -37,6 +39,7 @@ public class CategoryController {
 
     @Operation(summary = "Filter by category key")
     @GetMapping(value = "/")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> getCategoryById(@RequestParam(name = "categoryId") String categoryId) {
         Category category = categoryService.findByCategoryId(categoryId);
 
@@ -51,6 +54,7 @@ public class CategoryController {
 
     @Operation(summary = "Add new category")
     @PostMapping(value = "/add-category")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> addCategory(@Valid @RequestBody AddCategoryRequest request) {
         BaseResponse response = categoryService.addNewCategory(request);
         return ResponseEntity.ok().body(response);
@@ -58,6 +62,7 @@ public class CategoryController {
 
     @Operation(summary = "Update category")
     @PutMapping(value = "/update-category")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> updateCategory(@Valid @RequestBody CategoryRequest category) {
 
         BaseResponse response = categoryService.updateCategory(category);
@@ -66,6 +71,7 @@ public class CategoryController {
 
     @Operation(summary = "Delete category by key")
     @DeleteMapping(value = "/delete")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<SuccessResponse> deleteCategory(@RequestParam(name = "id") String categoryKey) {
         SuccessResponse response = categoryService.deleteCategory(categoryKey);
         return ResponseEntity.ok().body(response);

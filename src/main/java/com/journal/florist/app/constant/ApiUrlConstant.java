@@ -21,6 +21,7 @@ public final class ApiUrlConstant {
     public static final String SUPPLIER_URL = "/api/v1/suppliers";
     public static final String EXPENSE_URL = "/api/v1/expense";
     public static final String PAYMENT_URL = "/api/v1/payment";
+    public static final String USER_URL = "/api/v1/users";
     public static final String LOGIN_URL = "/api/v1/auth/login";
     public static final String LOGIN_FAILURE_URL = "/login?error";
     public static final String LOGOUT_URL = "/";

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.journal.florist.app.constant.ApiUrlConstant.PURCHASE_URL;
@@ -27,6 +28,7 @@ public class PurchaseController {
 
     @Operation(summary = "Fetching all purchase in record with pagination")
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getAllPage(
             @RequestParam(defaultValue = "1", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer limit) {
@@ -44,6 +46,7 @@ public class PurchaseController {
 
     @Operation(summary = "Purchasing product from supplier")
     @PostMapping("/add-purchase")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addNewPurchase(@RequestBody PurchaseRequest request) {
         BaseResponse response = purchaseService.create(request);
 

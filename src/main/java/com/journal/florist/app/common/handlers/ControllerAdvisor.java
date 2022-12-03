@@ -1,6 +1,6 @@
 package com.journal.florist.app.common.handlers;
 
-import com.journal.florist.app.common.utils.DateConverter;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.backend.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

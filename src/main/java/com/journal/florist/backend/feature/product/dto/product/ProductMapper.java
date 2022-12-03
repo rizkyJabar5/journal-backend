@@ -4,7 +4,7 @@
 
 package com.journal.florist.backend.feature.product.dto.product;
 
-import com.journal.florist.app.common.utils.DateConverter;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.backend.feature.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

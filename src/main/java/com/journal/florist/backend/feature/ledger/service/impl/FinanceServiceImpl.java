@@ -1,6 +1,6 @@
 package com.journal.florist.backend.feature.ledger.service.impl;
 
-import com.journal.florist.app.common.utils.DateConverter;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.ledger.model.Finance;
 import com.journal.florist.backend.feature.ledger.repositories.FinanceRepository;

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.journal.florist.app.constant.ApiUrlConstant.CUSTOMER_URL;
@@ -31,6 +32,7 @@ public class CustomerController {
 
     @Operation(summary = "Filter customer by customer name")
     @GetMapping(value = "/customer")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_CASHIER') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getCustomerName(@RequestParam String name,
                                                                 @RequestParam(defaultValue = "1",
                                                                         required = false) int page,
@@ -56,6 +58,7 @@ public class CustomerController {
 
     @Operation(summary = "Fetching all customer in record found")
     @GetMapping(value = "")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_CASHIER') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getAllCustomers(
             @RequestParam(defaultValue = "1", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer limit) {
@@ -74,6 +77,7 @@ public class CustomerController {
 
     @Operation(summary = "Creating new customer")
     @PostMapping(value = "/add-customer")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> addCustomer(@RequestBody CustomerRequest request) {
         BaseResponse response = customerService.addCustomer(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -81,6 +85,7 @@ public class CustomerController {
 
     @Operation(summary = "Updating existing customer")
     @PutMapping(value = "/update-customer")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> updateCustomer(@RequestBody UpdateCustomerRequest request) {
         if (request.getCustomerId() == null) {
             throw new IllegalException("Customer id is required");
@@ -91,6 +96,7 @@ public class CustomerController {
 
     @Operation(summary = "Deleting existing customer")
     @DeleteMapping(value = "/delete")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<SuccessResponse> deleteCustomer(@RequestParam String customerId) {
         SuccessResponse response = customerService.deleteCustomer(customerId);
         return new ResponseEntity<>(response, HttpStatus.OK);

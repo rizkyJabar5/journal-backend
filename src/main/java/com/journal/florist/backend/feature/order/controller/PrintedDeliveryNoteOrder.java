@@ -1,6 +1,6 @@
 package com.journal.florist.backend.feature.order.controller;
 
-import com.journal.florist.app.common.utils.DateConverter;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.app.common.utils.jasper.JasperReportRequest;
 import com.journal.florist.app.common.utils.jasper.JasperReportService;
 import com.journal.florist.backend.feature.order.service.DeliveryNoteService;
@@ -11,9 +11,12 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,9 +38,8 @@ public class PrintedDeliveryNoteOrder {
 
     @Operation(summary = "Print or Generate GNR",
             description = "Printed delivery order by order ID if GNR id is blank it will auto generate to random alpha numeric")
-    @PostMapping(value = "",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping()
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<?> printDeliveryNote(@RequestParam(name = "order-id") String orderId,
                                                @RequestParam(name = "gnr-id", required = false) String gnrId,
                                                HttpServletResponse httpResponse) throws IOException, JRException {
