@@ -7,6 +7,7 @@ package com.journal.florist.backend.feature.user.controller;
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import com.journal.florist.backend.feature.user.dto.RequestAppUser;
+import com.journal.florist.backend.feature.user.dto.RequestUpdateAppUser;
 import com.journal.florist.backend.feature.user.model.AppUsers;
 import com.journal.florist.backend.feature.user.service.AppUserService;
 import com.journal.florist.backend.feature.utils.FilterableCrudService;
@@ -75,11 +76,11 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-//    @PostMapping("/role/save")
-//    public ResponseEntity<Role> saveRole(@RequestBody Role role){
-//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-//        return ResponseEntity.created(uri).body(userService.saveRole(role));
-//    }
+    @PutMapping("/update-user")
+    public ResponseEntity<BaseResponse> saveRole(@ModelAttribute RequestUpdateAppUser request){
+        BaseResponse response = appUserService.update(request);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
 //
 //    @PostMapping("/role/addtouser`")
 //    public ResponseEntity<?> addToUser(@RequestBody RoleToUSerForm form){

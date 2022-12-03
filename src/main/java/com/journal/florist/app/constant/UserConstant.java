@@ -14,6 +14,7 @@ public final class UserConstant {
 
     // ----- User Constant ----- //
     public static final String SUCCESSFULLY_CREATE = "%s has been success add %s";
+    public static final String UPDATE_PROFILE = "Profile has been updated";
     public static final String EMAIL_OR_USERNAME_NOT_PROVIDED_MSG = "E-mail or username is not registered.";
     public static final String PASSWORD_MISMATCH = "Wrong password. Please try again";
     public static final String ROLE_IS_NOT_FOUND_MSG = "Error: Role %s is not found.";

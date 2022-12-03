@@ -12,6 +12,7 @@ import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.UserFriendlyDataException;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import com.journal.florist.backend.feature.user.dto.RequestAppUser;
+import com.journal.florist.backend.feature.user.dto.RequestUpdateAppUser;
 import com.journal.florist.backend.feature.user.enums.ERole;
 import com.journal.florist.backend.feature.user.model.AppRoles;
 import com.journal.florist.backend.feature.user.model.AppUsers;
@@ -27,11 +28,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.journal.florist.app.constant.UserConstant.*;
 
@@ -68,8 +67,9 @@ public class AppUserServiceImpl implements AppUserService {
         return userRepository.count();
     }
 
-    public Optional<AppUsers> getByUserId(Long id) {
-        return userRepository.findById(id);
+    public AppUsers getByUserId(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, id)));
     }
 
     public AppUsers findByEmailOrUsername(String email, String username) {
@@ -96,15 +96,8 @@ public class AppUserServiceImpl implements AppUserService {
             Faker faker = new Faker();
             user.setProfileAvatar(faker.avatar().image());
         } else {
-            String uploadImage = cloudinary
-                    .upload(
-                            request.profilePicture(),
-                            ObjectUtils.asMap(
-                                    "resourceType", "image",
-                                    "folder", "journal-backend/"))
-                    .get("url")
-                    .toString();
-            user.setProfileAvatar(uploadImage);
+            String avatar = uploadImageToCloud(request.profilePicture());
+            user.setProfileAvatar(avatar);
         }
 
         userRepository.save(user);
@@ -119,8 +112,41 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public BaseResponse update(AppUsers appUser, AppUsers entity) {
-        return null;
+    public BaseResponse update(RequestUpdateAppUser request) {
+        AppUsers persisted = getByUserId(request.userId());
+        Set<AppRoles> updateUserRoles = new HashSet<>();
+
+        String updateFullName = Objects.isNull(request.fullName())
+                || request.fullName().isEmpty()
+                ? persisted.getFullName()
+                : request.fullName();
+        String updateProfilePicture = Objects.isNull(request.profilePicture())
+                || request.profilePicture().isEmpty()
+                ? persisted.getProfileAvatar()
+                : uploadImageToCloud(request.profilePicture());
+
+        if (Objects.isNull(request.rolesName())
+                || request.rolesName().isEmpty()) {
+            persisted.getAuthorities();
+        } else {
+            request.rolesName().forEach(role -> {
+                AppRoles roles = roleService.getRolesByName(ERole.valueOfLabel(role.getRoleName()));
+                updateUserRoles.add(roles);
+            });
+        }
+
+        persisted.setFullName(updateFullName);
+        persisted.setProfileAvatar(updateProfilePicture);
+        persisted.setRoles(updateUserRoles);
+
+        userRepository.save(persisted);
+
+        AppUserBuilder mapper = AppUserBuilder.buildUserDetails(persisted);
+        return new BaseResponse(
+                HttpStatus.ACCEPTED,
+                UPDATE_PROFILE,
+                mapper
+        );
     }
 
     @Override
@@ -184,7 +210,7 @@ public class AppUserServiceImpl implements AppUserService {
     private void addRoleUsers(final AppUsers user, Set<ERole> requestRoles) {
         Set<AppRoles> userRoles = new HashSet<>();
 
-        if(requestRoles == null) {
+        if (requestRoles == null) {
             AppRoles defaultRole = roleService.getRolesByName(ERole.ROLE_USER);
             userRoles.add(defaultRole);
             user.setRoles(userRoles);
@@ -200,4 +226,14 @@ public class AppUserServiceImpl implements AppUserService {
         user.setRoles(userRoles);
     }
 
+    private String uploadImageToCloud(MultipartFile image) {
+        return cloudinary
+                .upload(
+                        image,
+                        ObjectUtils.asMap(
+                                "resourceType", "image",
+                                "folder", "journal-backend/"))
+                .get("url")
+                .toString();
+    }
 }
