@@ -76,7 +76,9 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update-user")
+    @Operation(summary = "Update existing user")
+    @PutMapping(value = "/update-user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> saveRole(@ModelAttribute RequestUpdateAppUser request){
         BaseResponse response = appUserService.update(request);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
