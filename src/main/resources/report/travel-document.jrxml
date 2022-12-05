@@ -97,7 +97,7 @@
 			</line>
 			<image hAlign="Center">
 				<reportElement x="5" y="2" width="79" height="77" uuid="94883631-a913-43e2-b182-ab8d77d0181e"/>
-				<imageExpression><![CDATA[ClassLoader.getSystemResource("report/logo.png");]]></imageExpression>
+				<imageExpression><![CDATA[ClassLoader.getSystemResource("./report/logo.png");]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement mode="Opaque" x="155" y="0" width="129" height="25" forecolor="#030303" uuid="bb685529-acb4-43e4-b795-45e43c94e064">
@@ -167,7 +167,7 @@
 	<detail>
 		<band height="200">
 			<staticText>
-				<reportElement mode="Transparent" x="220" y="180" width="158" height="20" forecolor="#BF5250" backcolor="#FFFFFF" uuid="08d03cc7-23f8-4128-921e-1ac2d49991e1"/>
+				<reportElement mode="Transparent" x="219" y="180" width="162" height="21" forecolor="#BF5250" backcolor="#FFFFFF" uuid="08d03cc7-23f8-4128-921e-1ac2d49991e1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="Z003" size="15" isBold="true" isItalic="true"/>
 				</textElement>
