@@ -3,12 +3,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
 			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
 			  name="travel-document"
-			  pageWidth="595"
 			  pageHeight="311"
 			  orientation="Landscape"
-			  columnWidth="555"
-			  leftMargin="20"
-			  rightMargin="20"
 			  topMargin="10"
 			  bottomMargin="5"
 			  uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
@@ -21,6 +17,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
 	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true"/>
@@ -71,7 +68,7 @@
 			<style backcolor="#D8D8D8"/>
 		</conditionalStyle>
 	</style>
-	<subDataset name="tableDataset" uuid="f13e6d36-5148-4ecc-bbe3-3035def80980">
+	<subDataset name="tableDataset" uuid="8daefda7-49ed-4197-a287-6068570cf297">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
@@ -93,7 +90,7 @@
 		<band height="93" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
-				<reportElement x="-1" y="80" width="411" height="3" uuid="806ce5df-1219-4876-ae0c-ca7405b1f246">
+				<reportElement x="-1" y="80" width="411" height="3" uuid="5f2d9cf1-91a2-4275-96a3-cbca9a129099">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -103,161 +100,181 @@
 				<imageExpression><![CDATA[ClassLoader.getSystemResource("report/logo.png");]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement mode="Opaque" x="150" y="0" width="129" height="25" forecolor="#030303" uuid="e622555d-198b-4ccd-a4a1-c59c53304058">
+				<reportElement mode="Opaque" x="155" y="0" width="129" height="25" forecolor="#030303" uuid="bb685529-acb4-43e4-b795-45e43c94e064">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="C059" size="18" isBold="true"/>
+					<font fontName="Noto Serif" size="18" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SEKAR SARI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="279" y="0" width="80" height="30" forecolor="#030303" uuid="d2649f28-28bd-4dec-b91e-4d51e2988463">
+				<reportElement mode="Opaque" x="266" y="-3" width="64" height="40" forecolor="#030303" backcolor="#FFFFFF" uuid="7a2f8c85-3af2-4da4-aebe-024dc55cb8e7">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Top" markup="none">
-					<font fontName="Z003" size="24" isBold="true"/>
+					<font fontName="Pacifico" size="18" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Florist]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="95" y="25" width="265" height="15" uuid="c226e44d-3bb5-4145-b0b3-903bf1d79fde"/>
+				<reportElement x="95" y="25" width="265" height="15" uuid="98d602a1-0830-4424-99da-8b2b5bd1df9a"/>
 				<textElement>
-					<font fontName="Serif" size="9"/>
+					<font fontName="Poppins" size="9"/>
 				</textElement>
 				<text><![CDATA[Workshop :	Pasar bunga Kayoon Stand C-26, Surabaya]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="95" y="37" width="285" height="15" uuid="b96f7183-44f8-43ad-ba60-43d8fbf50b6e"/>
+				<reportElement x="95" y="37" width="285" height="15" uuid="b0ca714a-cbb5-4a79-8c0f-51da1b547d08"/>
 				<textElement>
-					<font fontName="Serif" size="9"/>
+					<font fontName="Poppins" size="9"/>
 				</textElement>
 				<text><![CDATA[Office 	   :	Jl. Kayoon No.14(Seberang SPBU) , Surabaya]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="95" y="50" width="284" height="15" uuid="b8cc42fd-b569-497d-834d-7e854040ad18"/>
+				<reportElement x="95" y="50" width="284" height="15" uuid="62e2bfca-8de7-422d-a478-3578d98153bc"/>
 				<textElement>
-					<font fontName="Serif" size="9"/>
+					<font fontName="Poppins" size="9"/>
 				</textElement>
 				<text><![CDATA[Telp : (031) 548-1745	   HP/WA :  085 746 097 509]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="88" y="68" width="320" height="13" forecolor="#CF6967" uuid="39f1ae0a-07fa-47a5-80d9-227d73ec192b"/>
+				<reportElement x="84" y="68" width="342" height="13" forecolor="#CF6967" uuid="9921031c-d404-4c73-944f-8ea2abd8dafa"/>
 				<textElement>
-					<font fontName="Serif" size="7" isBold="true"/>
+					<font fontName="Poppins" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[https://www.sekarsari.florist ig/facebook:@sekarsariflorist email:sekarsariflorist@gmail.com]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="478" y="20" width="90" height="20" uuid="711da9bf-b73f-4604-a203-9de859256a6a"/>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="479" y="20" width="112" height="30" uuid="ceb515bd-138a-4874-a5fd-967aea63da40"/>
+				<textElement>
+					<font fontName="Poppins" size="12" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryNoteId}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="415" y="20" width="70" height="20" uuid="8a76985b-027b-4d8f-89fa-78375c7c8a06"/>
+				<reportElement x="412" y="20" width="67" height="30" uuid="48aefc9c-8f8e-4c81-9dad-3a2ac559ca2b"/>
 				<box rightPadding="4"/>
 				<textElement textAlignment="Left">
-					<font fontName="Noto Sans Black" size="12" isBold="false"/>
+					<font fontName="Poppins" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[No.Inv.QS. ]]></text>
+				<text><![CDATA[No.Inv.QS.]]></text>
 			</staticText>
 		</band>
 	</title>
 	<detail>
 		<band height="200">
 			<staticText>
-				<reportElement mode="Transparent" x="220" y="180" width="158" height="20" forecolor="#BF5250" backcolor="#FFFFFF" uuid="50cc5479-d20a-4c0b-bd01-690990f70f4c"/>
+				<reportElement mode="Transparent" x="220" y="180" width="158" height="20" forecolor="#BF5250" backcolor="#FFFFFF" uuid="08d03cc7-23f8-4128-921e-1ac2d49991e1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="Z003" size="15" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Unique & Excellent Design]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="420" y="130" width="55" height="15" uuid="261ad553-b5c6-4063-9eef-fdbec7bf4965"/>
+				<reportElement x="420" y="115" width="55" height="15" uuid="4d043ba0-f1c2-4e30-b24a-b858e037aa3d"/>
 				<box rightPadding="4"/>
-				<textElement textAlignment="Left"/>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins"/>
+				</textElement>
 				<text><![CDATA[Surabaya,]]></text>
 			</staticText>
 			<textField pattern="dd MMMMM yyyy">
-				<reportElement x="475" y="130" width="95" height="15" uuid="e46a5e4b-38ee-460a-ac10-3446e6965028"/>
+				<reportElement x="475" y="115" width="95" height="15" uuid="ac32ee6e-92d9-4c0b-8bf1-b3bca64c9e19"/>
+				<textElement>
+					<font fontName="Poppins"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="420" y="145" width="72" height="15" uuid="996e6419-e9dd-4a59-bdb5-39bad7a66f7e"/>
+				<reportElement x="420" y="130" width="72" height="15" uuid="4431f13e-c9d6-4695-b634-ff52b6c2f4ff"/>
+				<textElement>
+					<font fontName="Poppins"/>
+				</textElement>
 				<text><![CDATA[Diterima oleh,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="0" width="72" height="15" uuid="b795e430-92ed-4890-a686-0b74bee3bf07">
+				<reportElement x="15" y="0" width="72" height="15" uuid="b4b2b026-dfc1-41f5-9958-f39079d4cb22">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font fontName="Serif" size="10" isBold="false"/>
+					<font fontName="Poppins" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Kepada, Yth]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="80" width="72" height="15" uuid="e017b8d3-a71a-4841-884b-66a62ec22794"/>
+				<reportElement x="15" y="80" width="72" height="15" uuid="3e41193b-c03c-419f-b4b2-f180c1f671f7"/>
+				<textElement>
+					<font fontName="Poppins"/>
+				</textElement>
 				<text><![CDATA[Harap diterima]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="97" y="0" width="6" height="15" uuid="a8bff29d-d1a9-4846-91d9-3ff574a755a8"/>
+				<reportElement x="97" y="0" width="6" height="15" uuid="9f32f49c-852d-4fd4-a3e6-8bce4e762b23"/>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="30" width="72" height="15" uuid="74974e3e-128a-4b4f-897b-e9c264a0031b"/>
+				<reportElement x="15" y="30" width="72" height="15" uuid="3ad4394b-7638-4d87-bf35-44276e029c06"/>
+				<textElement>
+					<font fontName="Poppins"/>
+				</textElement>
 				<text><![CDATA[Alamat]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="97" y="80" width="6" height="15" uuid="43e64070-e56a-4dd0-ab27-e6c51fb9b479"/>
+				<reportElement x="97" y="80" width="6" height="15" uuid="4b08f73d-0ec6-4f55-9ec8-d26e80df02b9"/>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="97" y="30" width="6" height="15" uuid="d9fabfcc-5e95-41f5-b3e3-8a5b5000bb9b"/>
+				<reportElement x="97" y="30" width="6" height="15" uuid="66d7b385-79a1-4c5b-b3ba-2390ce147bbc"/>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="110" width="72" height="15" uuid="ff57e8fb-1745-4c5f-94ab-8a78154e84d9"/>
+				<reportElement x="15" y="110" width="72" height="15" uuid="14fd8be1-9c4f-4f4e-a93b-f8c04ca66754"/>
+				<textElement>
+					<font fontName="Poppins"/>
+				</textElement>
 				<text><![CDATA[Dari]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="128" y="0" width="343" height="20" forecolor="#030303" uuid="fadeaaa2-5052-4cfe-94dc-1cea55926c60"/>
+				<reportElement x="128" y="0" width="343" height="20" forecolor="#030303" uuid="16f6477c-60b0-49bd-a20c-901748d0e8d4"/>
 				<textElement>
-					<font size="13"/>
+					<font fontName="Poppins" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{recipientName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="30" width="343" height="50" forecolor="#030303" uuid="f24888a2-3046-4ced-89f2-97fe5c0ab333"/>
+				<reportElement x="128" y="30" width="343" height="50" forecolor="#030303" uuid="1ff99308-78a3-410e-b6b4-084a7d4a0b95"/>
 				<textElement>
-					<font size="12"/>
+					<font fontName="Poppins" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="80" width="62" height="15" forecolor="#030303" uuid="24796fe3-367e-494f-a801-9444271d3e00"/>
+				<reportElement x="128" y="81" width="72" height="15" forecolor="#030303" uuid="c531da27-98f1-4dd3-b1ca-4b15e27a4a62"/>
 				<textElement>
-					<font size="10"/>
+					<font fontName="Poppins" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="110" width="343" height="20" forecolor="#030303" uuid="8c909415-31e7-4f53-a035-62d6c1823e36"/>
+				<reportElement x="128" y="110" width="284" height="60" forecolor="#030303" uuid="6620f9f6-0e24-4a2d-93c6-b0c22f0fd9fc"/>
 				<textElement>
-					<font size="11" isBold="true"/>
+					<font fontName="Poppins" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sender}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="190" y="80" width="281" height="15" forecolor="#030303" uuid="161e2a8e-6515-4d5b-b29b-732fb5d9a7bf"/>
+				<reportElement x="201" y="81" width="270" height="15" forecolor="#030303" uuid="73fca0e6-c602-4d24-8c96-4826fb30a995"/>
 				<textElement>
-					<font size="10"/>
+					<font fontName="Poppins" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="97" y="110" width="6" height="15" uuid="a3f639c0-a7c8-448b-97ff-4b08e6a333d4"/>
+				<reportElement x="97" y="110" width="6" height="15" uuid="1dfebb3f-866b-4b69-b42c-10b2011aec53"/>
 				<text><![CDATA[:]]></text>
 			</staticText>
 		</band>
