@@ -167,7 +167,7 @@
 	<detail>
 		<band height="200">
 			<staticText>
-				<reportElement mode="Transparent" x="219" y="180" width="162" height="21" forecolor="#BF5250" backcolor="#FFFFFF" uuid="08d03cc7-23f8-4128-921e-1ac2d49991e1"/>
+				<reportElement mode="Transparent" x="219" y="180" width="162" height="20" forecolor="#BF5250" backcolor="#FFFFFF" uuid="08d03cc7-23f8-4128-921e-1ac2d49991e1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="Z003" size="15" isBold="true" isItalic="true"/>
 				</textElement>
