@@ -239,13 +239,6 @@
             <scope>compile</scope>
         </dependency>
         <!--       End Testing Tools       -->
-        <dependency>
-            <groupId>local.jasperFontOverrides</groupId>
-            <artifactId>local.jasperFontOverrides</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/report/delivery-note.jar</systemPath>
-        </dependency>
     </dependencies>
 
     <build>
