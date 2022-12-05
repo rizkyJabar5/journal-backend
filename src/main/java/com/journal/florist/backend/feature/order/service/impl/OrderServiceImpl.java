@@ -143,23 +143,11 @@ public class OrderServiceImpl implements OrderService {
 
         if (request.getOrderStatus() == OrderStatus.SENT) {
             if (request.getDateDelivery() == null && request.getTimeDelivery() == null) {
-                return new BaseResponse(
-                        HttpStatus.BAD_REQUEST,
-                        "Delivery time cannot be blank",
-                        null
-                );
+                throw new AppBaseException("Delivery time cannot be blank");
             } else if (request.getRecipientName() == null) {
-                return new BaseResponse(
-                        HttpStatus.BAD_REQUEST,
-                        "Recipient name cannot be blank",
-                        null
-                );
+                throw new AppBaseException("Recipient name cannot be blank");
             } else if (request.getAddress() == null) {
-                return new BaseResponse(
-                        HttpStatus.BAD_REQUEST,
-                        "Sender address cannot be blank",
-                        null
-                );
+                throw new AppBaseException("Sender address cannot be blank");
             }
 
             // Setter order shipment

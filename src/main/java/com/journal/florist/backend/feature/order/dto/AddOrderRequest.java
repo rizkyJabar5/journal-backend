@@ -23,6 +23,7 @@ public class AddOrderRequest implements Serializable {
     private OrderStatus orderStatus;
     private BigDecimal paymentAmount;
 
+    @NotBlank(message = "Recipient name cannot be blank")
     private String recipientName;
 
     @Valid

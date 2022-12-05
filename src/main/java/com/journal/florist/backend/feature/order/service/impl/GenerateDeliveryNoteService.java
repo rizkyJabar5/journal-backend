@@ -5,6 +5,7 @@ import com.journal.florist.app.common.utils.jasper.ReportService;
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.IllegalException;
+import com.journal.florist.backend.feature.order.enums.OrderStatus;
 import com.journal.florist.backend.feature.order.model.DeliveryNote;
 import com.journal.florist.backend.feature.order.model.OrderDetails;
 import com.journal.florist.backend.feature.order.model.Orders;
@@ -16,9 +17,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.journal.florist.app.constant.JournalConstants.DELIVERY_NOTE_ALREADY_PRINTED;
 import static com.journal.florist.app.constant.JournalConstants.ORDER_IS_NOT_FOR_DELIVERY;
@@ -42,7 +41,7 @@ public class GenerateDeliveryNoteService implements DeliveryNoteService {
             throw new IllegalException("GNR id must be unique. It's already taken");
         }
 
-        validateOrderHasStatusSent(orderId);
+        validateOrderHasStatusSent(order);
         validatePrinted(orderId);
 
         entity.setGnrId(gnrId);
@@ -61,17 +60,24 @@ public class GenerateDeliveryNoteService implements DeliveryNoteService {
         JasperReportRequest request = new JasperReportRequest();
 
         String user = SecurityUtils.getAuthentication().getName();
-
         Orders order = orderService.findOrderById(orderId);
+
+        List<String> productName = order.getOrderDetails().stream().parallel().map(product -> product.getProduct().getProductName()).toList();
+        String recipientName = order.getOrderShipment().getRecipientName();
+        String fullAddress = order.getOrderShipment().getDeliveryAddress().getFullAddress();
+        List<Integer> quantity = order.getOrderDetails().stream().parallel().map(OrderDetails::getQuantity).toList();
+        Date deliveryDate = order.getOrderShipment().getDeliveryDate();
+        String sender = order.getCustomer().getName();
+
         var list = new ArrayList<>();
         Map<String, Object> data = new HashMap<>();
         data.put("deliveryNoteId", deliveryNoteId);
-        data.put("recipientName", order.getOrderShipment().getRecipientName());
-        data.put("deliveryAddress", order.getOrderShipment().getDeliveryAddress().getFullAddress());
-        data.put("quantity", order.getOrderDetails().stream().parallel().map(OrderDetails::getQuantity).toList());
-        data.put("productName", order.getOrderDetails().stream().parallel().map(product -> product.getProduct().getProductName()).toList());
-        data.put("sender", order.getCustomer().getName());
-        data.put("deliveryDate", order.getOrderShipment().getDeliveryDate());
+        data.put("recipientName", recipientName);
+        data.put("deliveryAddress", fullAddress);
+        data.put("quantity", quantity);
+        data.put("productName", productName);
+        data.put("sender", sender);
+        data.put("deliveryDate", deliveryDate);
         list.add(data);
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
@@ -96,9 +102,8 @@ public class GenerateDeliveryNoteService implements DeliveryNoteService {
         }
     }
 
-    private void validateOrderHasStatusSent(String orderId) {
-        boolean hasStatusSent = deliveryNoteRepository.orderWithStatusSent(orderId);
-        if(!hasStatusSent) {
+    private void validateOrderHasStatusSent(Orders order) {
+        if(order.getOrderStatus() != OrderStatus.SENT) {
             throw new AppBaseException(
               String.format(ORDER_IS_NOT_FOR_DELIVERY)
             );

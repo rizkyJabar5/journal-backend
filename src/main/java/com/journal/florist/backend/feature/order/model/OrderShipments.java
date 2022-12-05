@@ -21,7 +21,7 @@ public class OrderShipments implements Serializable {
     @Id
     private Long orderShipmentId;
 
-    @OneToOne(optional = false)
+    @OneToOne
     @MapsId
     private Orders order;
 
