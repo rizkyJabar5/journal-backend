@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.journal.florist.app.constant.JournalConstants.DELIVERY_NOTE_ALREADY_PRINTED;
+import static com.journal.florist.app.constant.JournalConstants.ORDER_IS_NOT_FOR_DELIVERY;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,7 +42,9 @@ public class GenerateDeliveryNoteService implements DeliveryNoteService {
             throw new IllegalException("GNR id must be unique. It's already taken");
         }
 
+        validateOrderHasStatusSent(orderId);
         validatePrinted(orderId);
+
         entity.setGnrId(gnrId);
         entity.setOrder(order);
         entity.setPrinted(true);
@@ -85,7 +90,18 @@ public class GenerateDeliveryNoteService implements DeliveryNoteService {
     private void validatePrinted(String orderId) {
         boolean isPrinted = deliveryNoteRepository.orderPrinted(orderId);
         if (isPrinted) {
-            throw new AppBaseException(String.format("Delivery note in order %s is already printed", orderId));
+            throw new AppBaseException(
+                    String.format(DELIVERY_NOTE_ALREADY_PRINTED, orderId)
+            );
+        }
+    }
+
+    private void validateOrderHasStatusSent(String orderId) {
+        boolean hasStatusSent = deliveryNoteRepository.orderWithStatusSent(orderId);
+        if(!hasStatusSent) {
+            throw new AppBaseException(
+              String.format(ORDER_IS_NOT_FOR_DELIVERY)
+            );
         }
     }
 }

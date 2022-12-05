@@ -100,7 +100,7 @@
 			</line>
 			<image hAlign="Center">
 				<reportElement x="5" y="2" width="79" height="77" uuid="94883631-a913-43e2-b182-ab8d77d0181e"/>
-				<imageExpression><![CDATA[$P{ROOT_DIR} + "logo.png"]]></imageExpression>
+				<imageExpression><![CDATA[ClassLoader.getSystemResource("report/logo.png");]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement mode="Opaque" x="150" y="0" width="129" height="25" forecolor="#030303" uuid="e622555d-198b-4ccd-a4a1-c59c53304058">
