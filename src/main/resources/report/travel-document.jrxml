@@ -110,7 +110,7 @@
 				<text><![CDATA[SEKAR SARI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="266" y="-3" width="64" height="40" forecolor="#030303" backcolor="#FFFFFF" uuid="7a2f8c85-3af2-4da4-aebe-024dc55cb8e7">
+				<reportElement mode="Opaque" x="270" y="-3" width="64" height="40" forecolor="#030303" backcolor="#FFFFFF" uuid="7a2f8c85-3af2-4da4-aebe-024dc55cb8e7">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
