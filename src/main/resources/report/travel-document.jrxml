@@ -174,7 +174,7 @@
 				<text><![CDATA[Unique & Excellent Design]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="420" y="115" width="55" height="15" uuid="4d043ba0-f1c2-4e30-b24a-b858e037aa3d"/>
+				<reportElement x="412" y="115" width="55" height="15" uuid="4d043ba0-f1c2-4e30-b24a-b858e037aa3d"/>
 				<box rightPadding="4"/>
 				<textElement textAlignment="Left">
 					<font fontName="Poppins"/>
@@ -182,14 +182,14 @@
 				<text><![CDATA[Surabaya,]]></text>
 			</staticText>
 			<textField pattern="dd MMMMM yyyy">
-				<reportElement x="475" y="115" width="95" height="15" uuid="ac32ee6e-92d9-4c0b-8bf1-b3bca64c9e19"/>
+				<reportElement x="467" y="115" width="95" height="15" uuid="ac32ee6e-92d9-4c0b-8bf1-b3bca64c9e19"/>
 				<textElement>
 					<font fontName="Poppins"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="420" y="130" width="72" height="15" uuid="4431f13e-c9d6-4695-b634-ff52b6c2f4ff"/>
+				<reportElement x="412" y="130" width="72" height="15" uuid="4431f13e-c9d6-4695-b634-ff52b6c2f4ff"/>
 				<textElement>
 					<font fontName="Poppins"/>
 				</textElement>
