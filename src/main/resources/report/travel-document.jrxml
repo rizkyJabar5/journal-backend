@@ -96,7 +96,7 @@
 				</reportElement>
 			</line>
 			<image hAlign="Center">
-				<reportElement x="5" y="2" width="76" height="76" uuid="94883631-a913-43e2-b182-ab8d77d0181e"/>
+				<reportElement x="10" y="8" width="60" height="60" uuid="94883631-a913-43e2-b182-ab8d77d0181e"/>
 				<imageExpression><![CDATA[ClassLoader.getSystemResource("report/logo.png");]]></imageExpression>
 			</image>
 			<staticText>
