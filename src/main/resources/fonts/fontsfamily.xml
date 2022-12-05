@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+	<fontFamily name="Pacifico">
+		<normal><![CDATA[fonts/Pacifico/pacifico-regular.ttf]]></normal>
+		<pdfEncoding><![CDATA[Identity-H]]></pdfEncoding>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+	<fontFamily name="Poppins">
+		<normal><![CDATA[fonts/Poppins/poppins-regular.ttf]]></normal>
+		<pdfEncoding><![CDATA[Cp1252]]></pdfEncoding>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+	<fontSet name="DeliveryNote">
+		<family familyName="Pacifico"/>
+		<family familyName="Poppins" primary="true"/>
+	</fontSet>
+</fontFamilies>
