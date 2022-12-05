@@ -12,8 +12,15 @@
 		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
 		<exportFonts/>
 	</fontFamily>
+	<fontFamily name="Noto Serif">
+		<normal><![CDATA[fonts/NotoSerif/NotoSerif-Bold.ttf]]></normal>
+		<pdfEncoding><![CDATA[Cp1252]]></pdfEncoding>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
 	<fontSet name="DeliveryNote">
 		<family familyName="Pacifico"/>
+		<family familyName="Noto Serif"/>
 		<family familyName="Poppins" primary="true"/>
 	</fontSet>
 </fontFamilies>
