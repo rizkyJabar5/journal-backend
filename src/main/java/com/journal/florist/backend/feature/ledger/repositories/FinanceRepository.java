@@ -16,4 +16,11 @@ public interface FinanceRepository extends JpaRepository<Finance, String> {
             where cast(f.fromDaysFinance as date) = cast(?1 as date)
             """)
     String findFinanceIdByToday(Date today);
+
+    @Query("""
+            select f
+            from Finance f
+            where cast(f.fromDaysFinance as date) = cast(?1 as date)
+            """)
+    Finance getFinanceToday(Date today);
 }

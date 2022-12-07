@@ -6,6 +6,7 @@ import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.feature.customer.dto.CustomerMapper;
 import com.journal.florist.backend.feature.customer.dto.CustomerRequest;
 import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
+import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
 import com.journal.florist.backend.feature.utils.FilterableCrudService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,10 +31,33 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    private final CustomerMapper customerMapper;
+
+    @Operation(summary = "Get customer by Id")
+    @GetMapping(value = "/customer/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_CASHIER') or hasRole('ROLE_OWNER')")
+    public ResponseEntity<BaseResponse> getCustomerById(@PathVariable("id") String customerById) {
+
+        if (customerById.isBlank()) {
+            throw new IllegalException("Customer id is required");
+        }
+        Customers customer = customerService.getCustomerId(customerById);
+        CustomerMapper mapper = customerMapper.mapToEntity(customer);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.FOUND,
+                "Fetching Customer by name",
+                mapper
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.FOUND);
+    }
+
+
     @Operation(summary = "Filter customer by customer name")
     @GetMapping(value = "/customer")
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_CASHIER') or hasRole('ROLE_OWNER')")
-    public ResponseEntity<BaseResponse> getCustomerName(@RequestParam String name,
+    public ResponseEntity<BaseResponse> getCustomerName(@RequestParam String customerByName,
                                                                 @RequestParam(defaultValue = "1",
                                                                         required = false) int page,
                                                                 @RequestParam(defaultValue = "10",
@@ -42,10 +66,10 @@ public class CustomerController {
                 page - 1,
                 limit,
                 Sort.by("name").ascending());
-        if (name.isBlank()) {
+        if (customerByName.isBlank()) {
             throw new IllegalException("Parameter name is required");
         }
-        Page<CustomerMapper> mapperPage = customerService.getCustomerByName(name, filter);
+        Page<CustomerMapper> mapperPage = customerService.getCustomerByName(customerByName, filter);
 
         BaseResponse response = new BaseResponse(
                 HttpStatus.FOUND,
