@@ -2,7 +2,7 @@ package com.journal.florist.backend.feature.customer.dto;
 
 import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.backend.feature.customer.model.Customers;
-import com.journal.florist.backend.feature.ledger.model.Sales;
+import com.journal.florist.backend.feature.order.model.Orders;
 import com.journal.florist.backend.feature.utils.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,10 +34,10 @@ public class CustomerMapper implements Serializable {
 
     public CustomerMapper mapToEntity(Customers mapper) {
         List<String> history = null;
-        if(mapper.getSales() != null){
-            history = mapper.getSales()
+        if(mapper.getOrders() != null){
+            history = mapper.getOrders()
                     .stream()
-                    .map(Sales::getSalesId).toList();
+                    .map(Orders::getPublicKey).toList();
         }
 
         String modifiedBy = mapper.getLastModifiedBy();

@@ -18,6 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class SalesServiceImpl implements SalesService {
 
     private final SalesRepository salesRepository;
@@ -35,7 +36,6 @@ public class SalesServiceImpl implements SalesService {
         }
 
         entity.setOrders(orders);
-        entity.setCustomers(customer);
         entity.setSaleDate(orders.getCreatedAt());
         entity.setTotalOrderAmount(orders.getTotalOrderAmount());
         entity.setTotalOrderCostPrice(orders.getTotalOrderCostPrice());

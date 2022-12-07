@@ -4,7 +4,6 @@
 
 package com.journal.florist.backend.feature.ledger.model;
 
-import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.order.model.Orders;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,21 +32,13 @@ public class Sales {
     private String salesId;
 
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
-            targetEntity = Orders.class)
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
     @JoinColumn(foreignKey = @ForeignKey(name = "order_fk_id"))
-    private Orders orders;
+    private Orders orders = new Orders();
 
     private BigDecimal totalOrderAmount;
     private BigDecimal totalOrderCostPrice;
-
-    @ManyToOne(
-            fetch = FetchType.EAGER,
-            targetEntity = Customers.class)
-    @JoinColumn(foreignKey = @ForeignKey(name = "customer_fk_id"))
-    private Customers customers;
-
     private BigDecimal salesAmount = BigDecimal.ZERO;
     private BigDecimal netProfit = BigDecimal.ZERO;
 

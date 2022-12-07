@@ -30,9 +30,13 @@ import java.util.Set;
 public class Orders extends BaseEntity {
 
     @ManyToOne(
+            optional = false,
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             targetEntity = Customers.class)
-    @JoinColumn(foreignKey = @ForeignKey(name = "customer_fk_id"))
+    @JoinColumn(
+            nullable = false,
+            foreignKey = @ForeignKey(name = "customer_fk_id"))
     private Customers customer;
 
     @JsonBackReference
@@ -46,7 +50,7 @@ public class Orders extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order", optional = false)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     @PrimaryKeyJoinColumn
     private OrderShipments orderShipment;
 

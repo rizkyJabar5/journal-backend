@@ -39,14 +39,20 @@ public class SalesController {
         Pageable filter = FilterableCrudService.getPageableWithSort(
                 page - 1, limit, Sort.by("saleDate").descending());
         Page<SalesMapper> report = salesService.getAllSalesReport(filter);
-        BaseResponse response = new BaseResponse(HttpStatus.OK, "Fetching report sales", report);
 
         if (report.isEmpty()) {
             BaseResponse responseNotFound = new BaseResponse(
-                    HttpStatus.NO_CONTENT, "Record not found", null);
+                    HttpStatus.NO_CONTENT,
+                    "Record not found",
+                    null);
 
-            return new ResponseEntity<>(responseNotFound, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(responseNotFound, HttpStatus.OK);
         }
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                "Fetching report sales",
+                report);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

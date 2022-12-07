@@ -3,6 +3,7 @@ package com.journal.florist.backend.feature.ledger.controller;
 import com.journal.florist.app.common.messages.BaseResponse;
 import com.journal.florist.backend.feature.ledger.service.FinanceService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,10 @@ public class FinanceController {
     @Operation(summary = "Get finance by date")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
-    public ResponseEntity<BaseResponse> getFinanceByDate(@RequestParam(required = false) String date) {
+    public ResponseEntity<BaseResponse> getFinanceByDate(
+            @RequestParam(required = false)
+            @Schema(example = "23-12-2000")
+            String date) {
 
         BaseResponse response = financeService.getFinanceByDate(date);
 

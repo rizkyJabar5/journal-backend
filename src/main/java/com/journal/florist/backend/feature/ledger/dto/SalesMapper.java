@@ -33,16 +33,18 @@ public class SalesMapper implements Serializable {
         LocalDateTime dateTime = DateConverter.toLocalDateTime(sales.getSaleDate());
         String saleDate = DateConverter.formatDateTime().format(dateTime);
 
+        String orderId = sales.getOrders().getPublicKey();
+
         return SalesMapper.builder()
                 .saleToday(saleDate)
                 .monthlySales(sales.getMonthlySale())
                 .saleAmount(sales.getSalesAmount())
                 .netProfit(sales.getNetProfit())
-                .orderId(sales.getOrders().getPublicKey())
+                .orderId(orderId)
                 .totalOrderAmount(sales.getTotalOrderAmount())
-                .customerName(sales.getCustomers().getName())
-                .phoneNumber(sales.getCustomers().getPhoneNumber())
-                .companyName(sales.getCustomers().getCompany().getCompanyName())
+                .customerName(sales.getOrders().getCustomer().getName())
+                .phoneNumber(sales.getOrders().getCustomer().getPhoneNumber())
+                .companyName(sales.getOrders().getCustomer().getCompany().getCompanyName())
                 .build();
     }
 }

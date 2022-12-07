@@ -4,7 +4,7 @@
 
 package com.journal.florist.backend.feature.customer.model;
 
-import com.journal.florist.backend.feature.ledger.model.Sales;
+import com.journal.florist.backend.feature.order.model.Orders;
 import com.journal.florist.backend.feature.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,8 +32,8 @@ public class Customers extends BaseEntity {
     private Company company;
 
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "customers")
-    private Set<Sales> sales;
+            mappedBy = "customer")
+    private Set<Orders> orders;
 
     @OneToOne(mappedBy = "customer",
             cascade = CascadeType.ALL,
