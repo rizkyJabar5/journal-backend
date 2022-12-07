@@ -1,6 +1,7 @@
 package com.journal.florist.backend.feature.order.service.impl;
 
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.utils.converter.DateConverter;
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.NotFoundException;
@@ -92,6 +93,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Orders> findOrderByDate(String orderDate) {
         return null;
+    }
+
+    @Override
+    public List<OrdersMapper> findRecentOrder() {
+        Date financeToday = DateConverter.today();
+
+        return orderRepository.findOrderByDate(financeToday)
+                .stream().map(orderMapper::buildOrderResponse)
+                .toList();
     }
 
     @Override

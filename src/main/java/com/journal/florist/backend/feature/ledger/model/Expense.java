@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 public class Expense extends BaseEntity {
 
     private String additionalInformation;
-    private BigDecimal Amount;
+    private BigDecimal amount;
 
     @Column(nullable = false)
     private Pay payFor;

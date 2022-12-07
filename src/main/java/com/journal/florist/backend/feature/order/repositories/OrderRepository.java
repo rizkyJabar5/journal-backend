@@ -18,20 +18,24 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
 
     Orders findOrderByPublicKey(String publicKey);
 
-    @Query("select o from Orders o " +
-            "where o.createdAt = :orderDate " +
-            "and o.orderStatus = :orderStatus " +
-            "and o.paymentStatus = :paymentStatus " +
-            "order by o.createdAt desc")
+    @Query("""
+            select o from Orders o
+            where cast(o.createdAt as date) = cast(:orderDate as date)
+            and o.orderStatus = :orderStatus
+            and o.paymentStatus = :paymentStatus
+            order by o.createdAt desc
+            """)
     Page<Orders> findByField(@Param("orderDate") Date orderDate,
                              @Param("orderStatus") OrderStatus orderStatus,
                              @Param("paymentStatus") PaymentStatus paymentStatus,
                              Pageable pageable);
 
-    @Query("select o " +
-            "from Orders o " +
-            "where o.createdAt = ?1 " +
-            "order by o.createdAt desc")
+    @Query("""
+            select o
+            from Orders o
+            where cast(o.createdAt as date) = cast(?1 as date)
+            order by o.createdAt desc
+            """)
     List<Orders> findOrderByDate(Date orderDate);
 
     @Query("""

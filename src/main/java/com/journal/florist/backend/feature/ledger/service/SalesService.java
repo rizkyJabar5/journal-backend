@@ -13,9 +13,12 @@ public interface SalesService extends HasLogger {
 
     void saveSales(Orders orders, Customers customer);
     Page<SalesMapper> getAllSalesReport(Pageable pageable);
-
+    BigDecimal sumNetSalesToday();
+    BigDecimal sumGrossSalesToday();
     default BigDecimal getSalesMonthly() {
         return null;
     }
+    BigDecimal sumGrossSales();
+    BigDecimal sumNetSales();
 
 }

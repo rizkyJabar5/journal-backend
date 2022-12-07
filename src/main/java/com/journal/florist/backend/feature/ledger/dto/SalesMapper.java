@@ -35,9 +35,15 @@ public class SalesMapper implements Serializable {
 
         String orderId = sales.getOrders().getPublicKey();
 
+        BigDecimal monthlySale = sales.getMonthlySale();
+
+        if (monthlySale == null) {
+            monthlySale = BigDecimal.ZERO;
+        }
+
         return SalesMapper.builder()
                 .saleToday(saleDate)
-                .monthlySales(sales.getMonthlySale())
+                .monthlySales(monthlySale)
                 .saleAmount(sales.getSalesAmount())
                 .netProfit(sales.getNetProfit())
                 .orderId(orderId)

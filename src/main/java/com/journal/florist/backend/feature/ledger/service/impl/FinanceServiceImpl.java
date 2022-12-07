@@ -140,6 +140,21 @@ public class FinanceServiceImpl implements FinanceService {
         return repository.findFinanceIdByToday(date);
     }
 
+    @Override
+    public BigDecimal sumTotalDebt() {
+        return repository.sumTotalDebt();
+    }
+
+    @Override
+    public BigDecimal sumRevenue() {
+        return repository.sumTotalRevenue();
+    }
+
+    @Override
+    public BigDecimal sumAccountReceivable() {
+        return repository.sumTotalAccountReceivable();
+    }
+
     private Finance findFinanceById(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(

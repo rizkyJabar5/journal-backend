@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -19,5 +20,26 @@ public interface SalesRepository extends JpaRepository<Sales, Long> {
 
     @Query("select s from Sales s")
     Page<Sales> findAllSales(Pageable pageable);
-
+    @Query("""
+            select sum(s.netProfit)
+            from Sales s
+            where cast(s.saleDate as date) = cast(?1 as date)
+            """)
+    BigDecimal sumNetProfitToday(Date date);
+    @Query("""
+            select sum(s.salesAmount)
+            from Sales s
+            where cast(s.saleDate as date) = cast(?1 as date)
+            """)
+    BigDecimal sumGrossSalesToday(Date date);
+    @Query("""
+            select sum(s.salesAmount)
+            from Sales s
+            """)
+    BigDecimal sumGrossSales();
+    @Query("""
+            select sum(s.netProfit)
+            from Sales s
+            """)
+    BigDecimal sumNetSales();
 }

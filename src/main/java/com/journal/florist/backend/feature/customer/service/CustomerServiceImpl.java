@@ -152,5 +152,10 @@ public class CustomerServiceImpl implements CustomerService {
                 String.format(SUCCESSFULLY_DELETE_OPERATION, persisted.getPublicKey()),
                 SuccessResponse.StatusOperation.SUCCESS);
     }
+
+    @Override
+    public long countAllCustomer() {
+        return repository.count();
+    }
 }
 

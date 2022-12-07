@@ -38,8 +38,8 @@ public class OrderDetails implements Serializable {
     public Product getProduct() {
         return this.pk.getProduct();
     }
-    
-    public BigDecimal getTotalPrice(){
+
+    public BigDecimal getTotalPrice() {
         this.price = getProduct().getPrice();
         return this.price.multiply(BigDecimal.valueOf(getQuantity()));
     }
@@ -47,6 +47,10 @@ public class OrderDetails implements Serializable {
     public BigDecimal getTotalCostPrice() {
         this.costPrice = getProduct().getCostPrice();
         return this.costPrice.multiply(BigDecimal.valueOf(getQuantity()));
+    }
+
+    public BigDecimal getNetPrice() {
+        return getTotalPrice().subtract(getTotalCostPrice());
     }
 
     public OrderDetails(Orders order,

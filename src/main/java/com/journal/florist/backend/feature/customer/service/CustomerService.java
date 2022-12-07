@@ -18,5 +18,5 @@ public interface CustomerService extends HasLogger {
     BaseResponse addCustomer(CustomerRequest customer);
     BaseResponse updateCustomer(UpdateCustomerRequest customer);
     SuccessResponse deleteCustomer(String id);
-
+    long countAllCustomer();
 }

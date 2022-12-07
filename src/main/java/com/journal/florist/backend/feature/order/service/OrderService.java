@@ -24,6 +24,7 @@ public interface OrderService extends HasLogger {
     List<Orders> getOrderByCustomerName(String customerName);
     List<Orders> findOrderByStatus(OrderStatus orderStatus);
     List<Orders> findOrderByDate(String orderDate);
+    List<OrdersMapper> findRecentOrder();
     List<Orders> findOrderPaymentStatus(PaymentStatus paymentStatus);
     Orders findOrderById(String orderId);
 

@@ -68,4 +68,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         return expense;
     }
+
+    @Override
+    public BigDecimal sumExpense() {
+        return expenseRepository.sumTotalExpense();
+    }
 }

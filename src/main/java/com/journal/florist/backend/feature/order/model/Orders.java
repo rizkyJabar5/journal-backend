@@ -72,6 +72,12 @@ public class Orders extends BaseEntity {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public BigDecimal getTotalNetProfit() {
+        return getOrderDetails().parallelStream()
+                .map(OrderDetails::getNetPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     public Orders(Customers customer,
                   OrderStatus orderStatus,
                   String createdBy,

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class SalesServiceImpl implements SalesService {
 
         if (saleToday.isEmpty()) {
             entity.setSalesAmount(orders.getTotalOrderAmount());
-            entity.setNetProfit(orders.getTotalOrderCostPrice());
+            entity.setNetProfit(orders.getTotalNetProfit());
         }
 
         entity.setOrders(orders);
@@ -43,7 +44,7 @@ public class SalesServiceImpl implements SalesService {
         saleToday.stream()
                 .map(Sales::getNetProfit)
                 .forEach(netProfit -> {
-                    BigDecimal add = netProfit.add(orders.getTotalOrderCostPrice());
+                    BigDecimal add = netProfit.add(orders.getTotalNetProfit());
                     entity.setNetProfit(add);
                 });
         saleToday.stream()
@@ -52,7 +53,7 @@ public class SalesServiceImpl implements SalesService {
                     BigDecimal add = saleAmount.add(entity.getTotalOrderAmount());
                     entity.setSalesAmount(add);
                 });
-        getLogger().info("Saving history order for customer " + customer.getName());
+
         salesRepository.save(entity);
     }
 
@@ -61,5 +62,29 @@ public class SalesServiceImpl implements SalesService {
     public Page<SalesMapper> getAllSalesReport(Pageable pageable) {
         return salesRepository.findAllSales(pageable)
                 .map(salesMapper::buildSalesResponse);
+    }
+
+    @Override
+    public BigDecimal sumNetSalesToday() {
+        Date today = DateConverter.today();
+
+        return salesRepository.sumNetProfitToday(today);
+    }
+
+    @Override
+    public BigDecimal sumGrossSalesToday() {
+        Date today = DateConverter.today();
+
+        return salesRepository.sumGrossSalesToday(today);
+    }
+
+    @Override
+    public BigDecimal sumGrossSales() {
+        return salesRepository.sumGrossSales();
+    }
+
+    @Override
+    public BigDecimal sumNetSales() {
+        return salesRepository.sumNetSales();
     }
 }
