@@ -26,4 +26,11 @@ public interface SupplierRepository extends JpaRepository<Suppliers, String> {
             from Suppliers s
             """)
     BigDecimal sumAllTotalDebt();
+
+    @Query("""
+            select (count(s) > 0)
+            from Suppliers s
+            where s.supplierName = ?1
+            """)
+    boolean isExistSupplier(String supplierName);
 }

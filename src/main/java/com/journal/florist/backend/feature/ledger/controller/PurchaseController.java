@@ -37,6 +37,16 @@ public class PurchaseController {
                 page - 1, limit, Sort.by("createdAt"));
         Page<Purchase> data = purchaseService.getAllSuppliers(filter);
 
+        if (data.isEmpty()) {
+            BaseResponse response = new BaseResponse(
+                    HttpStatus.NOT_FOUND,
+                    "Record not found in purchase",
+                    null
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
         BaseResponse response = new BaseResponse(HttpStatus.FOUND,
                 "Fetching all purchase",
                 data);

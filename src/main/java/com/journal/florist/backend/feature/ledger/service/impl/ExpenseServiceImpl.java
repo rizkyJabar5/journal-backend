@@ -29,16 +29,19 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     @Transactional
     public Expense create(ExpenseRequest request) {
+
         String createdBy = SecurityUtils.getAuthentication().getName();
         Expense expense = new Expense();
 
+        request.defaultPay(expense);
+
         expense.setAdditionalInformation(request.additionalInformation());
         expense.setAmount(request.amount());
-        expense.setPayFor(request.pay());
         expense.setCreatedBy(createdBy);
         expense.setCreatedAt(new Date(System.currentTimeMillis()));
 
         if (request.supplierId() != null && request.pay() == Pay.SUPPLIERS) {
+            request.payDebtForSupplier(expense);
             Suppliers supplier = supplierService.getSupplierById(request.supplierId());
             BigDecimal debtBySupplier = supplierService.findDebtBySupplier(supplier.getId());
             BigDecimal result = debtBySupplier.subtract(expense.getAmount());
@@ -60,6 +63,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         } else if (request.supplierId() == null && request.pay() == Pay.SUPPLIERS) {
             throw new IllegalException("Supplier id must not be null or empty");
         }
+
         expenseRepository.save(expense);
 
         return expense;

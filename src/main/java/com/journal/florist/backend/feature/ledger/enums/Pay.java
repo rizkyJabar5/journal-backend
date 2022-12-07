@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Pay {
-    SUPPLIERS("supplier"),
-    OPERATIONAL("operational");
+    SUPPLIERS("Supplier"),
+    OPERATIONAL("Operational");
 
     private final String name;
 

@@ -13,8 +13,8 @@ public interface SupplierService extends HasLogger {
     Page<Suppliers> getAllSuppliers(Pageable pageable);
     BigDecimal findDebtBySupplier(String supplierId);
     BigDecimal sumTotalDebt();
-    void update(Suppliers suppliers);
+    BaseResponse addSuppliers(Suppliers supplier);
 
-    BaseResponse addSuppliers(Suppliers suppliers);
+    void update(Suppliers suppliers);
 
 }

@@ -37,14 +37,37 @@ public class SupplierController {
                     defaultValue = "10") int limit) {
         Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
         Page<Suppliers> suppliers = supplierService.getAllSuppliers(filter);
+
         if (suppliers.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            BaseResponse response = new BaseResponse(
+                    HttpStatus.NOT_FOUND,
+                    "Record not found in suppliers",
+                    null
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         BaseResponse response = new BaseResponse(
                 HttpStatus.FOUND,
                 "Fetching all Suppliers",
                 suppliers
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get supplier by Id")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
+    public ResponseEntity<BaseResponse> getSupplierById(
+            @PathVariable("id") String supplierId) {
+        Suppliers supplier = supplierService.getSupplierById(supplierId);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.FOUND,
+                "Fetching all Suppliers",
+                supplier
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);

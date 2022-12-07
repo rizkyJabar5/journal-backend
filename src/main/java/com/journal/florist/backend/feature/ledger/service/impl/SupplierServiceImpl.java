@@ -1,6 +1,7 @@
 package com.journal.florist.backend.feature.ledger.service.impl;
 
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.ledger.model.Suppliers;
 import com.journal.florist.backend.feature.ledger.repositories.SupplierRepository;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+
+import static com.journal.florist.app.constant.JournalConstants.MUST_BE_UNIQUE;
 
 @Service
 @RequiredArgsConstructor
@@ -41,17 +44,19 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public void update(Suppliers suppliers) {
-        Suppliers byId = repository.findById(suppliers.getId())
-                .orElseThrow(() -> new NotFoundException(
-                        String.format("supplier %s not found", suppliers.getId())));
-        repository.save(byId);
-    }
-
-    @Override
-    public BaseResponse addSuppliers(Suppliers suppliers) {
+    public BaseResponse addSuppliers(Suppliers supplier) {
         Suppliers entity = new Suppliers();
-        entity.setSupplierName(suppliers.getSupplierName());
+        String supplierName = supplier.getSupplierName();
+
+        boolean existSupplier = repository.isExistSupplier(supplierName);
+
+        if(existSupplier) {
+            throw new IllegalException(
+                    String.format(MUST_BE_UNIQUE, supplierName)
+            );
+        }
+
+        entity.setSupplierName(supplierName);
 
         repository.save(entity);
         return new BaseResponse(
@@ -59,5 +64,13 @@ public class SupplierServiceImpl implements SupplierService {
                 "Successfully to add new Suppliers",
                 entity
         );
+    }
+
+    @Override
+    public void update(Suppliers suppliers) {
+        Suppliers byId = repository.findById(suppliers.getId())
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("supplier %s not found", suppliers.getId())));
+        repository.save(byId);
     }
 }
