@@ -1,7 +1,8 @@
 package com.journal.florist.backend.feature.customer.service;
 
-import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
+import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.IllegalException;
 import com.journal.florist.backend.exceptions.NotFoundException;
@@ -9,9 +10,9 @@ import com.journal.florist.backend.feature.customer.dto.CustomerMapper;
 import com.journal.florist.backend.feature.customer.dto.CustomerRequest;
 import com.journal.florist.backend.feature.customer.dto.UpdateCustomerRequest;
 import com.journal.florist.backend.feature.customer.model.Company;
+import com.journal.florist.backend.feature.customer.model.CustomerDebt;
 import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.customer.repositories.CustomerRepository;
-import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.utils.EntityUtil;
 import com.journal.florist.backend.feature.utils.Validator;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import static com.journal.florist.app.constant.JournalConstants.*;
@@ -32,6 +34,7 @@ import static com.journal.florist.app.constant.JournalConstants.*;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository repository;
+    private final CustomerDebtService customerDebtService;
     private final CustomerMapper customerMapper;
     private final Validator validator;
 
@@ -88,6 +91,9 @@ public class CustomerServiceImpl implements CustomerService {
         }
         entity.setCreatedBy(createdBy);
         entity.setCreatedAt(new Date(System.currentTimeMillis()));
+
+        CustomerDebt debt = customerDebtService.addDebtCustomer(entity, BigDecimal.ZERO);
+        entity.setCustomerDebt(debt);
 
         repository.save(entity);
         getLogger().info("{} is successfully add to store", entity.getPublicKey());
