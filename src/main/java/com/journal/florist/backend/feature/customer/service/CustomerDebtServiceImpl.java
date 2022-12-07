@@ -17,6 +17,16 @@ public class CustomerDebtServiceImpl implements CustomerDebtService {
     private final CustomerDebtRepository repository;
 
     @Override
+    public BigDecimal getDebtByCustomerId(String customerId) {
+        BigDecimal debt = repository.getDebtByCustomerId(customerId);
+        if(debt == null ) {
+            debt = BigDecimal.ZERO;
+        }
+
+        return debt;
+    }
+
+    @Override
     public void addDebtCustomer(Customers customer, BigDecimal totalDebt) {
         CustomerDebt debt = repository.findCustomerById(customer.getPublicKey());
         if(debt == null) {

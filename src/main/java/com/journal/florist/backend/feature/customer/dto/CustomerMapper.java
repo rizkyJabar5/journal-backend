@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,41 +27,48 @@ public class CustomerMapper implements Serializable {
     private String phoneNumber;
     private String companyName;
     private Address address;
+    private BigDecimal customerDebt;
     private List<String> historyOrderId;
     private String addedBy;
     private String updatedBy;
     private String addedOn;
     private String updatedOn;
 
-    public CustomerMapper mapToEntity(Customers mapper) {
+    public CustomerMapper mapToEntity(Customers customer) {
         List<String> history = null;
-        if(mapper.getOrders() != null){
-            history = mapper.getOrders()
+        if(customer.getOrders() != null){
+            history = customer.getOrders()
                     .stream()
                     .map(Orders::getPublicKey).toList();
         }
 
-        String modifiedBy = mapper.getLastModifiedBy();
+        BigDecimal totalDebt = customer.getCustomerDebt().getTotalDebt();
+        if(totalDebt == null) {
+            totalDebt = BigDecimal.ZERO;
+        }
+
+        String modifiedBy = customer.getLastModifiedBy();
         if(modifiedBy == null) {
             updatedBy = null;
         }
 
-        LocalDateTime dateTime = DateConverter.toLocalDateTime(mapper.getCreatedAt());
+        LocalDateTime dateTime = DateConverter.toLocalDateTime(customer.getCreatedAt());
         String addedDate = DateConverter.formatDateTime().format(dateTime);
         String updatedDate = null;
-        if(mapper.getLastModifiedDate() != null) {
-            LocalDateTime toLocalDate = DateConverter.toLocalDateTime(mapper.getLastModifiedDate());
+        if(customer.getLastModifiedDate() != null) {
+            LocalDateTime toLocalDate = DateConverter.toLocalDateTime(customer.getLastModifiedDate());
             updatedDate = DateConverter.formatDateTime().format(toLocalDate);
         }
 
         return CustomerMapper.builder()
-                .customerId(mapper.getPublicKey())
-                .customerName(mapper.getName())
-                .phoneNumber(mapper.getPhoneNumber())
-                .companyName(mapper.getCompany().getCompanyName())
-                .address(mapper.getCompany().getAddress())
+                .customerId(customer.getPublicKey())
+                .customerName(customer.getName())
+                .phoneNumber(customer.getPhoneNumber())
+                .companyName(customer.getCompany().getCompanyName())
+                .address(customer.getCompany().getAddress())
+                .customerDebt(totalDebt)
                 .historyOrderId(history)
-                .addedBy(mapper.getCreatedBy())
+                .addedBy(customer.getCreatedBy())
                 .updatedBy(modifiedBy)
                 .addedOn(addedDate)
                 .updatedOn(updatedDate)

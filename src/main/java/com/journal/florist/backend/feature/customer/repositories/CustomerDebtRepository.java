@@ -14,6 +14,13 @@ public interface CustomerDebtRepository extends JpaRepository<CustomerDebt, Stri
     BigDecimal sumTotalAccountReceivable();
 
     @Query("""
+            SELECT cd
+            FROM CustomerDebt cd
+            where cd.customer.publicKey = ?1
+            """)
+    BigDecimal getDebtByCustomerId(String customerId);
+
+    @Query("""
             select cd
             from CustomerDebt cd
             where cd.customer.publicKey = :customerId

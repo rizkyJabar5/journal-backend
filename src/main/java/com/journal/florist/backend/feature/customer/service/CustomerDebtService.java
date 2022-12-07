@@ -6,9 +6,8 @@ import com.journal.florist.backend.feature.customer.model.Customers;
 import java.math.BigDecimal;
 
 public interface CustomerDebtService extends HasLogger {
-
+    BigDecimal getDebtByCustomerId(String customerId);
     void addDebtCustomer(Customers customer, BigDecimal totalDebt);
-
     void subtractDebtCustomer(Customers customer, BigDecimal totalDebt);
     BigDecimal sumAllTotalCustomerDebt();
 }
