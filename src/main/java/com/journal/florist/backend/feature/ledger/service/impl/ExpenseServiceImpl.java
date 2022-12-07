@@ -12,11 +12,14 @@ import com.journal.florist.backend.feature.ledger.service.ExpenseService;
 import com.journal.florist.backend.feature.ledger.service.FinanceService;
 import com.journal.florist.backend.feature.ledger.service.SupplierService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,19 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final SupplierService supplierService;
     private final FinanceService financeService;
+
+    @Override
+    public Page<Expense> getAllExpense(Pageable pageable) {
+        return expenseRepository.findAllExpensePage(pageable);
+    }
+
+    @Override
+    public Expense findExpenseById(String expenseId) {
+        return Optional.ofNullable(expenseRepository.findByExpenseId(expenseId))
+                .orElseThrow(
+                        () -> new IllegalException(String.format("Expense with id %s not found", expenseId))
+                );
+    }
 
     @Override
     @Transactional
