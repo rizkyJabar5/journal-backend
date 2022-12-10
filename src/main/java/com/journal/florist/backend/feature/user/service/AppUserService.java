@@ -5,6 +5,7 @@
 package com.journal.florist.backend.feature.user.service;
 
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.app.common.utils.HasLogger;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import com.journal.florist.backend.feature.user.dto.RequestAppUser;
@@ -20,6 +21,7 @@ public interface AppUserService extends HasLogger {
 
     Page<AppUsers> findAnyMatching(Optional<String> filter, Pageable pageable);
     long countAnyMatching(Optional<String> filter);
+    AppUsers findUserById(Long userId);
     AppUsers getByUserId(Long id);
     Page<AppUserBuilder> getAllUsers(Pageable pageable);
     AppUsers findByEmailOrUsername(String email, String username);
@@ -29,6 +31,6 @@ public interface AppUserService extends HasLogger {
 
     BaseResponse update(RequestUpdateAppUser request);
 
-    BaseResponse delete(AppUsers appUser, AppUsers appUserToDelete);
+    SuccessResponse delete(Long userId);
 
 }

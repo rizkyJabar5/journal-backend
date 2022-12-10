@@ -39,7 +39,7 @@ public class PurchaseController {
 
         if (data.isEmpty()) {
             BaseResponse response = new BaseResponse(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.OK,
                     "Record not found in purchase",
                     null
             );
@@ -47,11 +47,11 @@ public class PurchaseController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        BaseResponse response = new BaseResponse(HttpStatus.FOUND,
+        BaseResponse response = new BaseResponse(HttpStatus.OK,
                 "Fetching all purchase",
                 data);
 
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Purchasing product from supplier")
@@ -60,6 +60,6 @@ public class PurchaseController {
     public ResponseEntity<?> addNewPurchase(@RequestBody PurchaseRequest request) {
         BaseResponse response = purchaseService.create(request);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

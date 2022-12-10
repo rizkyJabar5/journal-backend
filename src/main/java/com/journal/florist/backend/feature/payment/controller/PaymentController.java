@@ -35,10 +35,10 @@ public class PaymentController {
     public ResponseEntity<BaseResponse> addPaymentOrder(@Valid @RequestBody PaymentRequest request) {
         PaymentsMapper data = paymentService.creditPayment(request);
 
-        BaseResponse response = new BaseResponse(HttpStatus.OK,
+        BaseResponse response = new BaseResponse(HttpStatus.CREATED,
                 String.format("Payment in order %s is successfully", request.orderId()),
                 data);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

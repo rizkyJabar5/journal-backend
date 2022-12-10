@@ -42,7 +42,7 @@ public class SalesController {
 
         if (report.isEmpty()) {
             BaseResponse responseNotFound = new BaseResponse(
-                    HttpStatus.NO_CONTENT,
+                    HttpStatus.OK,
                     "Record not found",
                     null);
 

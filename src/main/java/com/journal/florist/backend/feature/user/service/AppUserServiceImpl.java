@@ -6,6 +6,7 @@ package com.journal.florist.backend.feature.user.service;
 
 import com.cloudinary.utils.ObjectUtils;
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.app.common.utils.CloudinaryConfig;
 import com.journal.florist.app.security.SecurityUtils;
 import com.journal.florist.backend.exceptions.IllegalException;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
+import static com.journal.florist.app.constant.JournalConstants.SUCCESSFULLY_DELETE_OPERATION;
 import static com.journal.florist.app.constant.UserConstant.*;
 
 @Transactional
@@ -65,6 +67,12 @@ public class AppUserServiceImpl implements AppUserService {
         }
 
         return userRepository.count();
+    }
+
+    @Override
+    public AppUsers findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, userId)));
     }
 
     public AppUsers getByUserId(Long id) {
@@ -150,9 +158,17 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public BaseResponse delete(AppUsers appUser, AppUsers appUserToDelete) {
-        throwIfDeletingSelf(appUser, appUserToDelete);
-        return null;
+    public SuccessResponse delete(Long userId) {
+        AppUsers appUserToDelete = getByUserId(userId);
+        String userLoggedIn = SecurityUtils.getAuthentication().getName();
+
+        throwIfDeletingSelf(userLoggedIn, appUserToDelete);
+
+        userRepository.delete(appUserToDelete);
+
+        return new SuccessResponse(
+                String.format(SUCCESSFULLY_DELETE_OPERATION, appUserToDelete.getFullName()),
+                SuccessResponse.StatusOperation.SUCCESS);
     }
 
     public Page<AppUserBuilder> getAllUsers(Pageable pageable) {
@@ -201,8 +217,11 @@ public class AppUserServiceImpl implements AppUserService {
         return userRepository.findBy(pageable);
     }
 
-    private void throwIfDeletingSelf(AppUsers appUser, AppUsers appUserToDelete) {
-        if (appUser.equals(appUserToDelete)) {
+    private void throwIfDeletingSelf(String userLoggedIn, AppUsers appUserToDelete) {
+        if (appUserToDelete.getEmail().equals("admin@florist.com") || appUserToDelete.getUsername().equals("admin")) {
+            throw new UserFriendlyDataException(DELETING_USER_TOP);
+        }
+        if (userLoggedIn.equals(appUserToDelete.getUsername()) || userLoggedIn.equals(appUserToDelete.getEmail())) {
             throw new UserFriendlyDataException(DELETING_SELF_NOT_PERMITTED);
         }
     }

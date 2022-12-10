@@ -40,7 +40,7 @@ public class SupplierController {
 
         if (suppliers.isEmpty()) {
             BaseResponse response = new BaseResponse(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.OK,
                     "Record not found in suppliers",
                     null
             );
@@ -49,7 +49,7 @@ public class SupplierController {
         }
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 "Fetching all Suppliers",
                 suppliers
         );
@@ -65,7 +65,7 @@ public class SupplierController {
         Suppliers supplier = supplierService.getSupplierById(supplierId);
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 "Fetching all Suppliers",
                 supplier
         );
@@ -79,7 +79,7 @@ public class SupplierController {
     public ResponseEntity<BaseResponse> addNewSupplier(@RequestBody Suppliers suppliers) {
 
         BaseResponse response = supplierService.addSuppliers(suppliers);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
 
     }
 }

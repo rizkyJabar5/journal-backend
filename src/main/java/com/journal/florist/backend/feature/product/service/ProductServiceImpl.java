@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
 
         ProductMapper mapper = productMapper.productMapper(product);
         return new BaseResponse(
-                HttpStatus.OK,
+                HttpStatus.CREATED,
                 "Successfully added product",
                 mapper);
     }
@@ -152,11 +152,11 @@ public class ProductServiceImpl implements ProductService {
             if (Objects.nonNull(request.getCostPrice())) {
                 product.setCostPrice(request.getCostPrice());
             }
-            if (lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
-                throw new AppBaseException("Price must greater than cost price");
-            }
             if (Objects.nonNull(request.getPrice())) {
                 product.setPrice(request.getPrice());
+            }
+            if (lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
+                throw new AppBaseException("Price must greater than cost price");
             }
             if (Objects.nonNull(image)) {
                 String uploadImage = cloudinaryConfig.upload(image,
@@ -175,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
 
         ProductMapper mapper = productMapper.productMapper(product);
         return new BaseResponse(
-                HttpStatus.ACCEPTED,
+                HttpStatus.CREATED,
                 "Successfully updated product",
                 mapper);
     }

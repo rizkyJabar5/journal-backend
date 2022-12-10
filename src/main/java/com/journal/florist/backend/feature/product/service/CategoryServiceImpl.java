@@ -49,16 +49,16 @@ public class CategoryServiceImpl implements CategoryService {
                 .sorted(Comparator.comparing(Category::getNameCategory))
                 .map(categoryMapper::categoryMapper)
                 .toList();
-        if(categories.isEmpty()) {
+        if (categories.isEmpty()) {
             return new BaseResponse(
-                    HttpStatus.NO_CONTENT,
-                    String. format(NO_CONTENT, EntityUtil.getName(Category.class)),
+                    HttpStatus.OK,
+                    String.format(NO_CONTENT, EntityUtil.getName(Category.class)),
                     null
             );
         }
 
         return new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 "We found all categories.",
                 categories
         );
@@ -86,12 +86,12 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.save(entity);
         getLogger().info("Adding category: {}", entity.getPublicKey());
-        categoryMapper.categoryMapper(entity);
+        CategoryMapper mapper = categoryMapper.categoryMapper(entity);
 
         return new BaseResponse(
                 HttpStatus.CREATED,
                 String.format(SUCCESSFULLY_ADD_NEW_ENTITY, EntityUtil.getName(Category.class)),
-                categoryMapper.categoryMapper(entity));
+                mapper);
     }
 
     @Override
@@ -101,14 +101,14 @@ public class CategoryServiceImpl implements CategoryService {
         String updatedBy = authentication.getName();
         boolean authenticated = SecurityUtils.isAuthenticated();
 
-        if(category.getCategoryId().isEmpty()) {
+        if (category.getCategoryId().isEmpty()) {
             throw new IllegalException("Category id is required");
         }
 
         Category persisted = findByCategoryId(category.getCategoryId());
         if (authenticated) {
             boolean isEqual = categoryRepository.existsByNameCategory(category.getCategoryName());
-            if(isEqual) {
+            if (isEqual) {
                 throw new IllegalException(
                         String.format(MUST_BE_UNIQUE, EntityUtil.getName(Category.class))
                 );
@@ -117,7 +117,7 @@ public class CategoryServiceImpl implements CategoryService {
                 persisted.setNameCategory(category.getCategoryName());
             }
 
-            if(category.getDescription() != null && !category.getDescription().isBlank()) {
+            if (category.getDescription() != null && !category.getDescription().isBlank()) {
                 persisted.setDescription(category.getDescription());
             }
 
@@ -127,10 +127,11 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.save(persisted);
         getLogger().info("Update category id {}", persisted.getPublicKey());
+        CategoryMapper mapper = categoryMapper.categoryMapper(persisted);
         return new BaseResponse(
-                HttpStatus.ACCEPTED,
+                HttpStatus.CREATED,
                 "Successfully updated category " + category.getCategoryId(),
-                categoryMapper.categoryMapper(persisted)
+                mapper
         );
     }
 

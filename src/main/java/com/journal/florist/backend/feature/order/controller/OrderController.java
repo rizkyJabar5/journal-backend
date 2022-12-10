@@ -51,10 +51,10 @@ public class OrderController {
 
         if (orderPaidOff.isEmpty()) {
             BaseResponse noContent = new BaseResponse(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.OK,
                     "No content we found",
                     Collections.emptyList());
-            return new ResponseEntity<>(noContent, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(noContent, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -65,7 +65,7 @@ public class OrderController {
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> addNewOrder(@Valid @RequestBody AddOrderRequest request) {
         var response = orderService.addOrder(request);
-        return ResponseEntity.ok().body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update existing order")
@@ -73,6 +73,6 @@ public class OrderController {
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> updateExistingOrder(@Valid @RequestBody UpdateOrderRequest request) {
         var response = orderService.updateOrder(request);
-        return ResponseEntity.ok().body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

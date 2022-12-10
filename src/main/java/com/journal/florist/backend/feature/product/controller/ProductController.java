@@ -68,26 +68,26 @@ public class ProductController {
         List<ProductMapper> productMapper = service.getProductName(productName);
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 "Fetching product by name",
                 productMapper
         );
 
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Filter product by product key in request param")
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_CASHIER')")
-    public ResponseEntity<BaseResponse> getProductByKey(@PathVariable("id") String productId) {
+    public ResponseEntity<BaseResponse> getProductById(@PathVariable("id") String productId) {
 
         Optional<ProductMapper> productMapper = Optional.ofNullable(service.getProductById(productId));
         if (productMapper.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 String.format("Customer found with id %s", productId),
                 productMapper
         );
@@ -103,7 +103,7 @@ public class ProductController {
             @RequestParam(required = false) MultipartFile image) {
         BaseResponse response = service.addNewProduct(request, image);
 
-        return ResponseEntity.ok().body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update product")
@@ -113,15 +113,17 @@ public class ProductController {
             @Valid @ModelAttribute UpdateProductRequest request,
             @RequestParam(required = false) MultipartFile image) {
         BaseResponse response = service.updateProduct(request, image);
-        return ResponseEntity.ok().body(response);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Delete product")
     @DeleteMapping(value = "/delete")
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<SuccessResponse> deleteProduct(@RequestParam(name = "key") String productKey) {
-        SuccessResponse response = service.deleteProductById(productKey);
-        return ResponseEntity.accepted().body(response);
+    public ResponseEntity<SuccessResponse> deleteProduct(@RequestParam(name = "id") String productId) {
+        SuccessResponse response = service.deleteProductById(productId);
+
+        return ResponseEntity.ok().body(response);
     }
 
 }

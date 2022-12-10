@@ -57,7 +57,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_CASHIER')")
     public ResponseEntity<BaseResponse> addCategory(@Valid @RequestBody AddCategoryRequest request) {
         BaseResponse response = categoryService.addNewCategory(request);
-        return ResponseEntity.ok().body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update category")
@@ -66,7 +66,7 @@ public class CategoryController {
     public ResponseEntity<BaseResponse> updateCategory(@Valid @RequestBody CategoryRequest category) {
 
         BaseResponse response = categoryService.updateCategory(category);
-        return ResponseEntity.ok().body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Delete category by key")

@@ -10,6 +10,7 @@ public final class UserConstant {
     }
 
     public static final String DELETING_SELF_NOT_PERMITTED = "You can't delete it self .";
+    public static final String DELETING_USER_TOP = "Super admin can't delete.";
     public static final String EMAIL_ALREADY_TAKEN = "Email or Username has already taken by other user";
 
     // ----- User Constant ----- //

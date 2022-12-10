@@ -60,7 +60,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         supplierService.update(suppliers);
         financeService.addFinancePurchase(supplierService.sumTotalDebt());
 
-        return new BaseResponse(HttpStatus.OK,
+        return new BaseResponse(
+                HttpStatus.CREATED,
                 "Successfully add new purchase",
                 purchase);
     }

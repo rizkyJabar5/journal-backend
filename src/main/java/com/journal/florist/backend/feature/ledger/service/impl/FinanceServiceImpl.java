@@ -29,14 +29,14 @@ public class FinanceServiceImpl implements FinanceService {
             Finance financeDate = repository.getFinanceToday(financeToday);
 
             if(financeDate == null) {
-                return new BaseResponse(HttpStatus.NOT_FOUND,
+                return new BaseResponse(HttpStatus.OK,
                         "Record not found today",
                         null
                 );
             }
 
 
-            return new BaseResponse(HttpStatus.FOUND,
+            return new BaseResponse(HttpStatus.OK,
                     String.format("Record found in date %s", date),
                     financeDate
                     );
@@ -58,13 +58,13 @@ public class FinanceServiceImpl implements FinanceService {
         Finance financeDate = repository.getFinanceToday(dateTime);
 
         if(financeDate == null) {
-            return new BaseResponse(HttpStatus.NOT_FOUND,
+            return new BaseResponse(HttpStatus.OK,
                     String.format("Record not found in date %s", date),
                     null
             );
         }
 
-        return new BaseResponse(HttpStatus.FOUND,
+        return new BaseResponse(HttpStatus.OK,
                 String.format("Record found in date %s", date),
                 financeDate
         );

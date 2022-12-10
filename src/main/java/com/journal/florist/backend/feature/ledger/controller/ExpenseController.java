@@ -41,7 +41,7 @@ public class ExpenseController {
 
         if (data.isEmpty()) {
             BaseResponse response = new BaseResponse(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.OK,
                     "Record not found in expense",
                     null
             );
@@ -62,12 +62,13 @@ public class ExpenseController {
     public ResponseEntity<BaseResponse> getExpenseById(@PathVariable("id") String expenseId) {
         Expense data = expenseService.findExpenseById(expenseId);
 
-        BaseResponse response = new BaseResponse(HttpStatus.FOUND,
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
                 String.format("Expense with id found %s", expenseId),
                 data
         );
 
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Add new expense and will be request send to server")
@@ -77,10 +78,10 @@ public class ExpenseController {
 
         Expense data = expenseService.create(request);
         BaseResponse response = new BaseResponse(
-                HttpStatus.OK,
+                HttpStatus.CREATED,
                 "Successfully to persist new Expense",
                 data);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

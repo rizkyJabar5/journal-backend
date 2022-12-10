@@ -45,12 +45,12 @@ public class CustomerController {
         CustomerMapper mapper = customerMapper.mapToEntity(customer);
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 "Fetching Customer by name",
                 mapper
         );
 
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
@@ -72,12 +72,12 @@ public class CustomerController {
         Page<CustomerMapper> mapperPage = customerService.getCustomerByName(customerByName, filter);
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 "Fetching Customer by name",
                 mapperPage
         );
 
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Fetching all customer in record found")
@@ -115,7 +115,7 @@ public class CustomerController {
             throw new IllegalException("Customer id is required");
         }
         BaseResponse response = customerService.updateCustomer(request);
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Deleting existing customer")

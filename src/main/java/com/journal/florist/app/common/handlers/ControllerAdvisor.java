@@ -61,6 +61,20 @@ public class ControllerAdvisor extends ResponseStatusExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+
+    @ExceptionHandler(UserFriendlyDataException.class)
+    public ResponseEntity<Object> userFriendlyException(UserFriendlyDataException exception,
+                                                          HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", date);
+        response.put("message", exception.getMessage());
+        response.put("status", OperationStatus.FAILURE);
+        response.put("code", HttpStatus.NOT_ACCEPTABLE.value());
+        response.put("path", request.getServletPath());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> notFoundHandler(NotFoundException notFoundException,
                                                   HttpServletRequest request) {

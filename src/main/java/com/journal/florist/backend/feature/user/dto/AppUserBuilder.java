@@ -4,6 +4,7 @@
 
 package com.journal.florist.backend.feature.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.journal.florist.backend.feature.user.model.AppUsers;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.*;
 
 @Builder
 @Data
+@JsonIgnoreProperties(value = "password")
 public final class AppUserBuilder implements UserDetails {
 
     private Long userId;

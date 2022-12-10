@@ -5,6 +5,7 @@
 package com.journal.florist.backend.feature.user.controller;
 
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.app.common.messages.SuccessResponse;
 import com.journal.florist.backend.feature.user.dto.AppUserBuilder;
 import com.journal.florist.backend.feature.user.dto.RequestAppUser;
 import com.journal.florist.backend.feature.user.dto.RequestUpdateAppUser;
@@ -41,7 +42,7 @@ public class UserController {
         Page<AppUserBuilder> userPage = appUserService.getAllUsers(filter);
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 "Fetching all users",
                 userPage
         );
@@ -59,7 +60,7 @@ public class UserController {
         AppUserBuilder userDetails = AppUserBuilder.buildUserDetails(appUsers);
 
         BaseResponse response = new BaseResponse(
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 String.format("User %s is found", username),
                 userDetails
         );
@@ -79,14 +80,18 @@ public class UserController {
     @Operation(summary = "Update existing user")
     @PutMapping(value = "/update-user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_OWNER')")
-    public ResponseEntity<BaseResponse> saveRole(@ModelAttribute RequestUpdateAppUser request){
+    public ResponseEntity<BaseResponse> updateUser(@ModelAttribute RequestUpdateAppUser request){
         BaseResponse response = appUserService.update(request);
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-//
-//    @PostMapping("/role/addtouser`")
-//    public ResponseEntity<?> addToUser(@RequestBody RoleToUSerForm form){
-//        userService.addRoleToUser(form.getUsername(),form.getRoleName());
-//        return ResponseEntity.ok().build();
-//    }
+
+    @Operation(summary = "Delete existing user")
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_OWNER')")
+    public ResponseEntity<SuccessResponse> deleteUserId(@RequestParam(name = "id") Long userId){
+        SuccessResponse response = appUserService.delete(userId);
+
+        return ResponseEntity.ok().body(response);
+    }
 }
