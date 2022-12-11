@@ -96,7 +96,7 @@ public class AppUserServiceImpl implements AppUserService {
         user.setFullName(request.fullName());
         user.setUsername(request.username());
         user.setEmail(request.email());
-        user.setHashedPassword(passwordEncoder.encode(request.hashedPassword()));
+        user.setHashedPassword(passwordEncoder.encode(request.password()));
 
         addRoleUsers(user, request.rolesName());
 

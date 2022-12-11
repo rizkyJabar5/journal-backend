@@ -25,8 +25,9 @@ public record RequestAppUser(
         @Email(message = "Email is not valid")
         @NotBlank(message = "Email is required")
         String email,
+        @NotBlank(message = "Password is required")
         @Size(min = 6, message = "Password length should be at least 6 characters")
-        String hashedPassword,
+        String password,
         @NotBlank(message = "Roles is required, selected one or more")
         Set<ERole> rolesName,
         @RequestParam(required = false)
