@@ -49,11 +49,11 @@ public class ExpenseController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        BaseResponse response = new BaseResponse(HttpStatus.FOUND,
+        BaseResponse response = new BaseResponse(HttpStatus.OK,
                 "Fetching all expense",
                 data);
 
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Fetching expense by id")
