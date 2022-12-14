@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class CloudinaryConfig {
                     .upload(file.getBytes(), options);
         }catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return Collections.emptyMap();
         }
     }
 
@@ -50,7 +51,7 @@ public class CloudinaryConfig {
                     .destroy(publicIdFile, options);
         }catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return Collections.emptyMap();
         }
     }
 

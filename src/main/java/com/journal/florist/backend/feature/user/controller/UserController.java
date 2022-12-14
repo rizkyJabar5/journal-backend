@@ -50,10 +50,27 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "Filter user by id")
+    @GetMapping(value = "/user/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
+    public ResponseEntity<BaseResponse> getUserById(
+            @PathVariable("id") Long userId) {
+        AppUsers appUsers = appUserService.findUserById(userId);
+        AppUserBuilder userDetails = AppUserBuilder.buildUserDetails(appUsers);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                String.format("User %s is found", userId),
+                userDetails
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @Operation(summary = "Filter user by username")
     @GetMapping(value = "/user")
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
-    public ResponseEntity<BaseResponse> getByUsername(
+    public ResponseEntity<BaseResponse> getUserById(
             @RequestParam(name = "username") String email,
             String username) {
         AppUsers appUsers = appUserService.findByEmailOrUsername(email, username);
