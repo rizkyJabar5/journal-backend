@@ -31,6 +31,22 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @Operation(summary = "Fetching order by order id")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_CASHIER')")
+    public ResponseEntity<BaseResponse> getAllOrder(
+            @PathVariable("id") String orderId) {
+        
+        OrdersMapper order = orderService.getOrderById(orderId);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                "fetching orders with paid status",
+                order);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @Operation(summary = "Fetching all order in record with pagination")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_CASHIER')")
