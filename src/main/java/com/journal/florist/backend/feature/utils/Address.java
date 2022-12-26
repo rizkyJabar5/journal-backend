@@ -12,7 +12,6 @@ import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 @Getter
@@ -23,23 +22,27 @@ import java.io.Serializable;
 @JsonIgnoreProperties(value = "fullAddress", allowGetters = true)
 public class Address implements Serializable {
 
-    @NotEmpty(message = "Street may not be empty")
+//    @NotEmpty(message = "Street may not be empty")
     private String street;
 
-    @NotEmpty(message = "City may not be empty")
+//    @NotEmpty(message = "City may not be empty")
     private String city;
 
-    @NotEmpty(message = "Your state may not be empty")
-    private String province;
+//    @NotEmpty(message = "Your state may not be empty")
+//    private String province;
+//
+//    @NotEmpty(message = "Country is may not be empty")
+//    private String country;
 
-    @NotEmpty(message = "Country is may not be empty")
-    private String country;
-
-    @NotEmpty(message = "Zip address may not be empty")
+//    @NotEmpty(message = "Zip address may not be empty")
     private String zip;
 
     @Transient
     public String getFullAddress() {
-        return street + ", " + city + ", " + province + ", " + country + ", " + zip;
+        return street
+                .concat(", ")
+                .concat(city)
+                .concat(", ")
+                .concat(zip);
     }
 }
