@@ -34,6 +34,16 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    public Page<Suppliers> getAllSuppliersWithNoDebt(Pageable pageable) {
+        return repository.findSuppliersWithNoDebt(pageable);
+    }
+
+    @Override
+    public Page<Suppliers> getAllSuppliersWithDebt(Pageable pageable) {
+        return repository.findSuppliersWithDebt(pageable);
+    }
+
+    @Override
     public BigDecimal findDebtBySupplier(String supplierId) {
         return repository.findTotalDebtSupplier(supplierId);
     }

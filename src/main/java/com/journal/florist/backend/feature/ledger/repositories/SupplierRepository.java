@@ -14,6 +14,16 @@ public interface SupplierRepository extends JpaRepository<Suppliers, String> {
 
     @Query("select s from Suppliers s")
     Page<Suppliers> findAllSuppliers(Pageable pageable);
+    @Query("""
+            select s from Suppliers s
+            where s.totalDebt > 0
+            """)
+    Page<Suppliers> findSuppliersWithDebt(Pageable pageable);
+    @Query("""
+            select s from Suppliers s
+            where s.totalDebt = 0
+            """)
+    Page<Suppliers> findSuppliersWithNoDebt(Pageable pageable);
 
     @Query("""
             select s.totalDebt from Suppliers s
@@ -22,7 +32,7 @@ public interface SupplierRepository extends JpaRepository<Suppliers, String> {
     BigDecimal findTotalDebtSupplier(String supplierId);
 
     @Query("""
-            select sum(s.totalDebt) 
+            select sum(s.totalDebt)
             from Suppliers s
             """)
     BigDecimal sumAllTotalDebt();

@@ -57,6 +57,70 @@ public class SupplierController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "Fetching all supplier with debt in record")
+    @GetMapping("/supplier-no-debt")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
+    public ResponseEntity<BaseResponse> getAllSupplierWithNoDebt(
+            @RequestParam(name = "page",
+                    required = false,
+                    defaultValue = "1") int page,
+            @RequestParam(name = "limit",
+                    required = false,
+                    defaultValue = "10") int limit) {
+        Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
+        Page<Suppliers> suppliers = supplierService.getAllSuppliersWithNoDebt(filter);
+
+        if (suppliers.isEmpty()) {
+            BaseResponse response = new BaseResponse(
+                    HttpStatus.OK,
+                    "Record not found in suppliers",
+                    null
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                "Fetching all Suppliers",
+                suppliers
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Fetching all supplier with debt in record")
+    @GetMapping("/supplier-debt")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
+    public ResponseEntity<BaseResponse> getAllSupplierWithDebt(
+            @RequestParam(name = "page",
+                    required = false,
+                    defaultValue = "1") int page,
+            @RequestParam(name = "limit",
+                    required = false,
+                    defaultValue = "10") int limit) {
+        Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
+        Page<Suppliers> suppliers = supplierService.getAllSuppliersWithDebt(filter);
+
+        if (suppliers.isEmpty()) {
+            BaseResponse response = new BaseResponse(
+                    HttpStatus.OK,
+                    "Record not found in suppliers",
+                    null
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK,
+                "Fetching all Suppliers",
+                suppliers
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @Operation(summary = "Get supplier by Id")
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")

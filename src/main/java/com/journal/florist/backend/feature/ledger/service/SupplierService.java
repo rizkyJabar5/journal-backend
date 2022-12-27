@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 public interface SupplierService extends HasLogger {
     Suppliers getSupplierById(String id);
     Page<Suppliers> getAllSuppliers(Pageable pageable);
+    Page<Suppliers> getAllSuppliersWithNoDebt(Pageable pageable);
+    Page<Suppliers> getAllSuppliersWithDebt(Pageable pageable);
     BigDecimal findDebtBySupplier(String supplierId);
     BigDecimal sumTotalDebt();
     BaseResponse addSuppliers(Suppliers supplier);
