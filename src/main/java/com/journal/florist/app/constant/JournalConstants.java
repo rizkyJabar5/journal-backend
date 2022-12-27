@@ -23,7 +23,7 @@ public final class JournalConstants {
     public static final String DELIVERY_NOTE_ALREADY_PRINTED = "Delivery note in order %s is already printed";
     public static final String ORDER_IS_NOT_FOR_DELIVERY = "Order has not info order shipment for delivery note";
     // AbstractCrudView
-    public static final String CANNOT_BE_BLANK = "Field %s cannot be blank";
+    public static final String CANNOT_BE_BLANK = "%s cannot be blank";
     public static final String NOT_VALID_FIELD = "%s is not valid";
     public static final String DELETE_MESSAGE = "Are you sure you want to delete the selected %s? This action cannot be undone.";
 

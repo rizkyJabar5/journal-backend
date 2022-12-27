@@ -60,12 +60,23 @@ public class CustomerMapper implements Serializable {
             updatedDate = DateConverter.formatDateTime().format(toLocalDate);
         }
 
+        var customerCompany = customer.getCompany();
+
+        String companyName = "";
+        Address address = null;
+
+        if(customerCompany != null) {
+            companyName = customerCompany.getCompanyName();
+            address = customerCompany.getAddress();
+        }
+
+
         return CustomerMapper.builder()
                 .customerId(customer.getPublicKey())
                 .customerName(customer.getName())
                 .phoneNumber(customer.getPhoneNumber())
-                .companyName(customer.getCompany().getCompanyName())
-                .address(customer.getCompany().getAddress())
+                .companyName(companyName)
+                .address(address)
                 .customerDebt(totalDebt)
                 .historyOrderId(history)
                 .addedBy(customer.getCreatedBy())

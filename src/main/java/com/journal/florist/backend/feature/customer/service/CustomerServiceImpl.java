@@ -13,6 +13,7 @@ import com.journal.florist.backend.feature.customer.model.Company;
 import com.journal.florist.backend.feature.customer.model.CustomerDebt;
 import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.customer.repositories.CustomerRepository;
+import com.journal.florist.backend.feature.utils.Address;
 import com.journal.florist.backend.feature.utils.EntityUtil;
 import com.journal.florist.backend.feature.utils.Validator;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customers entity = new Customers();
 
         boolean persisted = repository.existsByPhoneNumber(customer.getCustomerPhone());
-        if(persisted){
+        if (persisted) {
             throw new IllegalException(UNIQUE_PHONE_NUMBER);
         }
 
@@ -80,15 +81,27 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.getCompanyName() != null) {
             Company company = new Company();
             company.setCompanyName(customer.getCompanyName());
+
+            if(customer.getStreet() == null || customer.getStreet().isEmpty()) {
+              throw new AppBaseException(String.format(CANNOT_BE_BLANK, "Street"));
+            }
+            if(customer.getCity() == null || customer.getCity().isEmpty()) {
+                throw new AppBaseException(String.format(CANNOT_BE_BLANK, "City"));
+            }
+
+            if(customer.getZip() == null || customer.getZip().isEmpty()) {
+                throw new AppBaseException(String.format(CANNOT_BE_BLANK, "Zip"));
+            }
+
+            Address address = new Address();
+            address.setStreet(customer.getStreet());
+            address.setCity(customer.getCity());
+            address.setZip(customer.getZip());
+            company.setAddress(address);
+
             entity.setCompany(company);
         }
 
-        if (customer.getAddress() != null) {
-            Company company = new Company();
-            company.setAddress(customer.getAddress());
-            company.setCompanyName(entity.getCompany().getCompanyName());
-            entity.setCompany(company);
-        }
         entity.setCreatedBy(createdBy);
         entity.setCreatedAt(new Date(System.currentTimeMillis()));
 

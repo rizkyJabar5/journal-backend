@@ -177,7 +177,7 @@ public class OrderServiceImpl implements OrderService {
                 throw new AppBaseException("If order status is TAKEN, Delivery Time not needed");
             } else if (request.getRecipientName() != null) {
                 throw new AppBaseException("If order status is TAKEN, Recipient name not needed");
-            } else if (request.getAddress() != null) {
+            } else if (request.getAddress() != null ) {
                 throw new AppBaseException("If order status is TAKEN, Sender address not needed");
             }
         }
