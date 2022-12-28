@@ -11,5 +11,5 @@ spring:
           driver_class: org.postgresql.Driver
         format_sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: false

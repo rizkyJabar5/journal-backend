@@ -23,8 +23,10 @@ public class ExpenseMapper implements Serializable {
     private String additionalInfo;
     private BigDecimal amount;
     private String payFor;
+    private  String supplierName;
     private String lastModifiedBy;
     private String lastModifiedDate;
+
 
     public ExpenseMapper buildExpenseResponse(Expense expense) {
 
@@ -44,6 +46,7 @@ public class ExpenseMapper implements Serializable {
             lastModifiedBy = null;
         }
 
+        String name = expense.getSupplierName() == null ? "" : expense.getSupplierName();
         return ExpenseMapper.builder()
                 .expenseId(expense.getPublicKey())
                 .date(addedDate)
@@ -51,6 +54,7 @@ public class ExpenseMapper implements Serializable {
                 .additionalInfo(expense.getAdditionalInformation())
                 .amount(expense.getAmount())
                 .payFor(expense.getPayFor().getName())
+                .supplierName(name)
                 .lastModifiedBy(lastModifiedBy)
                 .lastModifiedDate(modifiedDate)
                 .build();

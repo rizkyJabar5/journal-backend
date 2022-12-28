@@ -65,13 +65,14 @@ public class ExpenseServiceImpl implements ExpenseService {
         if (request.supplierId() != null && request.pay() == Pay.SUPPLIERS) {
             request.payDebtForSupplier(expense);
             Suppliers supplier = supplierService.getSupplierById(request.supplierId());
+            expense.setSupplierName(supplier.getSupplierName());
             BigDecimal debtBySupplier = supplierService.findDebtBySupplier(supplier.getId());
             BigDecimal result = debtBySupplier.subtract(expense.getAmount());
             if (debtBySupplier.compareTo(BigDecimal.ZERO) == 0) {
                 throw new AppBaseException(
                         String.format(
                                 "The debt has been paid off at the supplier %s",
-                                supplier.getId())
+                                supplier.getSupplierName())
                 );
             } else if (result.compareTo(BigDecimal.ZERO) < 0) {
                 BigDecimal overPayment = expense.getAmount().subtract(debtBySupplier);

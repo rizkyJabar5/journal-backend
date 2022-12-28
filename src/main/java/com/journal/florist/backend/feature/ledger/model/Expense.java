@@ -24,7 +24,7 @@ public class Expense extends BaseEntity {
 
     private String additionalInformation;
     private BigDecimal amount;
-
+    private String supplierName;
     @Column(nullable = false)
     private Pay payFor;
 
