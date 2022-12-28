@@ -26,7 +26,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             select e
             from Expense e
             where e.payFor = com.journal.florist.backend.feature.ledger.enums.Pay.SUPPLIERS
-            order by e.createdAt desc
             """)
     List<Expense> findAllExpenseToSuppliers();
     @Query("""
