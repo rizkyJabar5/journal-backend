@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.journal.florist.app.constant.ApiUrlConstant.EXPENSE_URL;
 
 @Tag(name = "Expense Endpoint",
@@ -38,6 +40,29 @@ public class ExpenseController {
         Pageable filter = FilterableCrudService.getPageableWithSort(
                 page - 1, limit, Sort.by("createdAt"));
         Page<Expense> data = expenseService.getAllExpense(filter);
+
+        if (data.isEmpty()) {
+            BaseResponse response = new BaseResponse(
+                    HttpStatus.OK,
+                    "Record not found in expense",
+                    null
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        BaseResponse response = new BaseResponse(HttpStatus.OK,
+                "Fetching all expense",
+                data);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Fetching all expense in record with pagination")
+    @GetMapping("/suppliers")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
+    public ResponseEntity<BaseResponse> getAllExpenseToSuppliers() {
+        List<Expense> data = expenseService.getAllExpenseToSuppliers();
 
         if (data.isEmpty()) {
             BaseResponse response = new BaseResponse(

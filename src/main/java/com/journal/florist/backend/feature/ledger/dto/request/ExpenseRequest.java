@@ -12,7 +12,7 @@ public record ExpenseRequest(
         Pay pay) {
 
     public void defaultPay(Expense expense) {
-        if (pay == null) {
+        if (pay == null || pay == Pay.OPERATIONAL) {
              expense.setPayFor(Pay.OPERATIONAL);
         }
     }

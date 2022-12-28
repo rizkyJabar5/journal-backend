@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +33,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Page<Expense> getAllExpense(Pageable pageable) {
         return expenseRepository.findAllExpensePage(pageable);
+    }
+
+    @Override
+    public List<Expense> getAllExpenseToSuppliers() {
+        return expenseRepository.findAllExpenseToSuppliers();
     }
 
     @Override

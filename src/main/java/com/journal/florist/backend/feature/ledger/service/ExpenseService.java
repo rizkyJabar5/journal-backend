@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface ExpenseService extends HasLogger {
     Page<Expense> getAllExpense(Pageable pageable);
+    List<Expense> getAllExpenseToSuppliers();
     Expense findExpenseById(String expenseId);
     Expense create(ExpenseRequest request);
     BigDecimal sumExpense();

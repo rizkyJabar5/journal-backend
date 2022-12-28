@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
@@ -21,6 +22,13 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             order by e.createdAt desc
             """)
     Page<Expense> findAllExpensePage(Pageable pageable);
+    @Query("""
+            select e
+            from Expense e
+            where e.payFor = com.journal.florist.backend.feature.ledger.enums.Pay.SUPPLIERS
+            order by e.createdAt desc
+            """)
+    List<Expense> findAllExpenseToSuppliers();
     @Query("""
             select sum(e.amount)
             from Expense e
