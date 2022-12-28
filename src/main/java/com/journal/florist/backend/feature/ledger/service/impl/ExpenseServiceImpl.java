@@ -66,6 +66,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             request.payDebtForSupplier(expense);
             Suppliers supplier = supplierService.getSupplierById(request.supplierId());
             expense.setSupplierName(supplier.getSupplierName());
+
             BigDecimal debtBySupplier = supplierService.findDebtBySupplier(supplier.getId());
             BigDecimal result = debtBySupplier.subtract(expense.getAmount());
             if (debtBySupplier.compareTo(BigDecimal.ZERO) == 0) {
@@ -80,6 +81,8 @@ public class ExpenseServiceImpl implements ExpenseService {
                         String.format("Debt is only %s your payment is over +%s", debtBySupplier, overPayment));
             }
             supplier.setTotalDebt(result);
+            supplier.setAmountPay(request.amount());
+            supplier.setPayDebtDate(expense.getCreatedAt());
             BigDecimal totalDebt = supplierService.sumTotalDebt();
             financeService.addFinanceExpense(expense.getAmount(), totalDebt);
             supplierService.update(supplier);

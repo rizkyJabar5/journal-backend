@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -33,6 +31,9 @@ public class Suppliers {
 
     private BigDecimal totalDebt = BigDecimal.ZERO;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date payDebtDate;
+    private BigDecimal amountPay = BigDecimal.ZERO;
     @PrePersist
     public void prePersist() {
         if(id != null) {

@@ -1,6 +1,7 @@
 package com.journal.florist.backend.feature.ledger.controller;
 
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.backend.feature.ledger.dto.SuppliersMapper;
 import com.journal.florist.backend.feature.ledger.model.Suppliers;
 import com.journal.florist.backend.feature.ledger.service.SupplierService;
 import com.journal.florist.backend.feature.utils.FilterableCrudService;
@@ -24,6 +25,7 @@ import static com.journal.florist.app.constant.ApiUrlConstant.SUPPLIER_URL;
 public class SupplierController {
 
     private final SupplierService supplierService;
+    private final SuppliersMapper suppliersMapper;
 
     @Operation(summary = "Fetching all supplier found in record")
     @GetMapping
@@ -36,7 +38,8 @@ public class SupplierController {
                     required = false,
                     defaultValue = "10") int limit) {
         Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
-        Page<Suppliers> suppliers = supplierService.getAllSuppliers(filter);
+        Page<SuppliersMapper> suppliers = supplierService.getAllSuppliers(filter)
+                .map(suppliersMapper::buildSuppliersResponse);
 
         if (suppliers.isEmpty()) {
             BaseResponse response = new BaseResponse(
@@ -68,7 +71,8 @@ public class SupplierController {
                     required = false,
                     defaultValue = "10") int limit) {
         Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
-        Page<Suppliers> suppliers = supplierService.getAllSuppliersWithNoDebt(filter);
+        Page<SuppliersMapper> suppliers = supplierService.getAllSuppliersWithNoDebt(filter)
+                .map(suppliersMapper::buildSuppliersResponse);
 
         if (suppliers.isEmpty()) {
             BaseResponse response = new BaseResponse(
@@ -100,7 +104,8 @@ public class SupplierController {
                     required = false,
                     defaultValue = "10") int limit) {
         Pageable filter = FilterableCrudService.getPageable(page - 1, limit);
-        Page<Suppliers> suppliers = supplierService.getAllSuppliersWithDebt(filter);
+        Page<SuppliersMapper> suppliers = supplierService.getAllSuppliersWithDebt(filter)
+                .map(suppliersMapper::buildSuppliersResponse);
 
         if (suppliers.isEmpty()) {
             BaseResponse response = new BaseResponse(
@@ -127,11 +132,12 @@ public class SupplierController {
     public ResponseEntity<BaseResponse> getSupplierById(
             @PathVariable("id") String supplierId) {
         Suppliers supplier = supplierService.getSupplierById(supplierId);
+        SuppliersMapper mapper = suppliersMapper.buildSuppliersResponse(supplier);
 
         BaseResponse response = new BaseResponse(
                 HttpStatus.OK,
                 "Fetching all Suppliers",
-                supplier
+                mapper
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
