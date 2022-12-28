@@ -84,7 +84,7 @@ public class OrdersMapper implements Serializable {
             Date deliveryDateConvert = orders.getOrderShipment().getDeliveryDate();
 
             if (deliveryDateConvert != null) {
-                var date = DateConverter.toLocalDate(deliveryDateConvert);
+                var date = DateConverter.toLocalDateTime(deliveryDateConvert);
                 dateFormat = DateConverter.formatDate().format(date);
                 timeFormat = DateConverter.formatTime().format(date);
             }

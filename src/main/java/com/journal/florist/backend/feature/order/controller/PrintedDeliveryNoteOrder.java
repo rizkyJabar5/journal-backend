@@ -61,7 +61,7 @@ public class PrintedDeliveryNoteOrder {
 
     private String getHeaderValue(String outputFileName) {
         DateTimeFormatter dateTimeFormatter = DateConverter.formatDateTime();
-        String date = DateConverter.toLocalDate(new Date(System.currentTimeMillis()))
+        String date = DateConverter.toLocalDateTime(new Date(System.currentTimeMillis()))
                 .format(dateTimeFormatter);
         String fileName = URLEncoder
                 .encode(outputFileName

@@ -1,6 +1,7 @@
 package com.journal.florist.backend.feature.ledger.controller;
 
 import com.journal.florist.app.common.messages.BaseResponse;
+import com.journal.florist.backend.feature.ledger.dto.ExpenseMapper;
 import com.journal.florist.backend.feature.ledger.dto.request.ExpenseRequest;
 import com.journal.florist.backend.feature.ledger.model.Expense;
 import com.journal.florist.backend.feature.ledger.service.ExpenseService;
@@ -29,6 +30,7 @@ import static com.journal.florist.app.constant.ApiUrlConstant.EXPENSE_URL;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final ExpenseMapper expenseMapper;
 
     @Operation(summary = "Fetching all expense in record with pagination")
     @GetMapping
@@ -62,7 +64,9 @@ public class ExpenseController {
     @GetMapping("/suppliers")
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getAllExpenseToSuppliers() {
-        List<Expense> data = expenseService.getAllExpenseToSuppliers();
+        List<ExpenseMapper> data = expenseService.getAllExpenseToSuppliers()
+                .stream().map(expenseMapper::buildExpenseResponse)
+                .toList();
 
         if (data.isEmpty()) {
             BaseResponse response = new BaseResponse(

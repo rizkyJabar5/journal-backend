@@ -40,11 +40,6 @@ public final class DateConverter {
                 .withZone(ZoneId.of("Asia/Jakarta"));
     }
 
-    public static LocalDateTime toLocalDate(Date date) {
-
-        return LocalDateTime.ofInstant(date.toInstant(), zoneId);
-    }
-
     public static Date today() {
         final Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 0);
