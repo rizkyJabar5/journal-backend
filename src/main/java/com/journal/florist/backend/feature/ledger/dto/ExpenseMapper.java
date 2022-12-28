@@ -18,12 +18,12 @@ import java.math.BigDecimal;
 @Component
 public class ExpenseMapper implements Serializable {
     private String expenseId;
-    private String date;
+    private String createdDate;
     private String createdBy;
     private String additionalInfo;
     private BigDecimal amount;
     private String payFor;
-    private  String supplierName;
+    private String supplierName;
     private String lastModifiedBy;
     private String lastModifiedDate;
 
@@ -31,7 +31,7 @@ public class ExpenseMapper implements Serializable {
     public ExpenseMapper buildExpenseResponse(Expense expense) {
 
         var dateTime = DateConverter.toLocalDateTime(expense.getCreatedAt());
-        String addedDate = DateConverter.formatDate().format(dateTime);
+        String addedDate = DateConverter.formatDateTime().format(dateTime);
 
         String modifiedDate = null;
 
@@ -49,7 +49,7 @@ public class ExpenseMapper implements Serializable {
         String name = expense.getSupplierName() == null ? "" : expense.getSupplierName();
         return ExpenseMapper.builder()
                 .expenseId(expense.getPublicKey())
-                .date(addedDate)
+                .createdDate(addedDate)
                 .createdBy(expense.getCreatedBy())
                 .additionalInfo(expense.getAdditionalInformation())
                 .amount(expense.getAmount())

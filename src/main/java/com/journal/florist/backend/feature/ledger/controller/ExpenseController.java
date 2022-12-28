@@ -41,7 +41,8 @@ public class ExpenseController {
 
         Pageable filter = FilterableCrudService.getPageableWithSort(
                 page - 1, limit, Sort.by("createdAt"));
-        Page<Expense> data = expenseService.getAllExpense(filter);
+        Page<ExpenseMapper> data = expenseService.getAllExpense(filter)
+                .map(expenseMapper::buildExpenseResponse);
 
         if (data.isEmpty()) {
             BaseResponse response = new BaseResponse(
@@ -90,11 +91,12 @@ public class ExpenseController {
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getExpenseById(@PathVariable("id") String expenseId) {
         Expense data = expenseService.findExpenseById(expenseId);
+        ExpenseMapper mapper = expenseMapper.buildExpenseResponse(data);
 
         BaseResponse response = new BaseResponse(
                 HttpStatus.OK,
                 String.format("Expense with id found %s", expenseId),
-                data
+                mapper
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -106,10 +108,13 @@ public class ExpenseController {
     public ResponseEntity<BaseResponse> addNewExpense(@ModelAttribute ExpenseRequest request) {
 
         Expense data = expenseService.create(request);
+        ExpenseMapper mapper = expenseMapper.buildExpenseResponse(data);
+
         BaseResponse response = new BaseResponse(
                 HttpStatus.CREATED,
                 "Successfully to persist new Expense",
-                data);
+                mapper
+        );
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
