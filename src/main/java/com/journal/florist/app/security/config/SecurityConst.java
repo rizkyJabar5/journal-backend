@@ -6,4 +6,5 @@ public final class SecurityConst {
     public static final String BLANK_USERNAME = "Field is required can't be blank.";
     public static final String TOKEN_CREATED_SUCCESS = "Token created successfully as {}.";
     public static final long EXPIRATION_TIME_JWT = 864000000;
+    public static final long TEST = 864000000;
 }
