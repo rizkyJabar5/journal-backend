@@ -8,14 +8,24 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.journal.florist.backend.feature.customer.model.Customers;
 import com.journal.florist.backend.feature.order.enums.OrderStatus;
 import com.journal.florist.backend.feature.order.enums.PaymentStatus;
-import com.journal.florist.backend.feature.payment.model.Payments;
 import com.journal.florist.backend.feature.utils.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -54,27 +64,11 @@ public class Orders extends BaseEntity {
     @PrimaryKeyJoinColumn
     private OrderShipments orderShipment;
 
-    @OneToOne(mappedBy = "order")
-    private Payments payment;
-
     public BigDecimal getTotalOrderAmount() {
         Set<OrderDetails> orderProduct = getOrderDetails();
 
         return orderProduct.parallelStream()
                 .map(OrderDetails::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal getTotalOrderCostPrice() {
-
-        return getOrderDetails().parallelStream()
-                .map(OrderDetails::getTotalCostPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal getTotalNetProfit() {
-        return getOrderDetails().parallelStream()
-                .map(OrderDetails::getNetPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

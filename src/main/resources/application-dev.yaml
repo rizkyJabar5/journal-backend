@@ -2,8 +2,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/tkbunga
-    username: postgres
-    password:
+    username: user
+    password: password
   jpa:
     properties:
       hibernate:

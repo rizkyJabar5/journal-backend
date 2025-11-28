@@ -7,8 +7,6 @@ import com.journal.florist.backend.exceptions.AppBaseException;
 import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.customer.service.CustomerDebtService;
 import com.journal.florist.backend.feature.customer.service.CustomerService;
-import com.journal.florist.backend.feature.ledger.service.FinanceService;
-import com.journal.florist.backend.feature.ledger.service.SalesService;
 import com.journal.florist.backend.feature.order.dto.AddOrderRequest;
 import com.journal.florist.backend.feature.order.dto.OrdersMapper;
 import com.journal.florist.backend.feature.order.dto.UpdateOrderRequest;
@@ -21,9 +19,6 @@ import com.journal.florist.backend.feature.order.repositories.OrderRepository;
 import com.journal.florist.backend.feature.order.service.OrderDetailService;
 import com.journal.florist.backend.feature.order.service.OrderService;
 import com.journal.florist.backend.feature.order.service.ShipmentService;
-import com.journal.florist.backend.feature.payment.model.Payments;
-import com.journal.florist.backend.feature.payment.service.PaymentLogService;
-import com.journal.florist.backend.feature.payment.service.PaymentService;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.EntityUtil;
 import lombok.RequiredArgsConstructor;
@@ -48,14 +43,10 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ShipmentService shipmentService;
     private final OrderDetailService orderDetailService;
-    private final SalesService salesService;
     private final ProductService productService;
     private final CustomerService customerService;
     private final OrdersMapper orderMapper;
-    private final PaymentService paymentService;
-    private final PaymentLogService paymentLogService;
     private final CustomerDebtService customerDebtService;
-    private final FinanceService financeService;
 
     @Override
     public OrdersMapper getOrderById(String orderId) {
@@ -185,11 +176,6 @@ public class OrderServiceImpl implements OrderService {
         // Customer payment check
         customerCheckPayment(request.getPaymentAmount(), orders.getTotalOrderAmount(), orders);
 
-        salesService.saveSales(orders, customer);
-        financeService.addAccountReceivableAndRevenue(
-                customerDebtService.sumAllTotalCustomerDebt(),
-                paymentLogService.sumTotalAmountPayment());
-
         Orders entity = create(orders);
         getLogger().info("Successfully to save new order");
         OrdersMapper mapper = orderMapper.buildOrderResponse(entity);
@@ -243,11 +229,7 @@ public class OrderServiceImpl implements OrderService {
           And then order status will have Payment status value NOT_YET_PAID
          */
         if (paymentAmount == null || paymentAmount.equals(BigDecimal.ZERO)) {
-
-            Payments payments = paymentService.addPayment(BigDecimal.ZERO, totalToBePaid, orders);
             customerDebtService.addDebtCustomer(orders.getCustomer(), orders.getTotalOrderAmount());
-            orders.setPayment(payments);
-
             return;
         }
 
@@ -262,9 +244,6 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal paymentOver = paymentAmount.subtract(totalToBePaid);
             throw new AppBaseException(String.format("Customer payment is over +%s", paymentOver));
         }
-
-        Payments payments = paymentService.addPayment(paymentAmount, result, orders);
-        orders.setPayment(payments);
     }
 
     private Date parseDateToEpoch(String dateDelivery, String timeDelivery) {

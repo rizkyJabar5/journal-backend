@@ -54,10 +54,6 @@ public class OrdersMapper implements Serializable {
 
         BigDecimal pay = BigDecimal.ZERO;
         BigDecimal underPay = orders.getTotalOrderAmount();
-        if (orders.getPayment() != null) {
-            pay = orders.getPayment().getAmount();
-            underPay = orders.getPayment().getUnderPayment();
-        }
 
         LocalDateTime dateTime = DateConverter.toLocalDateTime(orders.getCreatedAt());
         String addedDate = DateConverter.formatDateTime().format(dateTime);

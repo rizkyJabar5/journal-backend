@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,15 +13,11 @@ import java.util.List;
 public final class SummaryStore implements Serializable {
     private Long totalProducts;
     private Long totalCustomers;
-    private BigDecimal grossSalesToday;
-    private BigDecimal netProfitSalesToday;
     private Object recentOrders;
 
     public static SummaryStore buildSummaryStore(
             Long totalProducts,
             Long totalCustomers,
-            BigDecimal grossSalesToday,
-            BigDecimal netProfitSalesToday,
             List<OrdersMapper> recentOrders) {
 
         if (totalProducts == null) {
@@ -31,12 +26,6 @@ public final class SummaryStore implements Serializable {
         if (totalCustomers == null) {
             totalCustomers = 0L;
         }
-        if (grossSalesToday == null) {
-            grossSalesToday = BigDecimal.ZERO;
-        }
-        if (netProfitSalesToday == null) {
-            netProfitSalesToday = BigDecimal.ZERO;
-        }
         if (recentOrders == null) {
             recentOrders = Collections.emptyList();
         }
@@ -44,8 +33,6 @@ public final class SummaryStore implements Serializable {
         return SummaryStore.builder()
                 .totalProducts(totalProducts)
                 .totalCustomers(totalCustomers)
-                .grossSalesToday(grossSalesToday)
-                .netProfitSalesToday(netProfitSalesToday)
                 .recentOrders(recentOrders)
                 .build();
     }

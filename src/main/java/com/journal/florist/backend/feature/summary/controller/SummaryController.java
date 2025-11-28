@@ -23,16 +23,6 @@ public class SummaryController {
     private final DashboardSummaryService summaryService;
 
     @Operation(summary = "Fetching summary ledger")
-    @GetMapping("/ledger")
-    @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
-    public ResponseEntity<BaseResponse> getSummaryLedger() {
-
-        BaseResponse response = summaryService.summaryLedger();
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @Operation(summary = "Fetching summary ledger")
     @GetMapping("/store")
     @PreAuthorize("hasRole('ROLE_SUPERADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER')")
     public ResponseEntity<BaseResponse> getSummaryStore() {

@@ -57,7 +57,7 @@ public class JwtUtils implements HasLogger {
 
     /**
      * Retrieve username from the token.
-     *
+     * 
      * @param token the token
      * @return the username
      */
