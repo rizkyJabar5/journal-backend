@@ -24,11 +24,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p " +
             "where upper(p.productName) like upper(concat('%', :productName, '%')) " +
-            "or upper(p.category.publicKey) like upper (:categoryId) " +
             "or upper(p.publicKey) like upper (:productId) " +
             "order by p.createdAt desc")
     Page<Product> findByField(@Param("productName") String productName,
-                              @Param("categoryId") String categoryId,
                               @Param("productId") String productId,
                               Pageable pageable);
 

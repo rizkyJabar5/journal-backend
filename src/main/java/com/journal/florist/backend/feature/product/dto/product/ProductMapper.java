@@ -25,11 +25,8 @@ public class ProductMapper {
     private String productId;
     private String picture;
     private String productName;
-    private String categoryKey;
-    private String categoryName;
-    private String categoryDescription;
     private String productDescription;
-    private BigDecimal costPrice;
+    private Integer stock;
     private BigDecimal price;
     private String createdBy;
     private String createdAt;
@@ -53,11 +50,8 @@ public class ProductMapper {
                 .productId(entity.getPublicKey())
                 .picture(entity.getPicture())
                 .productName(entity.getProductName())
-                .categoryKey(entity.getCategory().getPublicKey())
-                .categoryName(entity.getCategory().getNameCategory())
-                .categoryDescription(entity.getCategory().getDescription())
                 .productDescription(entity.getDescription())
-                .costPrice(entity.getCostPrice())
+                .stock(entity.getStock())
                 .price(entity.getPrice())
                 .createdBy(entity.getCreatedBy())
                 .createdAt(formatCreateAt)

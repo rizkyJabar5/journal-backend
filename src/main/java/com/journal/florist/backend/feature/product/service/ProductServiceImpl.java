@@ -16,7 +16,6 @@ import com.journal.florist.backend.exceptions.NotFoundException;
 import com.journal.florist.backend.feature.product.dto.product.AddProductRequest;
 import com.journal.florist.backend.feature.product.dto.product.ProductMapper;
 import com.journal.florist.backend.feature.product.dto.product.UpdateProductRequest;
-import com.journal.florist.backend.feature.product.model.Category;
 import com.journal.florist.backend.feature.product.model.Product;
 import com.journal.florist.backend.feature.product.repositories.ProductRepository;
 import com.journal.florist.backend.feature.utils.EntityUtil;
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +42,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductMapper productMapper;
-    private final CategoryService categoryService;
     private final CloudinaryConfig cloudinaryConfig;
 
     @Override
@@ -77,11 +74,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductMapper> getByField(Pageable pageable) {
-        return null;
-    }
-
-    @Override
     public BaseResponse addNewProduct(AddProductRequest request, MultipartFile image) {
         Authentication authentication = SecurityUtils.getAuthentication();
         String createdBy = authentication.getName();
@@ -95,17 +87,11 @@ public class ProductServiceImpl implements ProductService {
                 throw new IllegalException(String.format(MUST_BE_UNIQUE, EntityUtil.getName(Product.class)));
             }
             product.setProductName(request.getProductName());
-            Category category = categoryService.findByCategoryId(request.getCategoryKey());
 
-            product.setCategory(category);
             product.setDescription(request.getDescription());
             product.setCreatedBy(createdBy);
             product.setCreatedAt(new Date(System.currentTimeMillis()));
-
-            if (lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
-                throw new AppBaseException("Price must greater than cost price");
-            }
-            product.setCostPrice(request.getCostPrice());
+            product.setStock(request.getStock());
             product.setPrice(request.getPrice());
             var uploadImage = cloudinaryConfig.upload(image,
                             ObjectUtils.asMap(
@@ -142,21 +128,14 @@ public class ProductServiceImpl implements ProductService {
                 }
                 product.setProductName(request.getProductName());
             }
-            if (Objects.nonNull(request.getCategoryId())) {
-                Category category = categoryService.findByCategoryId(request.getCategoryId());
-                product.setCategory(category);
-            }
             if (Objects.nonNull(request.getDescription())) {
                 product.setDescription(request.getDescription());
             }
-            if (Objects.nonNull(request.getCostPrice())) {
-                product.setCostPrice(request.getCostPrice());
+            if (Objects.nonNull(request.getStock())) {
+                product.setStock(request.getStock());
             }
             if (Objects.nonNull(request.getPrice())) {
                 product.setPrice(request.getPrice());
-            }
-            if (lessThanCostPrice(request.getPrice(), request.getCostPrice())) {
-                throw new AppBaseException("Price must greater than cost price");
             }
             if (Objects.nonNull(image)) {
                 String uploadImage = cloudinaryConfig.upload(image,
@@ -193,10 +172,5 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long countAllProduct() {
         return repository.count();
-    }
-
-    private boolean lessThanCostPrice(BigDecimal price, BigDecimal costPrice) {
-
-        return price.compareTo(costPrice) <= 0;
     }
 }

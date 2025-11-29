@@ -19,6 +19,7 @@ import com.journal.florist.backend.feature.order.repositories.OrderRepository;
 import com.journal.florist.backend.feature.order.service.OrderDetailService;
 import com.journal.florist.backend.feature.order.service.OrderService;
 import com.journal.florist.backend.feature.order.service.ShipmentService;
+import com.journal.florist.backend.feature.product.repositories.ProductRepository;
 import com.journal.florist.backend.feature.product.service.ProductService;
 import com.journal.florist.backend.feature.utils.EntityUtil;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ import static com.journal.florist.app.constant.JournalConstants.NOT_FOUND_MSG;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
     private final ShipmentService shipmentService;
     private final OrderDetailService orderDetailService;
     private final ProductService productService;
@@ -136,9 +138,16 @@ public class OrderServiceImpl implements OrderService {
                                     product,
                                     detail.getNotes(),
                                     detail.getQuantity(),
-                                    product.getCostPrice(),
+                                    product.getStock(),
                                     product.getPrice()))
             );
+
+            if (product.getStock() < detail.getQuantity()) {
+                throw new AppBaseException("Stock is not enough");
+            }
+
+            product.setStock(product.getStock() - detail.getQuantity());
+            productRepository.save(product);
         }
         orders.setOrderDetails(orderDetails);
 
@@ -164,9 +173,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (request.getOrderStatus() == OrderStatus.TAKEN) {
-            if (request.getDateDelivery() != null && request.getTimeDelivery() != null) {
-                throw new AppBaseException("If order status is TAKEN, Delivery Time not needed");
-            } else if (request.getRecipientName() != null) {
+            if (request.getRecipientName() != null) {
                 throw new AppBaseException("If order status is TAKEN, Recipient name not needed");
             } else if (request.getAddress() != null ) {
                 throw new AppBaseException("If order status is TAKEN, Sender address not needed");

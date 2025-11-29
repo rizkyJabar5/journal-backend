@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamicUpdate
 @Entity
 public class Product extends BaseEntity {
 
@@ -31,14 +33,8 @@ public class Product extends BaseEntity {
     @Lob
     private String description;
 
-    @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},
-            targetEntity = Category.class)
-    private Category category;
-
-    @Column(name = "cost_price")
-    private BigDecimal costPrice;
+    @Column(name = "stock")
+    private Integer stock;
 
     @Column(name = "price")
     private BigDecimal price;

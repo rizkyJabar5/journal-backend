@@ -31,7 +31,7 @@ public class OrderDetails implements Serializable {
     @Min(value = 1L, message = "Minimal quantity should be at 1")
     private Integer quantity;
 
-    private BigDecimal costPrice;
+    private Integer qty;
     private BigDecimal price;
 
     @Transient
@@ -44,27 +44,18 @@ public class OrderDetails implements Serializable {
         return this.price.multiply(BigDecimal.valueOf(getQuantity()));
     }
 
-    public BigDecimal getTotalCostPrice() {
-        this.costPrice = getProduct().getCostPrice();
-        return this.costPrice.multiply(BigDecimal.valueOf(getQuantity()));
-    }
-
-    public BigDecimal getNetPrice() {
-        return getTotalPrice().subtract(getTotalCostPrice());
-    }
-
     public OrderDetails(Orders order,
                         Product product,
                         String notes,
                         Integer quantity,
-                        BigDecimal costPrice,
+                        Integer qty,
                         BigDecimal price) {
         pk = new OrderProductPK();
         pk.setOrder(order);
         pk.setProduct(product);
         this.notes = notes;
         this.quantity = quantity;
-        this.costPrice = costPrice;
+        this.qty = qty;
         this.price = price;
     }
 

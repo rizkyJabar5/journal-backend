@@ -23,7 +23,6 @@ public interface ProductService extends HasLogger {
     ProductMapper getProductById(String productId);
     Product findByProductId(String productKey);
     List<ProductMapper> getProductName(String productName);
-    Page<ProductMapper> getByField(Pageable pageable);
     BaseResponse addNewProduct(AddProductRequest request, MultipartFile image);
 
     BaseResponse updateProduct(UpdateProductRequest request, MultipartFile image);
