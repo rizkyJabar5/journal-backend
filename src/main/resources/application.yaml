@@ -5,7 +5,7 @@ spring:
   application:
     name: Journal backend
   profiles:
-    active: dev
+    active: staging
   mustache:
     check-template-location: false
   servlet:
