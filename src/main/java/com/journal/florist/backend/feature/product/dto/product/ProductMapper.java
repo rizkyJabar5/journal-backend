@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -32,6 +33,9 @@ public class ProductMapper {
     private String createdAt;
     private String updatedBy;
     private String updatedAt;
+    private Integer weight;
+    private String material;
+    private BigDecimal materialPrice;
 
     public ProductMapper productMapper(Product entity) {
 
@@ -43,21 +47,24 @@ public class ProductMapper {
         }
         String formatCreateAt = DateConverter.formatDateTime().format(dateCreateAt);
         String updateBy = entity.getLastModifiedBy();
-        if(updateBy == null) {
+        if (updateBy == null) {
             this.updatedBy = null;
         }
         return ProductMapper.builder()
-                .productId(entity.getPublicKey())
-                .picture(entity.getPicture())
-                .productName(entity.getProductName())
-                .productDescription(entity.getDescription())
-                .stock(entity.getStock())
-                .price(entity.getPrice())
-                .createdBy(entity.getCreatedBy())
-                .createdAt(formatCreateAt)
-                .createdBy(entity.getCreatedBy())
-                .updatedAt(formatUpdateAt)
-                .updatedBy(updateBy)
-                .build();
+            .productId(entity.getPublicKey())
+            .picture(entity.getPicture())
+            .productName(entity.getProductName())
+            .productDescription(entity.getDescription())
+            .stock(entity.getStock())
+            .price(entity.getPrice())
+            .createdBy(entity.getCreatedBy())
+            .createdAt(formatCreateAt)
+            .createdBy(entity.getCreatedBy())
+            .updatedAt(formatUpdateAt)
+            .updatedBy(updateBy)
+            .material(entity.getMaterial())
+            .materialPrice(entity.getMaterialPrice())
+            .weight(entity.getWeight())
+            .build();
     }
 }

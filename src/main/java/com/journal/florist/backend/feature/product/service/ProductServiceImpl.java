@@ -93,6 +93,9 @@ public class ProductServiceImpl implements ProductService {
             product.setCreatedAt(new Date(System.currentTimeMillis()));
             product.setStock(request.getStock());
             product.setPrice(request.getPrice());
+            product.setWeight(request.getWeight());
+            product.setMaterialPrice(request.getMaterialPrice());
+            product.setMaterial(request.getMaterial());
             var uploadImage = cloudinaryConfig.upload(image,
                             ObjectUtils.asMap(
                                     "resourceType", "image",
@@ -128,6 +131,9 @@ public class ProductServiceImpl implements ProductService {
                 }
                 product.setProductName(request.getProductName());
             }
+            product.setWeight(request.getWeight());
+            product.setMaterialPrice(request.getMaterialPrice());
+            product.setMaterial(request.getMaterial());
             if (Objects.nonNull(request.getDescription())) {
                 product.setDescription(request.getDescription());
             }

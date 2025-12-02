@@ -39,6 +39,15 @@ public class Product extends BaseEntity {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "weight")
+    private Integer weight;
+
+    @Column(name = "material")
+    private String material;
+
+    @Column(name = "material_price")
+    private BigDecimal materialPrice;
+
     @Override
     public int hashCode() {
         return Objects.hash(getProductName());
