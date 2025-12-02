@@ -16,7 +16,7 @@ public class AddProductRequest {
     private String description;
     private Integer stock;
     private BigDecimal price;
-    private Long weight;
+    private Float weight;
     private String material;
     private BigDecimal materialPrice;
 }
