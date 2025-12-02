@@ -33,7 +33,7 @@ public class ProductMapper {
     private String createdAt;
     private String updatedBy;
     private String updatedAt;
-    private Integer weight;
+    private Long weight;
     private String material;
     private BigDecimal materialPrice;
 

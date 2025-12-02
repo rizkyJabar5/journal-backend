@@ -40,7 +40,7 @@ public class Product extends BaseEntity {
     private BigDecimal price;
 
     @Column(name = "weight")
-    private Integer weight;
+    private Long weight;
 
     @Column(name = "material")
     private String material;
